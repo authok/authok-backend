@@ -159,8 +159,9 @@ export const DEFAULT_OIDC_CONFIGURATION: Configuration = {
     return r;
   },
   clients: [
+    /*
     {
-      client_id: 'k5u3o2fiAA8XweXEEX604KCwCjzjtMU6',
+      client_id: 'k5u3o2fiAA8XweXEEX604KCwCjzjtMU3',
       client_secret: 'bar',
       grant_types: [
         'authorization_code',
@@ -179,6 +180,7 @@ export const DEFAULT_OIDC_CONFIGURATION: Configuration = {
       token_endpoint_auth_method: 'none',
       // + other client properties
     },
+    */
   ],
   pkce: {
     required: () => false,

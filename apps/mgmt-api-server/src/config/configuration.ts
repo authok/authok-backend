@@ -4,23 +4,23 @@ export default () => ({
     host: process.env.TRIGGER_HOST || 'http://localhost:3008',
   },
   management: {
-    tenant: 'org_1',
-    client_id: 'B2b8F5A5yGqkAgSM8i2yotsGeSnurxDJ', // 默认用于登录的 client
-    client_secret: 'COQQOeSvNXPSbzucGVdRtmi6KtfHFcqxDEFRy79Dzooo-_spR6TBH9tjLzaeoiE_',
-    domain: 'mgmt.cn.authok.cn',
-    audience: 'https://mgmt.authok.cn/api/v1'
+    tenant: process.env.MGMT_TENANT,
+    client_id: process.env.MGMT_CLIENT_ID, // 默认用于登录的 client
+    client_secret: process.env.MGMT_CLIENT_SECRET,
+    domain: process.env.MGMT_DOMAIN,
+    audience: process.env.MGMT_AUDIENCE,
   },
   ipstack: {
     url: 'http://api.ipstack.com',
-    access_key: '1e599a1240ca8f99f0b0d81a08324dbb',
+    access_key: process.env.IPSTACK_ACCESS_KEY,
   },
   mailer: {
-    host: 'smtp.126.com',
-    port: 465,
-    secure: true,
+    host: process.env.MAILER_HOST,
+    port: process.env.MAILER_PORT,
+    secure: process.env.MAILER_SECURE === 'true',
     auth: {
-      user: 'newtalentxp@126.com',
-      pass: 'edison@2012',
+      user: process.env.MAILER_USER,
+      pass: process.env.MAILER_PASSWORD,
     },
   },
   queue: {
