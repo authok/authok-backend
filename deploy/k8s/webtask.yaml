@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    biz: authok
+    app: webtask-action
+  name: webtask-action
+  namespace: authok
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      biz: authok
+      app: webtask-action
+  template:
+    metadata:
+      labels:
+        biz: authok
+        app: webtask-action
+    spec:
+      containers:
+        - image: ccr.ccs.tencentyun.com/authok/webtask-action:latest
+          imagePullPolicy: Always
+          name: webtask-action
+          resources:
+            limits:
+              memory: 512Mi
+            requests:
+              memory: 512Mi
+          ports:
+            - name: server
+              containerPort: 3008
+              protocol: TCP
+      imagePullSecrets:
+        - name: qcloudregistrykey
+      restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webtask-action
+  namespace: authok
+spec:
+  ports:
+    - name: server
+      port: 3008
+      protocol: TCP
+      targetPort: 3008
+  selector:
+    biz: authok
+    app: webtask-action
+  sessionAffinity: None
+  type: ClusterIP

@@ -1,0 +1,26 @@
+FROM node:16-alpine3.11 AS build
+
+WORKDIR /usr/local/authok.backend
+
+RUN apk --update add bash && \
+    apk add --no-cache --virtual build-dependencies dos2unix gcc g++ git make python3 python2 py2-setuptools vips-dev
+
+COPY packages ./packages
+
+RUN cd ./packages/webtask-action && yarn install --frozen-lockfile && yarn build && yarn cache clean
+
+
+
+FROM node:16-alpine3.11 AS production
+
+WORKDIR /usr/local/webtask-action
+
+COPY --from=build /usr/local/authok.backend/packages/webtask-action/node_modules ./node_modules
+COPY --from=build /usr/local/authok.backend/packages/webtask-action/dist ./dist
+COPY --from=build /usr/local/authok.backend/packages/webtask-action/package.json ./package.json
+
+RUN yarn global add pm2
+
+EXPOSE 3008
+
+CMD ["node", "dist/main.js"]

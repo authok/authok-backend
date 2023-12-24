@@ -1,0 +1,7 @@
+extend type Query {
+  application(id: String): Application
+}
+
+type Application {
+  id: ID!
+}

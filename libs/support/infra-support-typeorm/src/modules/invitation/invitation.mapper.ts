@@ -1,0 +1,63 @@
+import { InvitationEntity } from './invitation.entity';
+import { IUser } from 'libs/api/infra-api/src/user/user.model';
+import { Mapper, ClassTransformerMapper, DeepPartial } from '@libs/nest-core';
+import { ClientEntity } from '../client/client.entity';
+import { OrganizationEntity } from '../organization/organization.entity';
+import { InvitationDto } from 'libs/api/infra-api/src/invitation/invitation.dto';
+
+@Mapper(InvitationDto, InvitationEntity)
+export class InvitationMapper extends ClassTransformerMapper<
+  InvitationDto,
+  InvitationEntity
+> {
+  convertToCreateEntity(
+    create: DeepPartial<InvitationDto>,
+  ): DeepPartial<InvitationEntity> {
+    return this.convertToEntity(create as InvitationDto);
+  }
+
+  convertToEntity(dto: InvitationDto): InvitationEntity {
+    const { client_id, org_id, inviter, ...rest } = dto;
+
+    const entity = super.convertToEntity(rest as InvitationDto);
+    if (inviter) {
+      entity.inviter = {
+        tenant: dto.tenant,
+        user_id: inviter.user_id,
+      };
+    }
+
+    entity.client = {
+      client_id,
+    } as ClientEntity;
+
+    entity.organization = {
+      id: org_id,
+    } as OrganizationEntity;
+
+    console.log('转型: ', entity);
+
+    return entity;
+  }
+
+  convertToDTO(entity: InvitationEntity): InvitationDto {
+    const { tenant, organization, client, inviter: _inviter, ...rest } = entity;
+
+    const inviter = {
+      ...(_inviter && { id: _inviter.id }),
+      ...(_inviter && { user_id: _inviter.user_id }),
+      ...(_inviter && { name: _inviter.name }),
+      ...(_inviter && { username: _inviter.username }),
+      ...(_inviter && { nickname: _inviter.nickname }),
+      ...(_inviter && { email: _inviter.email }),
+      ...(_inviter && { phone_number: _inviter.phone_number }),
+    } as Partial<IUser>;
+
+    const dto = {
+      inviter,
+      ...rest,
+    } as InvitationDto;
+
+    return dto;
+  }
+}

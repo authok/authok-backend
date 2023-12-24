@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>通过 Authok 登录</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="//cdn.authok.cn/api-server/css/index.css"></link>
+  <!--link rel="shortcut icon" href="https://cdn.authok.cn/styleguide/components/2.0.2/media/logos/img/favicon.png"-->
+</head>
+<body>
+  <div class="main">
+    是否接受来自 <%= invitation.inviter.username || invitation.inviter.nickname || invitation.inviter.email || invitation.inviter.phone_number %>的邀请
+    <form autocomplete="off" action="/login/<%= uid %>/invitation" method="post">
+      <button class="ant-btn ant-btn-primary ant-btn-lg" autofocus type="submit" class="login login-submit">同意邀请</button>
+    </form>
+  </div>
+</body>
+</html>

@@ -1,0 +1,9 @@
+scalar JSON
+scalar Date
+
+enum SortByEnum {
+  CREATEDAT_DESC
+  CREATEDAT_ASC
+  UPDATEDAT_DESC
+  UPDATEDAT_ASC
+}
