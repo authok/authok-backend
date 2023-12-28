@@ -132,8 +132,8 @@ async function bootstrap() {
 
   if (process.env.ENV === 'DEV') {
     const httpsOptions = {
-      key: fs.readFileSync('./cert/dev.authok.cn/dev.authok.cn.key'),
-      cert: fs.readFileSync('./cert/dev.authok.cn/dev.authok.cn.crt'),
+      key: fs.readFileSync('./cert/dev.key'),
+      cert: fs.readFileSync('./cert/dev.crt'),
     };
     https.createServer(httpsOptions, server).listen(443);
   }
