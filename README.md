@@ -20,12 +20,10 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-<a href="https://authok.cn" target="_blank">Authok</a>是一个多租户IDaaS系统, 提供
-OIDC, SAML, WsFed等身份提供者.
-支持 租户管理，用户管理，权限/角色管理，API管理.
-OIDC身份提供者基于 <a href="https://github.com/node-oidc-provider" target="_blank">node-oidc-provider</a>实现, 这/是目前唯一入选 <a href="https://openid.net/developers/certified/" target="_blank">openid.net</a>的javascript项目, 我们对其进行了些许改良(<a href="https://github.com/authok/node-oidc-provider" target="_blank">改良项目地址</a>).
+<a href="https://authok.cn" target="_blank">Authok</a> is a multi-tenant IDaaS system, providing Identity Providers like OIDC, SAML, WsFed. It supports tenant management, user management, permission/role management, and API management. The OIDC Identity Provider is based on the <a href="https://github.com/panva/node-oidc-provider" target="_blank">node-oidc-provider</a> implementation, which is currently the only javascript project selected by <a href="https://openid.net/developers/certified/" target="_blank">openid.net</a>, and we have made some improvements to it (<a href="https://github.com/authok/node-oidc-provider" target="_blank">improvement project</a>).
 
-Authok是Auth0的开源版替代实现，Auth0商业收费高，且只支持海外社交渠道. Authok兼容全球社会化身份源，且免费可定制.
+Authok is an open-source alternative to Auth0. Authok is compatible with global social identity sources and is free to customize.
+
 
 
 
