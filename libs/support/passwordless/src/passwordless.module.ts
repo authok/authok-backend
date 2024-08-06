@@ -1,7 +1,7 @@
 import { Global, Module, Injectable, OnModuleInit, Inject } from '@nestjs/common';
 import { PasswordlessToken } from './passwordless-token.entity';
 import { RedisPasswordlessTokenRepository } from './redis-passwordless-token.repository';
-import { TenantConnectionManager } from 'libs/support/tenant-support-typeorm/src/modules/tenant/tenant.connection.manager';
+import { TenantConnectionManager } from 'libs/tenant-connection-manager/src/tenant.connection.manager';
 
 @Injectable()
 class ModuleInitializer implements OnModuleInit {

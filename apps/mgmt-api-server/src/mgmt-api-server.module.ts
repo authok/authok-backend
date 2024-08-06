@@ -1,10 +1,9 @@
-import { HttpModule, Module, Global } from '@nestjs/common';
+import { Module, Global } from '@nestjs/common';
 import { SharedModule } from 'libs/shared/src/shared.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RedisModule } from '@authok/nestjs-redis';
 import configuration from './config/configuration';
 import { InfraCoreModule } from 'libs/core/infra-core/src/infra.core.module';
-import { TenantModule } from 'libs/support/tenant-support-typeorm/src/tenant.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { InfraSupportTypeOrmModule } from 'libs/support/infra-support-typeorm/src/infra.support.typeorm.module';
 import { NotificationModule } from 'libs/core/notifications-core/src/notification.module';
@@ -52,6 +51,9 @@ import { StatsController } from './modules/stats/stats.controller';
 import { FeatureController } from './modules/marketplace/feature.controller';
 import { CategoryController } from './modules/marketplace/category.controller';
 import { CatalogController } from './modules/marketplace/catalog.controller';
+import { HttpModule } from '@nestjs/axios';
+import { TenantGrpcClientModule } from 'libs/client/tenant/src/tenant-client.module';
+import { TenantManager } from './modules/tenant/tenant.manager';
 
 @Global()
 @Module({
@@ -75,7 +77,7 @@ import { CatalogController } from './modules/marketplace/catalog.controller';
     VM2SandboxModule,
     IPModule,
     NotificationModule,
-    TenantModule,
+    TenantGrpcClientModule,
     InfraCoreModule,
     InfraSupportTypeOrmModule,
     TypeOrmLogModule,
@@ -96,6 +98,10 @@ import { CatalogController } from './modules/marketplace/catalog.controller';
     {
       provide: APP_INTERCEPTOR,
       useClass: ExpressJwtRequestContextInterceptor,
+    },
+    {
+      provide: 'ITenantManager',
+      useClass: TenantManager,
     },
   ],
   controllers: [

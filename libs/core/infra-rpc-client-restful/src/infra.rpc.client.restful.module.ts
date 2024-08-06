@@ -3,11 +3,11 @@ import { RestfulTenantService } from './restful.tenant.service';
 import { RestfulConnectionService } from './restful.connection.service';
 import { RestfulClientService } from './restful.client.service';
 import { RestfulKeyService } from './restful.key.service';
-import { RestfulApiService } from './restful.api.service';
 import { RestfulDeviceService } from './restful.device.service';
 import { RestfulOrganizationService } from './restful.organization.service';
 import { RestfulUserService } from './restful.user.service';
 import { RestfulSecretQuestionService } from './restful.secret-question.service';
+import { RestfulResourceServerService } from './restful.api.service';
 
 @Global()
 @Module({
@@ -22,7 +22,7 @@ import { RestfulSecretQuestionService } from './restful.secret-question.service'
     },
     {
       provide: 'IResourceServerService',
-      useClass: RestfulApiService,
+      useClass: RestfulResourceServerService,
     },
     {
       provide: 'IConnectionService',

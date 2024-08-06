@@ -46,7 +46,7 @@ import { PermissionEntity } from './modules/permission/permission.entity';
 import { TypeOrmPermissionRepository } from './modules/permission/typeorm.permission.repository';
 import { ClientGrantEntity } from './modules/client-grant/client-grant.entity';
 import { TypeOrmClientGrantRepository } from './modules/client-grant/typeorm.client-grant.repository';
-import { TenantConnectionManager } from 'libs/support/tenant-support-typeorm/src/modules/tenant/tenant.connection.manager';
+import { TenantConnectionManager } from 'libs/tenant-connection-manager/src/tenant.connection.manager';
 import { TypeOrmGroupRepository } from './modules/group/typeorm.group.repository';
 import { GroupEntity } from './modules/group/group.entity';
 import { UserGroupEntity } from './modules/group/user-group.entity';

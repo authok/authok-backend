@@ -1,6 +1,5 @@
 import { Module, Global } from '@nestjs/common';
 import { KeyService } from './key/key.service';
-import { TenantService } from './tenant/tenant.service';
 import { ClientService } from './client/client.service';
 import { ConnectionService } from './connection/connection.service';
 import { DeviceService } from './device/device.service';
@@ -14,8 +13,6 @@ import { EmailTemplateService } from './email-template/email-template.service';
 import { PasswordResetService } from './password-reset/password-reset.service';
 import { PermissionService } from './permission/permission.service';
 import { ClientGrantService } from './client-grant/client-grant.service';
-import { DBConnectionService } from './tenant/db-connection.service';
-import { TenantEventHandler } from './tenant/tenant.event.handler';
 import { SigningKeyGenerator } from 'libs/shared/src/key-generator/key.generator';
 import { IdentityService } from './identity/identity.service';
 import { UserEventHandler } from './user/user.event.handler';
@@ -32,7 +29,6 @@ import { TriggerBindingService } from './action/trigger-binding/trigger-binding.
 import { GrantService } from './grant/grant.service';
 import { EmailProviderService } from './email-provider/email-provider.service';
 import { ResourceServerEventHandler } from './resource-server/resource-server.event.handler';
-import { TenantManager } from './tenant/tenant.manager';
 import { BcryptPasswordCryptor } from './user/password-cryptor/bcrypt.password-cryptor';
 import { CustomDomainService } from './custom-domain/custom-domain.service';
 import { MetricService } from './metric/metric.service';
@@ -40,18 +36,6 @@ import { MetricService } from './metric/metric.service';
 @Global()
 @Module({
   providers: [
-    {
-      provide: 'ITenantService',
-      useClass: TenantService,
-    },
-    {
-      provide: 'ITenantManager',
-      useClass: TenantManager,
-    },
-    {
-      provide: 'IDBConnectionService',
-      useClass: DBConnectionService,
-    },
     {
       provide: 'IKeyService',
       useClass: KeyService,
@@ -63,10 +47,6 @@ import { MetricService } from './metric/metric.service';
     {
       provide: 'IResourceServerService',
       useClass: ResourceServerService,
-    },
-    {
-      provide: 'ITenantService',
-      useClass: TenantService,
     },
     {
       provide: 'IConnectionService',
@@ -177,14 +157,10 @@ import { MetricService } from './metric/metric.service';
       useClass: MetricService,
     },
     ResourceServerEventHandler,
-    TenantEventHandler,
     SigningKeyGenerator,
     UserEventHandler,
   ],
   exports: [
-    'ITenantManager',
-    'ITenantService',
-    'IDBConnectionService',
     'IKeyService',
     'IClientService',
     'IResourceServerService',

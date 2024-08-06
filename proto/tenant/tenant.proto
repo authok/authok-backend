@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package tenant;
+
+service TenantService {
+  rpc Create (CreateTenantRequest) returns (Tenant) {}
+  rpc Retrieve (RetrieveTenantRequest) returns (Tenant) {}
+  rpc FindByName (FindTenantByNameRequest) returns (Tenant) {}
+  
+}
+
+message FindTenantByNameRequest {
+  string name = 1;
+}
+
+message RetrieveTenantRequest {
+  string id = 1;
+}
+
+message CreateTenantRequest {
+  string name = 1;
+  string display_name = 2;
+  string description = 3;
+  string region = 4;
+  string environment = 5;
+  string jwt_configuration = 6;
+}
+
+message Tenant {
+  string id = 1;
+  string name = 2;
+  string display_name = 3;
+  string description = 4;
+  string region = 5;
+  string environment = 6;
+  string jwt_configuration = 7;
+}

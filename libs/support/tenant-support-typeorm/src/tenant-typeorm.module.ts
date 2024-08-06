@@ -2,7 +2,6 @@ import { Global, Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { DBConnection } from './modules/db-connection/db-connection.entity';
 import { TypeOrmDBConnectionRepository } from './modules/db-connection/db-connection.repository';
-import { TenantConnectionManager } from './modules/tenant/tenant.connection.manager';
 import { TenantEntity } from './modules/tenant/tenant.entity';
 import { TypeOrmTenantRepository } from './modules/tenant/typeorm.tenant.repository';
 import { TenantMapper } from './modules/tenant/tenant.mapper';
@@ -52,16 +51,11 @@ import { ConfigService } from '@nestjs/config';
       provide: 'IDBConnectionRepository',
       useClass: TypeOrmDBConnectionRepository,
     },
-    {
-      provide: 'IConnectionManager',
-      useClass: TenantConnectionManager,
-    },
     TenantMapper,
   ],
   exports: [
     'ITenantRepository',
     'IDBConnectionRepository',
-    'IConnectionManager',
   ],
 })
-export class TenantModule {}
+export class TenantTypeOrmModule {}

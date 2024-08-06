@@ -7,7 +7,7 @@ import {
   getManager as _getManager,
   Connection,
 } from 'typeorm';
-import { TenantConnectionManager } from './tenant.connection.manager';
+import { TenantConnectionManager } from '../../../../../tenant-connection-manager/src/tenant.connection.manager';
 
 @Injectable()
 export class TenantAwareRepository {

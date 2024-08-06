@@ -21,7 +21,6 @@ export function getEnvVars(dbname: string) {
   if (fs.existsSync(envVarsFilePath)) {
     data = { ...data, ...dotenv.parse(fs.readFileSync(envVarsFilePath)) };
   }
-console.log('data: ', dotenv.parse(fs.readFileSync(envVarsFilePath)))
   data = {
     ...data,
     ...(data.DATABASE_URL && buildDbConfigFromDatabaseURL(data)),

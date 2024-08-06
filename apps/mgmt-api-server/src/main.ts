@@ -32,7 +32,7 @@ async function bootstrap() {
       jwksRequestsPerMinute: 5,
       jwksUri: `${issuer}.well-known/jwks.json`,
     }),
-    audience: 'https://mgmt.authok.cn/api/v1',
+    audience: 'https://mgmt.authok.cn/api/v1/',
     issuer,
     algorithms: ['RS256'],
   });

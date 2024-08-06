@@ -42,6 +42,27 @@
         }
       }
     },
+    "tenant-service": {
+      "type": "application",
+      "root": "apps/tenant-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/tenant-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/tenant-service/tsconfig.app.json",
+        "assets": ["./proto/tenant/*.proto"],
+        "watchAssets": true
+      },
+      "targets": {
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "build:tenant-service",
+            "inspect": true,
+            "port": 57743
+          }
+        }
+      }
+    },
     "task-center": {
       "type": "application",
       "root": "apps/task-center",
@@ -123,6 +144,15 @@
       "sourceRoot": "libs/common/src",
       "compilerOptions": {
         "tsConfigPath": "libs/common/tsconfig.lib.json"
+      }
+    },
+    "tenant-client": {
+      "type": "library",
+      "root": "libs/client/tenant",
+      "entryFile": "index",
+      "sourceRoot": "libs/client/tenant/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/client/tenant/tsconfig.lib.json"
       }
     },
     "samlp": {

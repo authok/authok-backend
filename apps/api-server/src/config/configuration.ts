@@ -1,4 +1,5 @@
 export default () => ({
+  domain: process.env.DOMAIN,
   default: {
     phone_country_code: '86',
   },
@@ -20,12 +21,12 @@ export default () => ({
     access_key: 'alibaba-inc',
   },
   mailer: {
-    host: 'smtp.126.com',
+    host: '',
     port: 465,
     secure: true,
     auth: {
-      user: 'newtalentxp@126.com',
-      pass: 'edison@2012',
+      user: '',
+      pass: '',
     },
   },
   queue: {
@@ -35,7 +36,7 @@ export default () => ({
   services: {
     baseUrl: process.env.SERVICE_BASE_URL,
     sms: {
-      apihost: 'https://api.fat.lucfish.com',
+      apihost: '',
     },
   },
   redis: {

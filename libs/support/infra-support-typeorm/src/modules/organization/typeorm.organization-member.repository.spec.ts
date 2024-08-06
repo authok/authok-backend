@@ -10,7 +10,7 @@ import { NodeMailerMailModule } from 'libs/support/mail-nodemailer/src/mail.modu
 import { TriggerModule } from 'libs/support/trigger-client/src/trigger.module';
 import { TypeOrmLogModule } from 'libs/support/logstream-typeorm/src/log.module';
 import { SharedModule } from 'libs/shared/src/shared.module';
-import { TenantConnectionManager } from 'libs/support/tenant-support-typeorm/src/modules/tenant/tenant.connection.manager';
+import { TenantConnectionManager } from 'libs/tenant-connection-manager/src/tenant.connection.manager';
 import { OrganizationMemberEntity, OrganizationEntity, OrganizationMemberRoleEntity } from './organization.entity';
 import { RoleEntity, UserRoleEntity } from '../role/role.entity';
 import { PermissionEntity } from '../permission/permission.entity';

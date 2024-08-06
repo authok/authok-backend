@@ -130,14 +130,6 @@ async function bootstrap() {
   Logger.log('Listening at http ' + port);
   http.createServer(server).listen(port);
 
-  if (process.env.ENV === 'DEV') {
-    const httpsOptions = {
-      key: fs.readFileSync('./cert/dev.key'),
-      cert: fs.readFileSync('./cert/dev.crt'),
-    };
-    https.createServer(httpsOptions, server).listen(443);
-  }
-
   /*
   await app.listen(port, () => {
     Logger.log('Listening at http://localhost:' + port + '/api');

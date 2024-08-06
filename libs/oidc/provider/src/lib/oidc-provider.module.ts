@@ -26,7 +26,7 @@ import { MfaRecoveryCodeGrantTypeHandler } from './grant-types/mfa-recovery-code
 import { PasswordGrantTypeHandler } from './grant-types/password.grant_type.handler';
 import { PasswordlessOtpGrantTypeHandler } from './grant-types/passwordless-otp.grant_type.handler';
 import { ClientAdaptor } from './adapters/client.adaptor';
-import { TenantConnectionManager } from 'libs/support/tenant-support-typeorm/src/modules/tenant/tenant.connection.manager';
+import { TenantConnectionManager } from 'libs/tenant-connection-manager/src/tenant.connection.manager';
 import { InteractionController } from './controllers/interaction.controller';
 import { UserinfoController } from './controllers/userinfo.controller';
 import { IGrantTypeHandler } from './grant-types/grant_type.handler';

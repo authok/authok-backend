@@ -21,14 +21,14 @@ import { InfraCoreModule } from 'libs/core/infra-core/src/infra.core.module';
 import { OIDCProviderModule } from 'libs/oidc/provider/src/lib/oidc-provider.module';
 import { AuthorizationModule } from 'libs/core/authorization-core/src/authorization.module';
 import { AuthenticationModule } from 'libs/core/authentication-core/src/authentication.module';
-import { TenantModule } from 'libs/support/tenant-support-typeorm/src/tenant.module';
 import { RequestContextInterceptor } from 'libs/core/infra-core/src/request-context/request-context.interceptor';
 import { HttpExceptionFilter } from 'libs/common/src/filters/http-exception.filter';
 import { NestSessionOptions, SessionModule } from 'nestjs-session';
-import * as session from 'express-session';
 import RedisStore from 'connect-redis';
 import { TriggerModule } from 'libs/support/trigger-client/src/trigger.module';
 import { SAMLPModule } from 'libs/samlp/src/samlp.module';
+import { TenantGrpcClientModule } from 'libs/client/tenant/src/tenant-client.module';
+import { TenantConnectionManagerModule } from 'libs/tenant-connection-manager/src/connection-manager.module';
 
 @Global()
 @Module({
@@ -91,7 +91,8 @@ import { SAMLPModule } from 'libs/samlp/src/samlp.module';
     AuthenticationModule,
     AuthenticationOpenApiModule,
     ManagementOpenApiModule,
-    TenantModule,
+    TenantGrpcClientModule,
+    TenantConnectionManagerModule,
     InfraCoreModule,
     InfraSupportTypeOrmModule,
   ],

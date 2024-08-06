@@ -17,7 +17,6 @@ import { NodeMailerMailModule } from 'libs/support/mail-nodemailer/src/mail.modu
 import { PasswordlessSupportModule } from 'libs/support/passwordless/src/passwordless.module';
 import { VM2SandboxModule } from 'libs/support/sandbox-vm2/src/vm2.sandbox.module';
 import { CloudNativeSmsModule } from 'libs/support/sms-cloudnative/src/sms.module';
-import { TenantModule } from 'libs/support/tenant-support-typeorm/src/tenant.module';
 import { RedisTicketModule } from 'libs/support/ticket-redis/src/redis-ticket.module';
 import { CommandModule } from 'nestjs-command';
 import { RedisModule } from '@authok/nestjs-redis';
@@ -25,6 +24,7 @@ import { BizCommandModule } from './biz-command.module';
 import { TriggerModule } from 'libs/support/trigger-client/src/trigger.module';
 import { MarketplaceTypeOrmModule } from 'libs/support/marketplace-typeorm/src/marketplace.typeorm.module';
 import { MarketplaceCoreModule } from 'libs/core/marketplace-core/src/marketplace.core.module';
+import { TenantGrpcClientModule } from 'libs/client/tenant/src/tenant-client.module';
 
 @Module({
   imports: [
@@ -54,7 +54,7 @@ import { MarketplaceCoreModule } from 'libs/core/marketplace-core/src/marketplac
     OIDCProviderModule,
     AuthorizationModule,
     AuthenticationModule,
-    TenantModule,
+    TenantGrpcClientModule,
     InfraCoreModule,
     InfraSupportTypeOrmModule,
     CommandModule,

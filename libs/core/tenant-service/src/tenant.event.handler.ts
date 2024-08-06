@@ -3,7 +3,6 @@ import {
   Injectable,
   Logger,
   NotFoundException,
-  InternalServerErrorException,
 } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { CreateResourceServerDto } from 'libs/api/infra-api/src/resource-server/resource-server.dto';
@@ -13,11 +12,12 @@ import { IKeyService } from 'libs/api/infra-api/src/key/key.service';
 import { TenantDto } from 'libs/api/infra-api/src/tenant/tenant.dto';
 import { TenantCreatedEvent } from 'libs/api/infra-api/src/tenant/tenant.events';
 import { ITenantService } from 'libs/api/infra-api/src/tenant/tenant.service';
-import { managementApiScopes } from '../resource-server/management.api.scopes';
 import { IConnectionService } from 'libs/api/infra-api/src/connection/connection.service';
 import { IClientService } from 'libs/api/infra-api/src/client/client.service';
 import { IClientGrantService } from 'libs/api/infra-api/src/client-grant/client-grant.service';
 import { ITriggerService } from 'libs/api/infra-api/src/action/trigger/trigger.service';
+import { managementApiScopes } from '@libs/core/infra-core/resource-server/management.api.scopes';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class TenantEventHandler {
@@ -33,6 +33,7 @@ export class TenantEventHandler {
     @Inject('IKeyService') private readonly keyService: IKeyService,
     private readonly signingKeyGenerator: SigningKeyGenerator,
     @Inject('ITriggerService') private readonly triggerService: ITriggerService,
+    private readonly configService: ConfigService,
   ) {}
 
   @OnEvent('tenant.created')
@@ -86,9 +87,11 @@ export class TenantEventHandler {
   async initTenant(tenant: TenantDto) {
     const region = tenant.region || 'cn';
 
+    const domain = this.configService.get('DOMAIN', 'authok.cn')
+
     const resourceServer = {
       name: 'Authok Management API',
-      identifier: `https://${tenant.name}.${region}.authok.cn/api/v1`,
+      identifier: `https://${tenant.name}.${region}.${domain}/api/v1`,
       is_system: true,
       allow_offline_access: true,
       skip_consent_for_verifiable_first_party_clients: false,

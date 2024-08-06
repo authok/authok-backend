@@ -143,8 +143,8 @@ export class TenantConnectionManager {
             port: +process.env.DB_PORT || 5432,
             username: process.env.DB_USER || 'root',
             password: process.env.DB_PASSWORD || 'root',
-            database: process.env.AUTHOK_DB_DATABASE || 'authok',
-            synchronize: !!process.env.DB_SYNCHRONIZE,
+            database: process.env.AUTHOK_DB_DATABASE || `authok_asia_1`,
+            synchronize: false,
             timezone: process.env.TIMEZONE || 'Z',
             logging: process.env.DB_LOGGING !== 'false',
           };

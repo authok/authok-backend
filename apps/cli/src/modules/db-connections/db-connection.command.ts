@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { IDBConnectionService } from 'libs/api/infra-api/src/tenant/db-connection.service';
-import { TenantConnectionManager } from 'libs/support/tenant-support-typeorm/src/modules/tenant/tenant.connection.manager';
+import { TenantConnectionManager } from 'libs/tenant-connection-manager/src/tenant.connection.manager';
 import { Command } from 'nestjs-command';
 
 @Injectable()

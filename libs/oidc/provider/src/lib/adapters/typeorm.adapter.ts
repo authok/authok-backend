@@ -6,7 +6,7 @@ import {
   KindOfId,
   TypeORMEntities,
 } from 'libs/oidc/common/src';
-import { TenantConnectionManager } from 'libs/support/tenant-support-typeorm/src/modules/tenant/tenant.connection.manager';
+import { TenantConnectionManager } from 'libs/tenant-connection-manager/src/tenant.connection.manager';
 import { IModelAdapter } from './model.adapter';
 import { IRequestContext } from '@libs/nest-core';
 

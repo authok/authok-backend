@@ -121,7 +121,7 @@ export class TenantCommand {
   async createManagementApi(tenant: TenantDto) {
     const api = {
       name: 'Dashboard Management API',
-      identifier: `https://mgmt.authok.cn/api/v1`,
+      identifier: `https://mgmt.authok.cn/api/v1/`,
       is_system: false,
       allow_offline_access: true,
       skip_consent_for_verifiable_first_party_clients: true,
