@@ -12,4 +12,10 @@ export interface IOrganizationMemberRepository extends QueryRepository<Organizat
   removeRoles(ctx: IContext, member_id: string, role_ids: string[]);
 
   listPermissions(ctx: IContext, org_id: string, user_id: string, query: PageQuery): Promise<PageDto<PermissionDto>>;
+
+  findByOrgIdAndUserId(
+    context: IContext,
+    org_id: string,
+    user_id: string,
+  ): Promise<OrganizationMemberDto | undefined>;
 }

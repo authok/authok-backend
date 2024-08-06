@@ -96,7 +96,7 @@ class ModuleInitializer implements OnModuleInit {
   ) {}
 
   onModuleInit() {
-    Logger.debug('InfraSupportTypeOrmModule.onModuleInit');
+    Logger.debug(`InfraSupportTypeOrmModule.onModuleInit`);
     this.tenantConnectionManager.addEntities(
       KeyEntity,
       ClientEntity,

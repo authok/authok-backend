@@ -9,21 +9,26 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 import { ApiError } from './api-error.dto';
+import { QueryFailedError, TypeORMError } from 'typeorm';
 
-@Catch()
-export class AllExceptionFilter implements ExceptionFilter {
+@Catch(TypeORMError)
+export class TypeORMExceptionFilter implements ExceptionFilter {
   constructor(private readonly configService: ConfigService) {}
 
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 
-    const status =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
+    let status = HttpStatus.INTERNAL_SERVER_ERROR;
+    let message = (exception as any)?.message ?? 'something wrong';
 
-    const message = (exception as any)?.message;
+    switch (exception.constructor) {
+      case QueryFailedError: {
+        status = HttpStatus.UNPROCESSABLE_ENTITY;
+        message = (exception as QueryFailedError).message;
+        break;
+      }
+    }
 
     const r: ApiError = {
       statusCode: status,
@@ -35,7 +40,7 @@ export class AllExceptionFilter implements ExceptionFilter {
       r.stack = (exception as any).stack;
     }
 
-    Logger.error('错误信息', JSON.stringify(r), 'AllExceptionFilter');
+    Logger.error('错误信息', JSON.stringify(r), 'TypeORMExceptionFilter');
 
     response.status(status).json(r);
   }

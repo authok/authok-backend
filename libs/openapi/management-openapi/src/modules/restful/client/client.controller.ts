@@ -9,6 +9,7 @@ import {
   Inject,
   Query,
   UseGuards,
+  NotFoundException,
 } from '@nestjs/common';
 import {
   ApiOkResponse,
@@ -67,7 +68,7 @@ export class ClientController {
 
   @Post()
   @ApiOperation({ summary: '创建应用' })
-  @Scopes('update:clients')
+  @Scopes('create:clients')
   async create(
     @ReqCtx() ctx: IRequestContext,
     @Body() client: CreateClientDto,
@@ -85,7 +86,9 @@ export class ClientController {
     @ReqCtx() ctx: IRequestContext,
     @Param('id') id: string,
   ): Promise<ClientDto | undefined> {
-    return await this.clientService.retrieve(ctx, id);
+    const client = await this.clientService.retrieve(ctx, id);
+    if (!client) throw new NotFoundException();
+    return client;
   }
 
   @Delete(':id')

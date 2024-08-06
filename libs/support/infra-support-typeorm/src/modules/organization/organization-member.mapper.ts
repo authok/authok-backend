@@ -15,7 +15,7 @@ export class OrganizationMemberMapper extends ClassTransformerMapper<
   OrganizationMemberEntity
 > {
   convertToDTO(entity: OrganizationMemberEntity): OrganizationMemberDto {
-    const { organization, user, ...rest } = entity;
+    const { organization, user, roles, ...rest } = entity;
 
     const dto = super.convertToDTO(rest as OrganizationMemberEntity);
 
@@ -41,6 +41,13 @@ export class OrganizationMemberMapper extends ClassTransformerMapper<
         ...(user.picture && { picture: user.picture }),
         ...(user.gender && { gender: user.gender }),
       });
+    }
+
+    if (roles) {
+      dto.roles = roles.map(it => ({
+        id: it.role?.id,
+        name: it.role?.name,
+      }))
     }
 
     return dto;

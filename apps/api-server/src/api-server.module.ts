@@ -29,6 +29,8 @@ import { TriggerModule } from 'libs/support/trigger-client/src/trigger.module';
 import { SAMLPModule } from 'libs/samlp/src/samlp.module';
 import { TenantGrpcClientModule } from 'libs/client/tenant/src/tenant-client.module';
 import { TenantConnectionManagerModule } from 'libs/tenant-connection-manager/src/connection-manager.module';
+import { AllExceptionFilter } from 'libs/common/src/filters/all-exception.filter';
+import { TypeORMExceptionFilter } from 'libs/common/src/filters/typeorm-exception.filter';
 
 @Global()
 @Module({
@@ -97,11 +99,10 @@ import { TenantConnectionManagerModule } from 'libs/tenant-connection-manager/sr
     InfraSupportTypeOrmModule,
   ],
   providers: [
-    /*{
+    {
       provide: APP_FILTER,
       useClass: AllExceptionFilter,
     },
-    */
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
@@ -109,6 +110,10 @@ import { TenantConnectionManagerModule } from 'libs/tenant-connection-manager/sr
     {
       provide: APP_FILTER,
       useClass: APIExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: TypeORMExceptionFilter,
     },
     {
       provide: APP_INTERCEPTOR,

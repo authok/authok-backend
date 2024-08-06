@@ -155,6 +155,15 @@
         "tsConfigPath": "libs/client/tenant/tsconfig.lib.json"
       }
     },
+    "tenant-connection-manager": {
+      "type": "library",
+      "root": "libs/tenant-connection-manager",
+      "entryFile": "index",
+      "sourceRoot": "libs/tenant-connection-manager/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/tenant-connection-manager/tsconfig.lib.json"
+      }
+    },
     "samlp": {
       "type": "library",
       "root": "libs/samlp",

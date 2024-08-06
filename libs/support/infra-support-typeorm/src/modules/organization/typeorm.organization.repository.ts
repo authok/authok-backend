@@ -152,7 +152,7 @@ export class TypeOrmOrganizationRepository
     );
 
     const members = toAddUserIds.map((user_id) =>
-      plainToClass(OrganizationMemberEntity, {
+      plainToClass(OrganizationMemberDto, {
         tenant: ctx.tenant,
         user_id: user_id,
         org_id,
@@ -160,6 +160,9 @@ export class TypeOrmOrganizationRepository
     );
 
     const saved = await this.orgMemberRepo.createMany(ctx, members);
+
+    // TODO to DTO
+
     return saved;
   }
 

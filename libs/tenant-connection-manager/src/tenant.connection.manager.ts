@@ -62,6 +62,8 @@ export class TenantConnectionManager {
   addEntities(...items: EntityClassOrSchema[]) {
     items.forEach((it) => Logger.log(`加载 Entity: ${it.constructor.name}`));
     this.entities.push(...items);
+    Logger.log(`after addEntities:`)
+    Logger.log(items)
   }
 
   async get(ctx: IRequestContext): Promise<Connection> {
@@ -141,8 +143,8 @@ export class TenantConnectionManager {
             type: process.env.DRIVER || ('postgres' as any),
             host: process.env.DB_HOST || 'localhost',
             port: +process.env.DB_PORT || 5432,
-            username: process.env.DB_USER || 'root',
-            password: process.env.DB_PASSWORD || 'root',
+            username: process.env.DB_USER || 'postgres',
+            password: process.env.DB_PASSWORD || 'postgres',
             database: process.env.AUTHOK_DB_DATABASE || `authok_asia_1`,
             synchronize: false,
             timezone: process.env.TIMEZONE || 'Z',

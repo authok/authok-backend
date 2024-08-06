@@ -23,24 +23,7 @@ export class OrganizationMemberService implements IOrganizationMemberService {
   }
 
   async findByRelation(ctx: IContext, org_id: string, user_id: string): Promise<OrganizationMemberDto | undefined> {
-    return await this.organizationMemberRepository.queryOne(ctx, {
-      and: [
-        {
-          organization: {
-            id: {
-              eq: org_id,
-            },
-          },
-        },
-        {
-          user: {
-            user_id: {
-              eq: user_id,
-            }
-          }
-        }
-      ]
-    } as any);
+    return await this.organizationMemberRepository.findByOrgIdAndUserId(ctx, org_id, user_id);
   }
 
   async update(ctx: IContext, id: string, organizationMember: Partial<OrganizationMemberDto>): Promise<OrganizationMemberDto> {

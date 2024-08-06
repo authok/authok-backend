@@ -20,7 +20,7 @@ export class RoleDto {
 
   @ApiProperty()
   @JoiSchema(Joi.date())
-  readonly created_at: Date;
+  readonly created_at?: Date;
 }
 
 export class CreateRoleDto extends OmitType(RoleDto, [

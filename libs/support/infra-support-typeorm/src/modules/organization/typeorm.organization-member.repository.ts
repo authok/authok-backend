@@ -60,6 +60,51 @@ export class TypeOrmOrganizationMemberRepository
       'user',
       entity,
     );
+
+    entity.roles = await this.repo.queryRelations(
+      context,
+      OrganizationMemberRoleEntity,
+      'roles',
+      entity,
+      {},
+    );
+
+    console.log('rol: ', entity.roles)
+
+    return this.mapper.convertToDTO(entity);
+  }
+
+  async findByOrgIdAndUserId(
+    ctx: IContext,
+    org_id: string,
+    user_id: string,
+  ): Promise<OrganizationMemberDto | undefined> {
+    const connection: Connection = await this.repo.connectionManager.get(ctx);
+    const orgMemberRepo = await connection.getRepository(OrganizationMemberEntity);
+
+    const qb = orgMemberRepo.createQueryBuilder('org_members');
+
+    {
+      qb.where(`${qb.alias}.org_id = :org_id AND ${qb.alias}.user_id = :user_id`, {
+        org_id,
+        user_id,
+      })
+
+      qb.leftJoinAndSelect(
+        `${qb.alias}.roles`,
+        'organization_member_roles',
+      );
+
+      qb.leftJoinAndSelect(
+        `organization_member_roles.role`,
+        'roles',
+        `roles.id = organization_member_roles.role_id`,
+      );
+    }
+
+    const entity = await qb.getOne();
+    if (!entity) return undefined;    
+
     return this.mapper.convertToDTO(entity);
   }
 
@@ -68,15 +113,34 @@ export class TypeOrmOrganizationMemberRepository
     query: PageQueryDto,
   ): Promise<PageDto<OrganizationMemberDto>> {
     const connection: Connection = await this.repo.connectionManager.get(ctx);
-    const repo = await connection.getRepository(OrganizationMemberEntity);
+    const orgMemberRepo = await connection.getRepository(OrganizationMemberEntity);
 
-    const page = await paginate(repo, query, [
-      'id',
-      'user_id',
-      'org_id',
-      'roles.role.id',
-      'roles.role.name',
-    ]);
+    const options: IPaginationOptions<PageMeta> = {
+      limit: query.page_size,
+      page: query.page,
+      metaTransformer: (meta: IPaginationMeta): PageMeta => ({
+        total: meta.totalItems,
+        page: meta.currentPage,
+        page_size: meta.itemsPerPage,
+      }),
+    };
+
+    const qb = orgMemberRepo.createQueryBuilder('org_members');
+
+    {
+      qb.leftJoinAndSelect(
+        `${qb.alias}.roles`,
+        'organization_member_roles',
+      );
+
+      qb.leftJoinAndSelect(
+        `organization_member_roles.role`,
+        'roles',
+        `roles.id = organization_member_roles.role_id`,
+      )//.addSelect(['"roles"."id"', '"roles"."name"']);
+    }
+
+    const page = await _paginate(qb, options);
 
     return {
       items: page.items.map((it) => this.mapper.convertToDTO(it)),

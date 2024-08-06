@@ -1,6 +1,6 @@
 import { plainToClass } from 'class-transformer';
 import { OrganizationMemberDto } from 'libs/api/infra-api/src/organization/organization-member.dto';
-import { OrganizationMemberRoleDto } from 'libs/api/infra-api/src/organization/organization-member-role.dto';
+import { OrganizationMemberRoleModel } from 'libs/api/infra-api/src/organization/organization-member-role.model';
 import {
   OrganizationMemberRoleEntity,
   OrganizationMemberEntity,
@@ -11,7 +11,7 @@ import { RoleDto } from 'libs/api/infra-api/src/role/role.dto';
 
 export class OrganizationMemberRoleMapper {
   toEntity(
-    model?: Partial<OrganizationMemberRoleDto>,
+    model?: Partial<OrganizationMemberRoleModel>,
   ): OrganizationMemberRoleEntity | undefined {
     if (!model) return undefined;
 
@@ -36,18 +36,21 @@ export class OrganizationMemberRoleMapper {
 
   toDTO(
     entity?: Partial<OrganizationMemberRoleEntity>,
-  ): OrganizationMemberRoleDto | undefined {
+  ): OrganizationMemberRoleModel | undefined {
     if (!entity) return undefined;
 
     const { member, role, ...rest } = entity;
 
-    const model = plainToClass(OrganizationMemberRoleDto, rest);
+    const model = plainToClass(OrganizationMemberRoleModel, rest);
     if (member) {
       const { user } = member;
       model.member_id = member.id;
       model.member = plainToClass(OrganizationMemberDto, {
         id: member.id,
-        user: plainToClass(UserDto, {
+      });
+
+      if (user) {
+        model.user = plainToClass(UserDto, {
           user_id: user.user_id,
           ...(user.nickname && { nickname: user.nickname }),
           ...(user.username && { username: user.username }),
@@ -59,8 +62,8 @@ export class OrganizationMemberRoleMapper {
           }),
           ...(user.picture && { picture: user.picture }),
           ...(user.gender && { gender: user.gender }),
-        }),
-      });
+        })
+      }
     }
 
     if (role) {

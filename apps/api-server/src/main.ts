@@ -84,8 +84,8 @@ async function createApp(server): Promise<INestApplication> {
   */
 
   const config = new DocumentBuilder()
-    .setTitle('Authok 管理API')
-    .setDescription('Authok 管理API')
+    .setTitle('Authok Management OpenAPI')
+    .setDescription('Authok Management OpenAPI')
     .setVersion('1.0')
     .addBearerAuth({
       type: 'http',
@@ -94,7 +94,7 @@ async function createApp(server): Promise<INestApplication> {
       // scheme?: string;
       bearerFormat: 'jwt',
     })
-    .addTag('Authok 管理API')
+    .addTag('Authok Management OpenAPI')
     .build();
 
   const options: SwaggerDocumentOptions = {

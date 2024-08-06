@@ -101,6 +101,12 @@ export class OrganizationMemberEntity extends GuidIdentity {
   @Column({ name: 'fk_user_id', length: 80 })
   user_id: string;
 
+  @Column({
+    type: 'simple-json',
+    nullable: true,
+  })
+  user_metadata: Record<string, any>;
+
   @OneToMany(
     () => OrganizationMemberRoleEntity,
     (memberRole: OrganizationMemberRoleEntity) => memberRole.member,
@@ -112,7 +118,7 @@ export class OrganizationMemberEntity extends GuidIdentity {
       nullable: false,
     },
   )
-  roles: OrganizationMemberRoleEntity[];
+  roles?: OrganizationMemberRoleEntity[];
 }
 
 @Entity({

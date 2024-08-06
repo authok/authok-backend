@@ -89,7 +89,7 @@ export class TypeOrmConnectionRepository
     });
 
     if (existConnection) {
-      throw new APIException('invalid_request', '已经存在相同标识的连接');
+      throw new APIException('invalid_request', `Connection with identity "${input.name}" already exists`);
     }
 
     const connection = await connectionRepository.save(

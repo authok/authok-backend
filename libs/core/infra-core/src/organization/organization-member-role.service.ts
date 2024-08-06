@@ -1,9 +1,10 @@
 import { PageDto } from 'libs/common/src/pagination/pagination.dto';
 import { IRequestContext } from '@libs/nest-core';
-import { OrganizationMemberRoleDto, OrganizationMemberRolePageQueryDto } from 'libs/api/infra-api/src/organization/organization-member-role.dto';
+import { OrganizationMemberRolePageQueryDto } from 'libs/api/infra-api/src/organization/organization-member-role.dto';
 import { Inject } from '@nestjs/common';
 import { IOrganizationMemberRoleService } from 'libs/api/infra-api/src/organization/organization-member-role.service';
 import { IOrganizationMemberRoleRepository } from 'libs/api/infra-api/src/organization/organization-member-role.repository';
+import { OrganizationMemberRoleModel } from 'libs/api/infra-api/src/organization/organization-member-role.model';
 
 export class OrganizationMemberRoleService implements IOrganizationMemberRoleService {
   constructor(
@@ -15,14 +16,14 @@ export class OrganizationMemberRoleService implements IOrganizationMemberRoleSer
     ctx: IRequestContext,
     member_id: string,
     role_id: string,
-  ): Promise<OrganizationMemberRoleDto | undefined> {
+  ): Promise<OrganizationMemberRoleModel | undefined> {
     return await this.organizationMemberRoleRepository.retrieve(ctx, member_id, role_id);
   }
 
   async update(
     ctx: IRequestContext,
-    data: Partial<OrganizationMemberRoleDto>,
-  ): Promise<OrganizationMemberRoleDto> {
+    data: Partial<OrganizationMemberRoleModel>,
+  ): Promise<OrganizationMemberRoleModel> {
     return await this.organizationMemberRoleRepository.update(ctx, data);
   }
 
@@ -32,15 +33,15 @@ export class OrganizationMemberRoleService implements IOrganizationMemberRoleSer
 
   async create(
     ctx: IRequestContext,
-    organizationMemberRole: OrganizationMemberRoleDto,
-  ): Promise<OrganizationMemberRoleDto> {
+    organizationMemberRole: OrganizationMemberRoleModel,
+  ): Promise<OrganizationMemberRoleModel> {
     return await this.organizationMemberRoleRepository.create(ctx, organizationMemberRole);
   }
 
   async paginate(
     ctx: IRequestContext,
     query: OrganizationMemberRolePageQueryDto,
-  ): Promise<PageDto<OrganizationMemberRoleDto>> {
+  ): Promise<PageDto<OrganizationMemberRoleModel>> {
     return await this.organizationMemberRoleRepository.paginate(ctx, query);
   }
 }

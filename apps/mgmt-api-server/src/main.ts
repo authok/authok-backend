@@ -3,7 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { MgmtApiServerModule } from './mgmt-api-server.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 // import { auth } from 'express-oauth2-bearer';
-import * as jwt from 'express-jwt';
+import { expressjwt } from 'express-jwt';
 import * as jwks from 'jwks-rsa';
 
 async function bootstrap() {
@@ -25,7 +25,7 @@ async function bootstrap() {
       ? 'https://mgmt.dev.authok.cn/'
       : 'https://mgmt.cn.authok.cn/';
 
-  const jwtCheck = jwt({
+  const jwtCheck = expressjwt({
     secret: jwks.expressJwtSecret({
       cache: true,
       rateLimit: true,

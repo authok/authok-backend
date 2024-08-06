@@ -25,6 +25,7 @@ import { KeyController } from './key/key.controller';
 import { CustomDomainController } from './custom-domain/custom-domain.controller';
 import { OrganizationMemberController } from './organization/organization-member.controller';
 import { UserFilterController } from './user/user-filter.controller';
+import { OrganizationMemberRoleController } from './organization/organization-member-role.controller';
 
 @Module({
   controllers: [
@@ -37,6 +38,7 @@ import { UserFilterController } from './user/user-filter.controller';
     ClientController,
     ResourceServerController,
     OrganizationMemberController,
+    OrganizationMemberRoleController,
     OrganizationInvitationController,
     OrganizationController,
     EmailTemplateController,

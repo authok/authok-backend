@@ -8,6 +8,7 @@ import {
   Body,
   Delete,
   UseGuards,
+  NotFoundException,
 } from '@nestjs/common';
 import { IOrganizationMemberService } from 'libs/api/infra-api/src/organization/organization-member.service';
 import { IOrganizationService } from 'libs/api/infra-api/src/organization/organization.service';
@@ -23,6 +24,7 @@ import { IRequestContext, ReqCtx } from '@libs/nest-core';
 import {
   ApiBearerAuth,
   ApiForbiddenResponse,
+  ApiOperation,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -38,7 +40,7 @@ import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
     ttl: 1000,
   }
 })
-@UseGuards(ThrottlerGuard, AuthGuard('jwt'), ScopesGuard)
+// @UseGuards(ThrottlerGuard, AuthGuard('jwt'), ScopesGuard)
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: '未授权' })
 @ApiForbiddenResponse({ description: '权限不足' })
@@ -50,16 +52,26 @@ export class OrganizationMemberController {
     private readonly organizationMemberService: IOrganizationMemberService,
   ) {}
 
-  @Get(':org_id/members/:member_id')
+  @ApiOperation({
+    summary: 'Retrieve a member',
+    description: 'Retrieve a member',
+  })
+  @Get(':org_id/members/:user_id')
   @Scopes('read:organization_members')
   async get(
     @ReqCtx() ctx: IRequestContext,
-    @Param('org_id') org_id: string,
-    @Param('member_id') member_id: string,
+    @Param('org_id') orgId: string,
+    @Param('user_id') userId: string,
   ): Promise<OrganizationMemberDto | undefined> {
-    return await this.organizationMemberService.retrieve(ctx, member_id);
+    const member = await this.organizationMemberService.findByRelation(ctx, orgId, userId);
+    if (!member) throw new NotFoundException();
+    return member;
   }
 
+  @ApiOperation({
+    summary: 'List organization members.',
+    description: 'Get members who belong to an organization',
+  })
   @Get(':org_id/members')
   @Scopes('read:organization_members')
   async paginate(
@@ -72,6 +84,10 @@ export class OrganizationMemberController {
     return await this.organizationMemberService.paginate(ctx, query);
   }
 
+  @ApiOperation({
+    summary: 'Add members to an organization.',
+    description: 'Add members to an organization.',
+  })
   @Post(':org_id/members')
   @Scopes('create:organization_members')
   async add(

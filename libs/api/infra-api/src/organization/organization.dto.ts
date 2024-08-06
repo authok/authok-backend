@@ -30,7 +30,7 @@ export class OrganizationDto {
   branding: BrandingDto;
 
   @ApiProperty()
-  @JoiSchema(Joi.object())
+  @JoiSchema(Joi.object().optional())
   metadata?: any;
 }
 
@@ -54,6 +54,7 @@ export class OrganizationMemberPageQueryDto extends PageQueryDto {
   allowUnknown: false,
 })
 export class AddOrganizationMembersDto {
+  @ApiProperty()
   @JoiSchema(Joi.array().items(Joi.string()).required())
   members: string[];
 }

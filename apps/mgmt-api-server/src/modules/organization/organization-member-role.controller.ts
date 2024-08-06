@@ -1,7 +1,7 @@
 import { Controller, Inject, Post, Param, Query, Get, Body, Delete, UseGuards } from "@nestjs/common";
 import { IOrganizationMemberService } from "libs/api/infra-api/src/organization/organization-member.service";
 import { IOrganizationMemberRoleService } from "libs/api/infra-api/src/organization/organization-member-role.service";
-import { OrganizationMemberRolePageQueryDto, OrganizationMemberRoleDto, OrganizationMemberAddRolesDto, OrganizationMemberRemoveRolesDto } from "libs/api/infra-api/src/organization/organization-member-role.dto";
+import { OrganizationMemberRolePageQueryDto, OrganizationMemberRoleModel, OrganizationMemberAddRolesDto, OrganizationMemberRemoveRolesDto } from "libs/api/infra-api/src/organization/organization-member-role.dto";
 import { PageDto } from "libs/common/src/pagination/pagination.dto";
 import { Scopes } from "libs/oidc/client/src/lib/guards/scopes.decorator";
 import { TenantGuard } from "../../middleware/tenant.guard";
@@ -24,7 +24,7 @@ export class OrganizationMemberRoleController {
     @Param('org_id') org_id: string,
     @Param('member_id') member_id: string,
     @Query() _query: OrganizationMemberRolePageQueryDto,
-  ): Promise<PageDto<OrganizationMemberRoleDto>> {
+  ): Promise<PageDto<OrganizationMemberRoleModel>> {
     const query = {..._query, 'member.org_id': org_id, member_id };
   
     return await this.organizationMemberRoleService.paginate(ctx, query);

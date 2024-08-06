@@ -1,5 +1,6 @@
 import {
   PageDto,
+  PageMeta,
   PageQueryDto,
 } from 'libs/common/src/pagination/pagination.dto';
 import { IRequestContext } from '@libs/nest-core';
@@ -8,9 +9,9 @@ import { Inject, Injectable } from '@nestjs/common';
 import { OrganizationMemberRoleMapper } from './organization-member-role.mapper';
 import { TenantAwareRepository } from 'libs/support/tenant-support-typeorm/src/modules/tenant/tenant-aware.repository';
 import { OrganizationMemberRoleEntity } from './organization.entity';
-import { paginate } from 'libs/common/src/pagination/typeorm-paginate';
-import { OrganizationMemberRoleDto } from 'libs/api/infra-api/src/organization/organization-member-role.dto';
+import { OrganizationMemberRoleModel } from 'libs/api/infra-api/src/organization/organization-member-role.model';
 import { IContext } from '@libs/nest-core';
+import { paginate as _paginate, IPaginationMeta, IPaginationOptions } from 'nestjs-typeorm-paginate';
 
 @Injectable()
 export class TypeOrmOrganizationMemberRoleRepository
@@ -24,7 +25,7 @@ export class TypeOrmOrganizationMemberRoleRepository
     ctx: IContext,
     member_id: string,
     role_id: string,
-  ): Promise<OrganizationMemberRoleDto | undefined> {
+  ): Promise<OrganizationMemberRoleModel | undefined> {
     const repo = await this.repo(ctx, OrganizationMemberRoleEntity);
 
     const entity = await repo.findOne({
@@ -40,8 +41,8 @@ export class TypeOrmOrganizationMemberRoleRepository
 
   async update(
     ctx: IRequestContext,
-    data: Partial<OrganizationMemberRoleDto>,
-  ): Promise<OrganizationMemberRoleDto> {
+    data: Partial<OrganizationMemberRoleModel>,
+  ): Promise<OrganizationMemberRoleModel> {
     const repo = await this.repo(ctx, OrganizationMemberRoleEntity);
 
     const toUpdate = this.organizationMemberRoleMapper.toEntity(data);
@@ -79,8 +80,8 @@ export class TypeOrmOrganizationMemberRoleRepository
 
   async create(
     ctx: IContext,
-    body: OrganizationMemberRoleDto,
-  ): Promise<OrganizationMemberRoleDto> {
+    body: OrganizationMemberRoleModel,
+  ): Promise<OrganizationMemberRoleModel> {
     const repo = await this.repo(ctx, OrganizationMemberRoleEntity);
 
     const toSave = this.organizationMemberRoleMapper.toEntity(body);
@@ -94,10 +95,76 @@ export class TypeOrmOrganizationMemberRoleRepository
   async paginate(
     ctx: IContext,
     query: PageQueryDto,
-  ): Promise<PageDto<OrganizationMemberRoleDto>> {
-    const repo = await this.repo(ctx, OrganizationMemberRoleEntity);
+  ): Promise<PageDto<OrganizationMemberRoleModel>> {
+    const memberRoleRepo = await this.repo(ctx, OrganizationMemberRoleEntity);
 
-    const page = await paginate(repo, query, ['member_id', 'role_id']);
+    const options: IPaginationOptions<PageMeta> = {
+      limit: Math.min(query.page_size, 100),
+      page: query.page,
+      metaTransformer: (meta: IPaginationMeta): PageMeta => ({
+        total: meta.totalItems,
+        page: meta.currentPage,
+        page_size: meta.itemsPerPage,
+      }),
+    };
+
+    const qb = memberRoleRepo.createQueryBuilder();
+    
+    {
+      qb.where(`${qb.alias}.tenant = :tenant`, {
+        tenant: ctx.tenant,
+      });
+
+      qb.leftJoinAndSelect(
+        `${qb.alias}.member`,
+        'organization_members',
+        // `organization_members.id = ${qb.alias}.member.id`,
+      )
+
+      qb.leftJoinAndSelect(
+        `${qb.alias}.role`,
+        'roles',
+        // `roles.id = ${qb.alias}.role_id`,
+      )
+
+      if (query.org_id) {
+        qb.where(`organization_members.org_id = :org_id`, {
+          org_id: query.org_id,
+        });
+      }
+
+      if (query.user_id) {
+        qb.where(`organization_members.user_id = :user_id`, {
+          user_id: query.user_id,
+        });
+      }
+
+      if (query.sort) {
+        const order_by = {};
+        const items = query.sort.split(' ');
+        for (const item of items) {
+          if (item.startsWith('-')) {
+            order_by[item.substring(1)] = 'DESC';
+          } else {
+            order_by[item] = 'ASC';
+          }
+        }
+
+        const _order_by = {};
+        for (const k in order_by) {
+          _order_by[`${qb.alias}.${k}`] = order_by[k];
+        }
+        qb.orderBy(_order_by);
+      } else {
+        qb.orderBy(`${qb.alias}.created_at`, 'DESC');
+      }
+    }
+
+    const page = await _paginate<OrganizationMemberRoleEntity, PageMeta>(
+      qb,
+      options,
+    );
+
     return {
       items: page.items.map(this.organizationMemberRoleMapper.toDTO),
       meta: page.meta,

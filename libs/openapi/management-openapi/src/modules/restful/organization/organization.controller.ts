@@ -43,7 +43,7 @@ import { ScopesGuard } from 'libs/oidc/client/src/lib/guards/scopes.guard';
     ttl: 1000,
   }
 })
-@UseGuards(ThrottlerGuard, AuthGuard('jwt'), ScopesGuard)
+// @UseGuards(ThrottlerGuard, AuthGuard('jwt'), ScopesGuard)
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: '未授权' })
 @ApiForbiddenResponse({ description: '权限不足' })
