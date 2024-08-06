@@ -4,13 +4,14 @@ import { IGroupService } from "libs/api/infra-api/src/group/group.service";
 import * as _ from 'lodash';
 import { IUserService } from "libs/api/infra-api/src/user/user.service";
 import { Group } from "libs/api/infra-api/src/group/group";
-import { IdentityDto, ProfileDataDto } from "libs/api/infra-api/src/identity/identity.dto";
+import { ProfileDataDto } from "libs/api/infra-api/src/identity/identity.dto";
 import { UpdateUserDto } from "libs/api/infra-api/src/user/user.dto";
 import { IConnectionService } from "libs/api/infra-api/src/connection/connection.service";
 import { ConnectionDto } from "libs/api/infra-api/src/connection/connection.dto";
 import { plainToClass } from "class-transformer";
 import { IdentityService } from "libs/core/infra-core/src/identity/identity.service";
 import { ITask } from "../task";
+import { IdentityModel, ProfileDataModel } from "libs/api/infra-api/src/identity/identity.model";
 
 @Injectable()
 export class SyncUsersTask implements ITask {
@@ -75,12 +76,12 @@ export class SyncUsersTask implements ITask {
       const { gender, avatar, name, mobile, biz_mail, ...profile } = user;
       const userid = `${connection.options.corp_id}|${user.userid}`;
 
-      const identity: Partial<IdentityDto> = {
+      const identity: Partial<IdentityModel> = {
         user_id: userid,
         access_token: ctx.token.access_token,
         provider: connection.strategy,
         is_social: true,
-        profile_data: plainToClass(ProfileDataDto, {
+        profile_data: plainToClass(ProfileDataModel, {
           picture: avatar,
           nickname: name,
           name,
@@ -109,7 +110,7 @@ export class SyncUsersTask implements ITask {
           Logger.log(`创建新用户: from ${userid} ${user.name}, to: ${federactedUser.user_id}`);
           ctx.createCount++;
         } else {
-          const targetIdentity: Partial<IdentityDto> = federactedUser.identities.filter(
+          const targetIdentity: Partial<IdentityModel> = federactedUser.identities.filter(
             (it) =>
               identity.user_id == it.user_id &&
               identity.connection == it.connection,

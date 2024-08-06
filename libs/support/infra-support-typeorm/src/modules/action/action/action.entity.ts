@@ -1,6 +1,6 @@
 import { PrimaryGeneratedColumn, Entity, ManyToMany, JoinTable, Column, UpdateDateColumn, CreateDateColumn, BaseEntity, Unique } from "typeorm";
 import { TriggerEntity } from "../trigger/trigger.entity";
-import { DependencyDto, SecretDto } from 'libs/api/infra-api/src/action/action/action.dto';
+import { DependencyModel, SecretModel } from 'libs/api/infra-api/src/action/action/action.model';
 
 @Entity({
   name: 'actions'
@@ -48,7 +48,7 @@ export class ActionEntity extends BaseEntity {
     type: 'simple-json',
     nullable: true,
   })
-  dependencies: DependencyDto[];
+  dependencies: DependencyModel[];
 
   @Column({ nullable: true })
   runtime: string;
@@ -57,7 +57,7 @@ export class ActionEntity extends BaseEntity {
     type: 'simple-json',
     nullable: true,
   })
-  secrets: SecretDto[];
+  secrets: SecretModel[];
 
   // @Column({ nullable: true })
   // deployed_version: ActionVersion;

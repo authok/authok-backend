@@ -1,5 +1,4 @@
-# FROM node:16-alpine3.11 AS dependencies
-FROM node:16.20.0-alpine3.18 AS dependencies
+FROM node:22.3.0-alpine3.19 AS dependencies
 
 # OpenJDK
 ENV JAVA_HOME="/usr/lib/jvm/default-jvm/"
@@ -20,8 +19,8 @@ RUN yarn install --frozen-lockfile && yarn cache clean
 
 
 
-# FROM node:16-alpine3.11 AS build
-FROM node:16.20.0-alpine3.18 AS build
+FROM node:22.3.0-alpine3.19 AS build
+
 
 # OpenJDK
 ENV JAVA_HOME="/usr/lib/jvm/default-jvm/"
@@ -45,8 +44,7 @@ RUN yarn build:cli
 
 
 
-# FROM node:16-alpine3.11 AS production
-FROM node:16.20.0-alpine3.18 AS production
+FROM node:22.3.0-alpine3.19 AS production
 
 
 WORKDIR /usr/local/authok.backend
@@ -57,6 +55,7 @@ COPY --from=dependencies /usr/local/authok.backend/package.json .
 COPY --from=dependencies /usr/local/authok.backend/node_modules ./node_modules
 COPY --from=build /usr/local/authok.backend/dist ./dist
 COPY --from=build /usr/local/authok.backend/apps/api-server/views ./apps/api-server/views
+COPY --from=build /usr/local/authok.backend/proto ./apps/api-server/proto
 
 EXPOSE 3003
 

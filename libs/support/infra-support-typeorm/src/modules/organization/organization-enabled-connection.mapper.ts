@@ -1,26 +1,26 @@
 import { plainToClass } from "class-transformer";
-import { OrganizationEnabledConnectionDto } from 'libs/api/infra-api/src/organization/organization.dto';
+import { OrganizationEnabledConnection } from 'libs/api/infra-api/src/organization/organization.model';
 import { Mapper, ClassTransformerMapper } from '@libs/nest-core';
 import { OrganizationEnabledConnectionEntity } from "./enabled-connection.entity";
-import { ConnectionDto } from "libs/api/infra-api/src/connection/connection.dto";
+import { ConnectionModel } from "libs/api/infra-api/src/connection/connection.model";
 
-@Mapper(OrganizationEnabledConnectionDto, OrganizationEnabledConnectionEntity)
-export class OrganizationEnabledConnectionMapper extends ClassTransformerMapper<OrganizationEnabledConnectionDto, OrganizationEnabledConnectionEntity> {
-  convertToDTO(entity: OrganizationEnabledConnectionEntity): OrganizationEnabledConnectionDto {
+@Mapper(OrganizationEnabledConnection, OrganizationEnabledConnectionEntity)
+export class OrganizationEnabledConnectionMapper extends ClassTransformerMapper<OrganizationEnabledConnection, OrganizationEnabledConnectionEntity> {
+  convertToDTO(entity: OrganizationEnabledConnectionEntity): OrganizationEnabledConnection {
     const { connection, ...rest } = entity;
     
     const dto = super.convertToDTO(rest as OrganizationEnabledConnectionEntity);
     if (connection) {
-      dto.connection = plainToClass(ConnectionDto, connection);
+      dto.connection = plainToClass(ConnectionModel, connection);
     }
 
     return dto;
   }
 
-  convertToEntity(dto: OrganizationEnabledConnectionDto): OrganizationEnabledConnectionEntity {
+  convertToEntity(dto: OrganizationEnabledConnection): OrganizationEnabledConnectionEntity {
     const { connection, ...rest } = dto;
 
-    const entity = super.convertToEntity(rest as OrganizationEnabledConnectionDto);
+    const entity = super.convertToEntity(rest as OrganizationEnabledConnection);
 
     return entity;
   }

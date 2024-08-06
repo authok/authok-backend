@@ -7,7 +7,7 @@ import {
   Options,
 } from '@nestjs/common';
 import { ApiOkResponse, ApiTags, ApiOperation } from '@nestjs/swagger';
-import { UserDto } from 'libs/api/infra-api/src/user/user.dto';
+import { UserDto } from 'libs/dto/src/user/user.dto';
 import { Request, Response } from 'express';
 import { IRequestContext, ReqCtx } from '@libs/nest-core';
 

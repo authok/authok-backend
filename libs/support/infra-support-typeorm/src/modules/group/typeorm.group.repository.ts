@@ -1,15 +1,12 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { IRequestContext } from '@libs/nest-core';
+import { IContext, IRequestContext } from '@libs/nest-core';
 import { TenantAwareRepository } from '../../../../tenant-support-typeorm/src/modules/tenant/tenant-aware.repository';
-import { IGroup } from 'libs/api/infra-api/src/group/group';
 import { GroupEntity } from './group.entity';
 import { IGroupRepository } from 'libs/api/infra-api/src/group/group.repository';
-import {
-  PageDto,
-  PageQueryDto,
-} from 'libs/common/src/pagination/pagination.dto';
 import { paginate } from 'libs/common/src/pagination/typeorm-paginate';
 import { GroupMapper } from './group.mapper';
+import { GroupModel } from 'libs/api/infra-api/src/group/group.model';
+import { Page, PageQuery } from 'libs/common/src/pagination/pagination.model';
 
 @Injectable()
 export class TypeOrmGroupRepository
@@ -19,7 +16,7 @@ export class TypeOrmGroupRepository
   @Inject()
   private readonly groupMapper: GroupMapper;
 
-  async update(ctx: IRequestContext, _group: Partial<IGroup>): Promise<IGroup> {
+  async update(ctx: IRequestContext, _group: Partial<GroupModel>): Promise<GroupModel> {
     const repo = await this.repo(ctx, GroupEntity);
     const group = this.groupMapper.toEntity(_group);
     const { id, ...data } = group;
@@ -39,13 +36,13 @@ export class TypeOrmGroupRepository
       },
     });
 
-    return this.groupMapper.toDTO(savedGroup);
+    return this.groupMapper.toModel(savedGroup);
   }
 
   async retrieve(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-  ): Promise<IGroup | undefined> {
+  ): Promise<GroupModel | undefined> {
     const repo = await this.repo(ctx, GroupEntity);
     const group = await repo.findOne({
       where: {
@@ -54,18 +51,18 @@ export class TypeOrmGroupRepository
       },
     });
 
-    return this.groupMapper.toDTO(group);
+    return this.groupMapper.toModel(group);
   }
 
-  async create(ctx: IRequestContext, _group: Partial<IGroup>): Promise<IGroup> {
+  async create(ctx: IContext, _group: Partial<GroupModel>): Promise<GroupModel> {
     const repo = await this.repo(ctx, GroupEntity);
     const group = this.groupMapper.toEntity(_group);
     group.tenant = ctx.tenant;
 
-    return this.groupMapper.toDTO(await repo.save(group));
+    return this.groupMapper.toModel(await repo.save(group));
   }
 
-  async delete(ctx: IRequestContext, id: string): Promise<void> {
+  async delete(ctx: IContext, id: string): Promise<void> {
     const repo = await this.repo(ctx, GroupEntity);
     const group = await repo.findOne({
       where: {
@@ -80,9 +77,9 @@ export class TypeOrmGroupRepository
   }
 
   async paginate(
-    ctx: IRequestContext,
-    query: PageQueryDto,
-  ): Promise<PageDto<IGroup>> {
+    ctx: IContext,
+    query: PageQuery,
+  ): Promise<Page<GroupModel>> {
     const repo = await this.repo(ctx, GroupEntity);
 
     query.tenant = ctx.tenant;
@@ -96,15 +93,15 @@ export class TypeOrmGroupRepository
 
     return {
       meta: page.meta,
-      items: page.items.map((it) => this.groupMapper.toDTO(it)),
+      items: page.items.map((it) => this.groupMapper.toModel(it)),
     };
   }
 
   async findByOuterId(
-    ctx: IRequestContext,
+    ctx: IContext,
     type: string,
     outer_id: string,
-  ): Promise<IGroup | undefined> {
+  ): Promise<GroupModel | undefined> {
     const repo = await this.repo(ctx, GroupEntity);
 
     const group = await repo.findOne({
@@ -115,6 +112,6 @@ export class TypeOrmGroupRepository
       },
     });
 
-    return this.groupMapper.toDTO(group);
+    return this.groupMapper.toModel(group);
   }
 }

@@ -29,7 +29,7 @@ import {
   UpdateConnectionDto,
   CreateConnectionDto,
   ConnectionPageQueryDto,
-} from 'libs/api/infra-api/src/connection/connection.dto';
+} from 'libs/dto/src';
 import { IConnectionService } from 'libs/api/infra-api/src/connection/connection.service';
 import { IRequestContext, ReqCtx } from '@libs/nest-core';
 import { Response } from 'express';

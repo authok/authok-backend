@@ -4,12 +4,12 @@ import { URL } from 'url';
 import { Request, Response } from 'express';
 import { IRequestContext } from '@libs/nest-core';
 import axios from 'axios';
-import { ProfileDataDto } from 'libs/api/infra-api/src/identity/identity.dto';
 import { plainToClass } from 'class-transformer';
 import { APIException } from 'libs/common/src/exception/api.exception';
 import * as crypto from 'crypto';
 import dayjs from 'dayjs';
 import { AccessTokenResult } from '../../interface';
+import { ProfileDataModel } from 'libs/api/infra-api/src/identity/identity.model';
 
 const AUTHORIZE_URL = 'https://fuwu.jinritemai.com/authorize';
 const TOKEN_URL = 'https://openapi-fxg.jinritemai.com/token/create';
@@ -154,10 +154,10 @@ export class DoudianIdentityProvider extends OAuth2IdentityProvider {
   async fetchUserInfo(
     ctx: IRequestContext,
     access_token: string,
-  ): Promise<ProfileDataDto> {
+  ): Promise<ProfileDataModel> {
     const { shop_id: user_id, shop_name: nickname, ...rest } = ctx.data;
 
-    return plainToClass(ProfileDataDto, {
+    return plainToClass(ProfileDataModel, {
       ...rest,
       user_id,
       openid: user_id,

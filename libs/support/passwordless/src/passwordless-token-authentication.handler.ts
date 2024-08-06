@@ -15,7 +15,7 @@ import { IRequestContext } from '@libs/nest-core';
 import { APIException } from 'libs/common/src/exception/api.exception';
 import { IConnectionService } from 'libs/api/infra-api/src/connection/connection.service';
 import { nanoid } from 'nanoid';
-import { IdentityDto } from 'libs/api/infra-api/src/identity/identity.dto';
+import { IdentityModel } from 'libs/api/infra-api/src/identity/identity.model';
 
 @Injectable()
 export class PasswordlessTokenAuthenticationHandler extends AuthenticationHandler {
@@ -100,7 +100,7 @@ export class PasswordlessTokenAuthenticationHandler extends AuthenticationHandle
               user_id,
               provider: connection.strategy,
               connection: connection.name,
-            } as IdentityDto,
+            } as IdentityModel,
           ],
         });
       }

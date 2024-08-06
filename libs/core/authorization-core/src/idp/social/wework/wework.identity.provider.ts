@@ -8,12 +8,12 @@ import {
   WeworkUserInfo,
   WeworkCheckAccessTokenResult,
 } from './models';
-import { ProfileDataDto } from 'libs/api/infra-api/src/identity/identity.dto';
 import { plainToClass } from 'class-transformer';
 import { APIException } from 'libs/common/src/exception/api.exception';
 import * as crypto from 'crypto';
 import { OAuth2IdentityProvider } from '../../oauth2.identity.provider';
 import { AccessTokenResult } from '../../interface';
+import { ProfileDataModel } from 'libs/api/infra-api/src/identity/identity.model';
 
 const AUTHORIZE_URL = 'https://open.work.weixin.qq.com/wwopen/sso/qrConnect';
 
@@ -102,7 +102,7 @@ export class WeworkIdentityProvider extends OAuth2IdentityProvider {
   async fetchUserInfo(
     ctx: IRequestContext,
     access_token: string,
-  ): Promise<ProfileDataDto> {
+  ): Promise<ProfileDataModel> {
     const url = `https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo?access_token=${access_token}&code=${ctx.code}`;
     const r = await axios.get<any>(url);
     const data = r.data;
@@ -130,7 +130,7 @@ export class WeworkIdentityProvider extends OAuth2IdentityProvider {
     const { userid, name, gender, telephone, biz_mail, avatar, ...rest } =
       profile;
 
-    return plainToClass(ProfileDataDto, {
+    return plainToClass(ProfileDataModel, {
       user_id: userid,
       nickname: name,
       gender: parseInt(gender),

@@ -7,9 +7,9 @@ import { IConnectionService } from 'libs/api/infra-api/src/connection/connection
 import { IPService } from 'libs/support/ipservice-support/src/ip.service';
 import { IPasswordHistoryRepository } from 'libs/api/infra-api/src/user/password-history.repository';
 import { PasswordHistoryDto } from 'libs/api/infra-api/src/user/password-history.dto';
-import { UserDto } from 'libs/api/infra-api/src/user/user.dto';
 import { IClientService } from 'libs/api/infra-api/src/client/client.service';
 import { IContext } from '@libs/nest-core';
+import { UserModel } from 'libs/api/infra-api/src/user/user.model';
 
 @Injectable()
 export class UserEventHandler {
@@ -52,7 +52,7 @@ export class UserEventHandler {
   }
 
   @OnEvent(UserEvents.PasswordChanged)
-  async handlePasswordChanged(ctx: IContext, user: UserDto) {
+  async handlePasswordChanged(ctx: IContext, user: UserModel) {
     console.log('handlePasswordChanged: ', user);
     await this.passwordHistoryRepo.create(ctx, {        
       user_id: user.user_id,

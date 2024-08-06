@@ -1,7 +1,7 @@
 import { Controller, Get, Param, Query, Inject, UseGuards, Post, Scope, Body, NotFoundException, Req, Delete } from "@nestjs/common";
 import { IInvitationService } from "libs/api/infra-api/src/invitation/invitation.service";
 import { PageDto } from "libs/common/src/pagination/pagination.dto";
-import { InvitationDto, InvitationPageQueryDto } from "libs/api/infra-api/src/invitation/invitation.dto";
+import { InvitationDto, InvitationPageQueryDto } from "libs/api/infra-api/src/invitation/invitation.model";
 import { TenantGuard } from "../../middleware/tenant.guard";
 import { IRequestContext, ReqCtx } from "@libs/nest-core";
 import { Scopes } from "libs/oidc/client/src/lib/guards/scopes.decorator";

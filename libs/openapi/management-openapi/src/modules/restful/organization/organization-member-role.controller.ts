@@ -1,7 +1,7 @@
 import { Controller, Inject, Post, Param, Query, Get, Body, Delete, UseGuards, NotFoundException } from "@nestjs/common";
 import { IOrganizationMemberService } from "libs/api/infra-api/src/organization/organization-member.service";
 import { IOrganizationMemberRoleService } from "libs/api/infra-api/src/organization/organization-member-role.service";
-import { OrganizationMemberRolePageQueryDto, OrganizationMemberAddRolesDto, OrganizationMemberRemoveRolesDto } from "libs/api/infra-api/src/organization/organization-member-role.dto";
+import { OrganizationMemberRolePageQueryDto, OrganizationMemberAddRolesDto, OrganizationMemberRemoveRolesDto, RoleDto } from "libs/dto/src";
 import { PageDto } from "libs/common/src/pagination/pagination.dto";
 import { Scopes } from "libs/oidc/client/src/lib/guards/scopes.decorator";
 import { IRequestContext, ReqCtx } from "@libs/nest-core";
@@ -9,7 +9,6 @@ import { ApiBearerAuth, ApiForbiddenResponse, ApiOperation, ApiTags, ApiUnauthor
 import { Throttle, ThrottlerGuard } from "@nestjs/throttler";
 import { AuthGuard } from "@nestjs/passport";
 import { ScopesGuard } from "libs/oidc/client/src/lib/guards/scopes.guard";
-import { RoleDto } from "libs/api/infra-api/src/role/role.dto";
 
 @Controller('/api/v1/organizations')
 @ApiTags('组织')

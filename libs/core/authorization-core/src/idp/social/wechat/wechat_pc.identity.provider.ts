@@ -9,7 +9,7 @@ import {
   WechatUserInfo,
   WechatCheckAccessTokenResult,
 } from './types';
-import { ProfileDataDto } from 'libs/api/infra-api/src/identity/identity.dto';
+import { ProfileDataModel } from 'libs/api/infra-api/src/identity/identity.model';
 import { plainToClass } from 'class-transformer';
 import { APIException } from 'libs/common/src/exception/api.exception';
 import * as crypto from 'crypto';
@@ -119,7 +119,7 @@ export class WechatPCIdentityProvider extends OAuth2IdentityProvider {
   async fetchUserInfo(
     ctx: IRequestContext,
     access_token: string,
-  ): Promise<ProfileDataDto> {
+  ): Promise<ProfileDataModel> {
     const lang = 'zh_CN';
     const url = `https://api.weixin.qq.com/sns/userinfo?access_token=${access_token}&openid=${ctx.openid}&lang=${lang}`;
     console.log('url: ', url);
@@ -142,7 +142,7 @@ export class WechatPCIdentityProvider extends OAuth2IdentityProvider {
       ...rest
     } = data;
 
-    return plainToClass(ProfileDataDto, {
+    return plainToClass(ProfileDataModel, {
       ...rest,
       user_id: unionid || openid,
       openid,

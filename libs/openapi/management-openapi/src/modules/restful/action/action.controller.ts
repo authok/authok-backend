@@ -1,9 +1,9 @@
 import { Controller, Query, Get, Inject, Body, Post, Param, Patch, Delete, UseGuards, NotFoundException } from "@nestjs/common";
-import { ActionPageQueryDto, ActionDto, CreateActionDto, UpdateActionDto, ExecutionDto, DeployDraftVersionBody, TestActionBody } from "libs/api/infra-api/src/action/action/action.dto";
+import { ActionPageQueryDto, ActionDto, CreateActionDto, UpdateActionDto, ExecutionDto, DeployDraftVersionBody, TestActionBody } from "libs/dto/src";
 import { PageDto, pageDtoFactory } from "libs/common/src/pagination/pagination.dto";
 import { IActionService } from "libs/api/infra-api/src/action/action/action.service";
 import { plainToClass } from "class-transformer";
-import { TriggerDto } from "libs/api/infra-api/src/action/trigger/trigger.dto";
+import { TriggerDto } from "libs/dto//src";
 import { ScopesGuard } from "libs/oidc/client/src/lib/guards/scopes.guard";
 import { IRequestContext, ReqCtx } from "@libs/nest-core";
 import { Scopes } from "libs/oidc/client/src/lib/guards/scopes.decorator";

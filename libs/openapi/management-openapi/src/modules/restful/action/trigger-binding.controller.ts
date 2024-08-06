@@ -1,5 +1,5 @@
 import { Controller, Patch, Body, Inject, Param, Get, UseGuards } from "@nestjs/common";
-import { TriggerBindingDto, TriggerBindingsUpdateRequest } from "libs/api/infra-api/src/action/trigger-binding/trigger-binding.dto";
+import { TriggerBindingDto, TriggerBindingsUpdateRequest } from "libs/dto/src";
 import { ITriggerBindingService } from "libs/api/infra-api/src/action/trigger-binding/trigger-binding.service";
 import { ReqCtx, IRequestContext } from "@libs/nest-core";
 import { ScopesGuard } from "libs/oidc/client/src/lib/guards/scopes.guard";

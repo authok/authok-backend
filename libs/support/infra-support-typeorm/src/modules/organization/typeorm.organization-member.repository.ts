@@ -1,17 +1,12 @@
-import {
-  PageQueryDto,
-  PageDto,
-  PageMeta,
-} from 'libs/common/src/pagination/pagination.dto';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { IOrganizationMemberRepository } from 'libs/api/infra-api/src/organization/organization-member.repository';
-import { OrganizationMemberDto } from 'libs/api/infra-api/src/organization/organization-member.dto';
+import { OrganizationMemberModel } from 'libs/api/infra-api/src/organization/organization-member.model';
 import {
   OrganizationMemberEntity,
   OrganizationMemberRoleEntity,
 } from './organization.entity';
 import { OrganizationMemberMapper } from './organization-member.mapper';
-import { FindManyOptions, SelectQueryBuilder, Connection, In } from 'typeorm';
+import { Connection, In } from 'typeorm';
 import {
   IContext,
   MapperQueryRepository,
@@ -20,14 +15,14 @@ import {
   Query,
   FindByIdOptions,
 } from '@libs/nest-core';
-import { PageQuery } from 'libs/common/src/pagination/pagination.model';
+import { Page, PageMeta, PageQuery } from 'libs/common/src/pagination/pagination.model';
 import {
   IPaginationOptions,
   IPaginationMeta,
   paginate as _paginate,
 } from 'nestjs-typeorm-paginate';
 import { PermissionEntity } from '../permission/permission.entity';
-import { PermissionDto } from 'libs/api/infra-api/src/permission/permission.dto';
+import { PermissionModel } from 'libs/api/infra-api/src/permission/permission.model';
 import { TenantAwareTypeOrmQueryRepository } from '@libs/nest-core-typeorm';
 import * as _ from 'lodash';
 import { paginate } from 'libs/common/src/pagination/typeorm-paginate';
@@ -35,7 +30,7 @@ import { UserEntity } from '../user/user.entity';
 
 @Injectable()
 export class TypeOrmOrganizationMemberRepository
-  extends MapperQueryRepository<OrganizationMemberDto, OrganizationMemberEntity>
+  extends MapperQueryRepository<OrganizationMemberModel, OrganizationMemberEntity>
   implements IOrganizationMemberRepository
 {
   constructor(
@@ -49,8 +44,8 @@ export class TypeOrmOrganizationMemberRepository
   async findById(
     context: IContext,
     id: string | number,
-    opts?: FindByIdOptions<OrganizationMemberDto>,
-  ): Promise<OrganizationMemberDto | undefined> {
+    opts?: FindByIdOptions<OrganizationMemberModel>,
+  ): Promise<OrganizationMemberModel | undefined> {
     const entity = await this.repo.findById(context, id);
     if (!entity) return undefined;
 
@@ -78,7 +73,7 @@ export class TypeOrmOrganizationMemberRepository
     ctx: IContext,
     org_id: string,
     user_id: string,
-  ): Promise<OrganizationMemberDto | undefined> {
+  ): Promise<OrganizationMemberModel | undefined> {
     const connection: Connection = await this.repo.connectionManager.get(ctx);
     const orgMemberRepo = await connection.getRepository(OrganizationMemberEntity);
 
@@ -110,8 +105,8 @@ export class TypeOrmOrganizationMemberRepository
 
   async paginate(
     ctx: IContext,
-    query: PageQueryDto,
-  ): Promise<PageDto<OrganizationMemberDto>> {
+    query: PageQuery,
+  ): Promise<Page<OrganizationMemberModel>> {
     const connection: Connection = await this.repo.connectionManager.get(ctx);
     const orgMemberRepo = await connection.getRepository(OrganizationMemberEntity);
 
@@ -211,7 +206,7 @@ export class TypeOrmOrganizationMemberRepository
     org_id: string,
     user_id: string,
     query: PageQuery,
-  ): Promise<PageDto<PermissionDto>> {
+  ): Promise<Page<PermissionModel>> {
     const connection: Connection = await this.repo.connectionManager.get(ctx);
     const permissionRepo = await connection.getRepository(PermissionEntity);
 

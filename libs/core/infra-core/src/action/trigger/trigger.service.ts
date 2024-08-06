@@ -1,11 +1,7 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { ITriggerService } from 'libs/api/infra-api/src/action/trigger/trigger.service';
-import { TriggerDto } from 'libs/api/infra-api/src/action/trigger/trigger.dto';
+import { TriggerModel } from 'libs/api/infra-api/src/action/trigger/trigger.model';
 import { ITriggerRepository } from 'libs/api/infra-api/src/action/trigger/trigger.repository';
-import {
-  PageDto,
-  PageQueryDto,
-} from 'libs/common/src/pagination/pagination.dto';
 import { IContext } from '@libs/nest-core';
 import { ITriggerBindingRepository } from 'libs/api/infra-api/src/action/trigger-binding/trigger-binding.repository';
 import { ITriggerClient } from 'libs/support/trigger-client/src/interface';
@@ -15,6 +11,7 @@ import {
   ActionContextBuilder,
   ActionContext,
 } from 'libs/api/infra-api/src/action/trigger/trigger.context';
+import { Page, PageQuery } from 'libs/common/src/pagination/pagination.model';
 
 @Injectable()
 export class TriggerService implements ITriggerService {
@@ -26,18 +23,18 @@ export class TriggerService implements ITriggerService {
     @Inject('ITriggerClient') private readonly triggerClient: ITriggerClient,
   ) {}
 
-  async create(ctx: IContext, trigger: TriggerDto): Promise<TriggerDto> {
+  async create(ctx: IContext, trigger: TriggerModel): Promise<TriggerModel> {
     return await this.triggerRepository.create(ctx, trigger);
   }
 
-  async retrieve(ctx: IContext, id: string): Promise<TriggerDto | undefined> {
+  async retrieve(ctx: IContext, id: string): Promise<TriggerModel | undefined> {
     return await this.triggerRepository.retrieve(ctx, id);
   }
 
   async update(
     ctx: IContext,
-    trigger: Partial<TriggerDto>,
-  ): Promise<TriggerDto> {
+    trigger: Partial<TriggerModel>,
+  ): Promise<TriggerModel> {
     return await this.triggerRepository.update(ctx, trigger);
   }
 
@@ -47,8 +44,8 @@ export class TriggerService implements ITriggerService {
 
   async paginate(
     ctx: IContext,
-    query: PageQueryDto,
-  ): Promise<PageDto<TriggerDto>> {
+    query: PageQuery,
+  ): Promise<Page<TriggerModel>> {
     return await this.triggerRepository.paginate(ctx, query);
   }
 

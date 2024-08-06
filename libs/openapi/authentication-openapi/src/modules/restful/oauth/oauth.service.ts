@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException, Inject } from '@nestjs/common';
-import { IdentityDto } from 'libs/api/infra-api/src/identity/identity.dto';
+import { IdentityDto } from 'libs/dto/src';
 import { ISandboxService } from 'libs/api/sandbox-api/src/sandbox.service';
 import { IConnectionService } from 'libs/api/infra-api/src/connection/connection.service';
 import { ReqCtx, IRequestContext } from '@libs/nest-core';

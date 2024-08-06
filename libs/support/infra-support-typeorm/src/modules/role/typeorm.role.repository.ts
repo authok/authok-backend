@@ -1,13 +1,12 @@
 import {
-  RoleDto,
-  RolePageQueryDto,
-  RolePermissionAssignmentDto,
-} from 'libs/api/infra-api/src/role/role.dto';
+  RoleModel,
+  RolePageQuery,
+  RolePermissionAssignmentModel,
+} from 'libs/api/infra-api/src/role/role.model';
 import { IRoleRepository } from 'libs/api/infra-api/src/role/role.repository';
 import { FindManyOptions, In, SelectQueryBuilder } from 'typeorm';
 import { RoleEntity } from './role.entity';
-import { IRequestContext } from '@libs/nest-core';
-import { PageDto, PageMeta } from 'libs/common/src/pagination/pagination.dto';
+import { IContext } from '@libs/nest-core';
 import {
   IPaginationMeta,
   IPaginationOptions,
@@ -16,12 +15,13 @@ import {
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { PermissionEntity } from '../permission/permission.entity';
 import { TenantAwareRepository } from '../../../../tenant-support-typeorm/src/modules/tenant/tenant-aware.repository';
+import { Page, PageMeta } from 'libs/common/src/pagination/pagination.model';
 
 export class TypeOrmRoleRepository
   extends TenantAwareRepository
   implements IRoleRepository {
 
-  async create(ctx: IRequestContext, role: Partial<RoleDto>): Promise<RoleDto> {
+  async create(ctx: IContext, role: Partial<RoleModel>): Promise<RoleModel> {
     const repo = await this.repo(ctx, RoleEntity);
     const existingRole = await repo.findOne({
       where: {
@@ -46,9 +46,9 @@ export class TypeOrmRoleRepository
   }
 
   async batchCreate(
-    ctx: IRequestContext,
-    _roles: Partial<RoleDto>[],
-  ): Promise<RoleDto[]> {
+    ctx: IContext,
+    _roles: Partial<RoleModel>[],
+  ): Promise<RoleModel[]> {
     const repo = await this.repo(ctx, RoleEntity);
     const __roles: Partial<RoleEntity>[] = _roles.map((it) => ({
       ...it,
@@ -62,9 +62,9 @@ export class TypeOrmRoleRepository
   }
 
   async paginate(
-    ctx: IRequestContext,
-    query: RolePageQueryDto,
-  ): Promise<PageDto<RoleDto>> {
+    ctx: IContext,
+    query: RolePageQuery,
+  ): Promise<Page<RoleModel>> {
     const repo = await this.repo(ctx, RoleEntity);
     const options: IPaginationOptions<PageMeta> = {
       limit: query.page_size,
@@ -104,9 +104,9 @@ export class TypeOrmRoleRepository
   }
 
   async retrieve(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-  ): Promise<RoleDto | null> {
+  ): Promise<RoleModel | null> {
     const repo = await this.repo(ctx, RoleEntity);
     return await repo.findOne({
       where: {
@@ -116,7 +116,7 @@ export class TypeOrmRoleRepository
     });
   }
 
-  async findByIds(ctx: IRequestContext, ids: string[]): Promise<RoleDto[]> {
+  async findByIds(ctx: IContext, ids: string[]): Promise<RoleModel[]> {
     const repo = await this.repo(ctx, RoleEntity);
     return await repo.findBy({
       id: In(ids),
@@ -125,16 +125,16 @@ export class TypeOrmRoleRepository
   }
 
   async update(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-    data: Partial<RoleDto>,
+    data: Partial<RoleModel>,
   ): Promise<{ affected?: number }> {
     const repo = await this.repo(ctx, RoleEntity);
     return await repo.update({ tenant: ctx.tenant, id }, data);
   }
 
   async delete(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
   ): Promise<{ raw: any; affected?: number | null; }> {
     const repo = await this.repo(ctx, RoleEntity);
@@ -145,9 +145,9 @@ export class TypeOrmRoleRepository
   }
 
   async addPermissions(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-    data: RolePermissionAssignmentDto,
+    data: RolePermissionAssignmentModel,
   ): Promise<void> {
     const repo = await this.repo(ctx, RoleEntity);
     const permissionRepo = await this.repo(ctx, PermissionEntity);
@@ -189,9 +189,9 @@ export class TypeOrmRoleRepository
   }
 
   async removePermissions(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-    data: RolePermissionAssignmentDto,
+    data: RolePermissionAssignmentModel,
   ): Promise<void> {
     const repo = await this.repo(ctx, RoleEntity);
     const permissionRepo = await this.repo(ctx, PermissionEntity);

@@ -19,10 +19,10 @@ import { IClientService } from 'libs/api/infra-api/src/client/client.service';
 import * as https from 'https';
 import * as uuid from 'uuid';
 
-import { UserDto } from 'libs/api/infra-api/src/user/user.dto';
 import { URL } from 'url';
 import * as validator from '@authenio/samlify-xsd-schema-validator';
 import { IUserService } from 'libs/api/infra-api/src/user/user.service';
+import { UserModel } from 'libs/api/infra-api/src/user/user.model';
 samlify.setSchemaValidator(validator);
 /*
 samlify.setSchemaValidator({
@@ -36,7 +36,7 @@ const createTemplateCallback =
   (
     idp: samlify.IdentityProviderInstance,
     sp: samlify.ServiceProviderInstance,
-    user: UserDto,
+    user: UserModel,
     samlpConfig: Record<string, any>,
   ) =>
   (template) => {
@@ -148,7 +148,7 @@ export class SAMLPController {
     const user = {
       user_id: 'u1',
       email: '1@126.com',
-    } as UserDto;
+    } as UserModel;
 
     // 在登录成功后创建 login response, 通过 回调链接 post 给 sp
     const sampleRequestInfo = { extract: { request: { id: 'request_id' } } };
@@ -368,7 +368,7 @@ export class SAMLPController {
     const user = {
       user_id: 'u1',
       email: '1@126.com',
-    } as UserDto;
+    } as UserModel;
 
     const samlpRes = await idp.createLoginResponse(
       sp,
@@ -415,7 +415,7 @@ export class SAMLPController {
           const user = {
             user_id: 'u1',
             email: '1@126.com',
-          } as UserDto;
+          } as UserModel;
       
           const samlpRes = await idp.createLoginResponse(
             sp,

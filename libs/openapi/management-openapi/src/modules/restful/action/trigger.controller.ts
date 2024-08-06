@@ -1,7 +1,7 @@
 import { Controller, Inject, Get, Req, Query, Param, UseGuards } from "@nestjs/common";
 import { ITriggerService } from "libs/api/infra-api/src/action/trigger/trigger.service";
 import { PageDto, pageDtoFactory } from "libs/common/src/pagination/pagination.dto";
-import { TriggerDto, TriggerQueryDto } from "libs/api/infra-api/src/action/trigger/trigger.dto";
+import { TriggerDto, TriggerQueryDto } from "libs/dto/src";
 import { IRequestContext, ReqCtx } from "@libs/nest-core";
 import { Scopes } from "libs/oidc/client/src/lib/guards/scopes.decorator";
 import { ApiUnauthorizedResponse, ApiForbiddenResponse, ApiBearerAuth, ApiTags, ApiOkResponse, ApiOperation } from "@nestjs/swagger";

@@ -1,17 +1,17 @@
-import { IRequestContext } from "@libs/nest-core";
-import { IGroup } from "./group";
+import { IContext, IRequestContext } from "@libs/nest-core";
 import { PageDto, PageQueryDto } from "libs/common/src/pagination/pagination.dto";
+import { GroupModel } from "./group.model";
 
 export interface IGroupRepository {
-  create(ctx: IRequestContext, group: Partial<IGroup>): Promise<IGroup>;
+  create(ctx: IContext, group: Partial<GroupModel>): Promise<GroupModel>;
 
-  retrieve(ctx: IRequestContext, id: string): Promise<IGroup | undefined>;
+  retrieve(ctx: IContext, id: string): Promise<GroupModel | undefined>;
 
-  update(ctx: IRequestContext, group: Partial<IGroup>): Promise<IGroup>;
+  update(ctx: IContext, group: Partial<GroupModel>): Promise<GroupModel>;
 
   delete(ctx: IRequestContext, id: string): Promise<void>;
 
-  paginate(ctx: IRequestContext, query: PageQueryDto): Promise<PageDto<IGroup>>;
+  paginate(ctx: IRequestContext, query: PageQueryDto): Promise<PageDto<GroupModel>>;
 
-  findByOuterId(ctx: IRequestContext, type: string, outer_id: string): Promise<IGroup | undefined>;
+  findByOuterId(ctx: IRequestContext, type: string, outer_id: string): Promise<GroupModel | undefined>;
 }

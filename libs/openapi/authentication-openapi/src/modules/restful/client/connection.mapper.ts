@@ -1,4 +1,4 @@
-import { ConnectionDto } from 'libs/api/infra-api/src/connection/connection.dto';
+import { ConnectionDto } from "libs/dto/src";
 
 const mappers = {};
 

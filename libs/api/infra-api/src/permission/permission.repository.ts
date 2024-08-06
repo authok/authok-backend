@@ -1,10 +1,10 @@
-import { PageDto } from 'libs/common/src/pagination/pagination.dto';
-import { PermissionDto, PermissionPageQueryDto } from './permission.dto';
-import { IRequestContext } from '@libs/nest-core';
+import { Page } from 'libs/common/src/pagination/pagination.model';
+import { PermissionModel, PermissionPageQuery } from './permission.model';
+import { IContext } from '@libs/nest-core';
 
 export interface IPermissionRepository {
   paginate(
-    ctx: IRequestContext,
-    query: PermissionPageQueryDto,
-  ): Promise<PageDto<PermissionDto>>;
+    ctx: IContext,
+    query: PermissionPageQuery,
+  ): Promise<Page<PermissionModel>>;
 }

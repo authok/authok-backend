@@ -3,23 +3,23 @@ import { IUser } from 'libs/api/infra-api/src/user/user.model';
 import { Mapper, ClassTransformerMapper, DeepPartial } from '@libs/nest-core';
 import { ClientEntity } from '../client/client.entity';
 import { OrganizationEntity } from '../organization/organization.entity';
-import { InvitationDto } from 'libs/api/infra-api/src/invitation/invitation.dto';
+import { InvitationModel } from 'libs/api/infra-api/src/invitation/invitation.model';
 
-@Mapper(InvitationDto, InvitationEntity)
+@Mapper(InvitationModel, InvitationEntity)
 export class InvitationMapper extends ClassTransformerMapper<
-  InvitationDto,
+  InvitationModel,
   InvitationEntity
 > {
   convertToCreateEntity(
-    create: DeepPartial<InvitationDto>,
+    create: DeepPartial<InvitationModel>,
   ): DeepPartial<InvitationEntity> {
-    return this.convertToEntity(create as InvitationDto);
+    return this.convertToEntity(create as InvitationModel);
   }
 
-  convertToEntity(dto: InvitationDto): InvitationEntity {
+  convertToEntity(dto: InvitationModel): InvitationEntity {
     const { client_id, org_id, inviter, ...rest } = dto;
 
-    const entity = super.convertToEntity(rest as InvitationDto);
+    const entity = super.convertToEntity(rest as InvitationModel);
     if (inviter) {
       entity.inviter = {
         tenant: dto.tenant,
@@ -40,7 +40,7 @@ export class InvitationMapper extends ClassTransformerMapper<
     return entity;
   }
 
-  convertToDTO(entity: InvitationEntity): InvitationDto {
+  convertToDTO(entity: InvitationEntity): InvitationModel {
     const { tenant, organization, client, inviter: _inviter, ...rest } = entity;
 
     const inviter = {
@@ -56,7 +56,7 @@ export class InvitationMapper extends ClassTransformerMapper<
     const dto = {
       inviter,
       ...rest,
-    } as InvitationDto;
+    } as InvitationModel;
 
     return dto;
   }

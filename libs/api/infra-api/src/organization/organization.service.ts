@@ -1,60 +1,59 @@
 import { PageDto } from 'libs/common/src/pagination/pagination.dto';
 import { IRequestContext } from '@libs/nest-core';
 import {
-  OrganizationDto,
-  UpdateOrganizationDto,
-  OrganizationPageQueryDto,
-  OrganizationEnabledConnectionDto,
-  AddOrganizationEnabledConnectionDto,
-  UpdateOrganizationEnabledConnectionDto,
-} from './organization.dto';
-import { ConnectionDto } from '../connection/connection.dto';
-import { OrganizationMemberDto } from './organization-member.dto';
+  OrganizationModel,
+  UpdateOrganizationModel,
+  OrganizationPageQuery,
+  OrganizationEnabledConnection,
+  AddOrganizationEnabledConnection,
+  UpdateOrganizationEnabledConnection,
+} from './organization.model';
 import { IContext } from '@libs/nest-core';
-import { InvitationDto } from '../invitation/invitation.dto';
+import { InvitationModel } from '../invitation/invitation.model';
+import { OrganizationMemberModel } from './organization-member.model';
 
 export interface IOrganizationService {
   retrieve(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-  ): Promise<OrganizationDto | undefined>;
+  ): Promise<OrganizationModel | undefined>;
 
   findByName(
-    ctx: IRequestContext,
+    ctx: IContext,
     name: string,
-  ): Promise<OrganizationDto | undefined>;
+  ): Promise<OrganizationModel | undefined>;
 
   update(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-    body: UpdateOrganizationDto,
-  ): Promise<OrganizationDto>;
+    body: UpdateOrganizationModel,
+  ): Promise<OrganizationModel>;
 
   delete(ctx: IRequestContext, id: string): Promise<void>;
 
   create(
-    ctx: IRequestContext,
-    body: Partial<OrganizationDto>,
-  ): Promise<OrganizationDto>;
+    ctx: IContext,
+    body: Partial<OrganizationModel>,
+  ): Promise<OrganizationModel>;
 
   paginate(
     ctx: IContext,
-    query: OrganizationPageQueryDto,
-  ): Promise<PageDto<OrganizationDto>>;
+    query: OrganizationPageQuery,
+  ): Promise<PageDto<OrganizationModel>>;
 
-  addMembers(ctx: IContext, org_id: string, user_ids: string[]): Promise<OrganizationMemberDto[]>;
+  addMembers(ctx: IContext, org_id: string, user_ids: string[]): Promise<OrganizationMemberModel[]>;
 
   removeMembers(ctx: IContext, org_id: string, user_ids: string[]): Promise<void>;
 
-  getInvitation(ctx: IContext, org_id: string, invitation_id: string): Promise<InvitationDto | undefined>;
+  getInvitation(ctx: IContext, org_id: string, invitation_id: string): Promise<InvitationModel | undefined>;
 
   removeInvitation(ctx: IContext, org_id: string, invitation_id: string): Promise<void>;
 
-  enabledConnections(ctx: IContext, org_id: string): Promise<PageDto<OrganizationEnabledConnectionDto>>;
+  enabledConnections(ctx: IContext, org_id: string): Promise<PageDto<OrganizationEnabledConnection>>;
 
-  addConnection(ctx: IContext, org_id: string, connection: AddOrganizationEnabledConnectionDto): Promise<OrganizationEnabledConnectionDto>;
+  addConnection(ctx: IContext, org_id: string, connection: AddOrganizationEnabledConnection): Promise<OrganizationEnabledConnection>;
 
   deleteConnection(ctx: IContext, org_id: string, connection_id: string): Promise<void>;
 
-  updateConnection(ctx: IContext, org_id: string, connection_id: string, connection: UpdateOrganizationEnabledConnectionDto): Promise<OrganizationEnabledConnectionDto>;
+  updateConnection(ctx: IContext, org_id: string, connection_id: string, connection: UpdateOrganizationEnabledConnection): Promise<OrganizationEnabledConnection>;
 }

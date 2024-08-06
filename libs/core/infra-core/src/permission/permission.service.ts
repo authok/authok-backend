@@ -1,12 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {
-  PermissionDto,
-  PermissionPageQueryDto,
-} from 'libs/api/infra-api/src/permission/permission.dto';
+  PermissionModel,
+  PermissionPageQuery,
+} from 'libs/api/infra-api/src/permission/permission.model';
 import { IPermissionRepository } from 'libs/api/infra-api/src/permission/permission.repository';
 import { IPermissionService } from 'libs/api/infra-api/src/permission/permission.service';
 import { PageDto } from 'libs/common/src/pagination/pagination.dto';
-import { IRequestContext } from '@libs/nest-core';
+import { IContext, IRequestContext } from '@libs/nest-core';
 
 @Injectable()
 export class PermissionService implements IPermissionService {
@@ -15,9 +15,9 @@ export class PermissionService implements IPermissionService {
     private readonly repo: IPermissionRepository,
   ) {}
   async paginate(
-    ctx: IRequestContext,
-    query: PermissionPageQueryDto,
-  ): Promise<PageDto<PermissionDto>> {
+    ctx: IContext,
+    query: PermissionPageQuery,
+  ): Promise<PageDto<PermissionModel>> {
     return await this.repo.paginate(ctx, query);
   }
 }

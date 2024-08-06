@@ -12,9 +12,9 @@ import {
   PageDto,
   PageQueryDto,
 } from 'libs/common/src/pagination/pagination.dto';
-import { ConnectionDto } from 'libs/api/infra-api/src/connection/connection.dto';
 import { nanoid } from 'nanoid';
 import { DEFAULT_GRANT_TYPES } from '@libs/oidc/common';
+import { ConnectionModel } from 'libs/api/infra-api/src/connection/connection.model';
 
 @Injectable()
 export class ClientService implements IClientService {
@@ -84,7 +84,7 @@ export class ClientService implements IClientService {
   async findEnabledConnections(
     ctx: IContext,
     client_id: string,
-  ): Promise<ConnectionDto[]> {
+  ): Promise<ConnectionModel[]> {
     return await this.clientRepository.findEnabledConnections(ctx, client_id);
   }
 }

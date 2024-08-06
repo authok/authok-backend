@@ -1,17 +1,17 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import {
-  RoleDto,
-  RolePageQueryDto,
-  RolePermissionAssignmentDto,
-  RoleUsersDto
-} from 'libs/api/infra-api/src/role/role.dto';
+  RoleModel,
+  RolePageQuery,
+  RolePermissionAssignmentModel,
+  RoleUsersModel
+} from 'libs/api/infra-api/src/role/role.model';
 import { IRoleRepository } from 'libs/api/infra-api/src/role/role.repository';
 import { IRoleService } from 'libs/api/infra-api/src/role/role.service';
-import { UserRoleDto } from 'libs/api/infra-api/src/user/user-role.dto';
+import { UserRoleModel } from 'libs/api/infra-api/src/user/user-role.model';
 import { IUserRoleRepository } from 'libs/api/infra-api/src/user/user-role.repository';
 import { IUserRepository } from 'libs/api/infra-api/src/user/user.repository';
-import { PageDto } from 'libs/common/src/pagination/pagination.dto';
-import { IRequestContext } from '@libs/nest-core';
+import { IContext } from '@libs/nest-core';
+import { Page } from 'libs/common/src/pagination/pagination.model';
 
 @Injectable()
 export class RoleService implements IRoleService {
@@ -25,34 +25,34 @@ export class RoleService implements IRoleService {
   ) {}
 
   public async create(
-    ctx: IRequestContext,
-    role: Partial<RoleDto>,
-  ): Promise<RoleDto | undefined> {
+    ctx: IContext,
+    role: Partial<RoleModel>,
+  ): Promise<RoleModel | undefined> {
     return await this.roleRepo.create(ctx, role);
   }
 
-  public async batchCreate(ctx: IRequestContext, roles: Partial<RoleDto>[]) {
+  public async batchCreate(ctx: IContext, roles: Partial<RoleModel>[]) {
     return await this.roleRepo.batchCreate(ctx, roles);
   }
 
   public async paginate(
-    ctx: IRequestContext,
-    query: RolePageQueryDto,
-  ): Promise<PageDto<RoleDto>> {
+    ctx: IContext,
+    query: RolePageQuery,
+  ): Promise<Page<RoleModel>> {
     return await this.roleRepo.paginate(ctx, query);
   }
 
   public async retrieve(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-  ): Promise<RoleDto | undefined> {
+  ): Promise<RoleModel | undefined> {
     return await this.roleRepo.retrieve(ctx, id);
   }
 
   public async update(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-    data: Partial<RoleDto>,
+    data: Partial<RoleModel>,
   ) {
     const updateResult = await this.roleRepo.update(ctx, id, data);
     if (!updateResult.affected) {
@@ -61,36 +61,36 @@ export class RoleService implements IRoleService {
     return await this.roleRepo.retrieve(ctx, id);
   }
 
-  public async delete(ctx: IRequestContext, id: string): Promise<void> {
+  public async delete(ctx: IContext, id: string): Promise<void> {
     await this.roleRepo.delete(ctx, id);
   }
 
   async addPermissions(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-    data: RolePermissionAssignmentDto,
+    data: RolePermissionAssignmentModel,
   ): Promise<void> {
     await this.roleRepo.addPermissions(ctx, id, data);
   }
 
   async removePermissions(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-    data: RolePermissionAssignmentDto,
+    data: RolePermissionAssignmentModel,
   ): Promise<void> {
     await this.roleRepo.removePermissions(ctx, id, data);
   }
 
   async assignUsers(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-    data: RoleUsersDto,
+    data: RoleUsersModel,
   ): Promise<void> {
     const role = await this.roleRepo.retrieve(ctx, id);
     if (!role) throw new NotFoundException(`Role id: ${id} not found`);
 
     const users = await this.userRepo.findByUserIds(ctx, data.users);
-    const userRoles: Partial<UserRoleDto>[] = users.map((it) => ({
+    const userRoles: Partial<UserRoleModel>[] = users.map((it) => ({
       role_id: id,
       user_id: it.user_id,
     }));
@@ -99,15 +99,15 @@ export class RoleService implements IRoleService {
   }
 
   async unassignUsers(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-    data: RoleUsersDto,
+    data: RoleUsersModel,
   ): Promise<void> {
     const role = await this.roleRepo.retrieve(ctx, id);
     if (!role) throw new NotFoundException(`Role id: ${id} not found`);
 
     const users = await this.userRepo.findByUserIds(ctx, data.users);
-    const userRoles: Partial<UserRoleDto>[] = users.map((it) => ({
+    const userRoles: Partial<UserRoleModel>[] = users.map((it) => ({
       role_id: id,
       user_id: it.user_id,
     }));

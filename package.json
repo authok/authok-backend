@@ -180,6 +180,8 @@
       "@app/models": "<rootDir>/libs/models/src",
       "libs/support/trigger-client/src/(.*)": "<rootDir>/libs/support/trigger-client/src/$1",
       "libs/api/infra-api/src/(.*)": "<rootDir>/libs/api/infra-api/src/$1",
+      "@libs/dto": "<rootDir>/libs/dto/src",
+      "@libs/dto/src/(.*)": "<rootDir>/libs/dto/src/$1",
       "@libs/oidc/common": "<rootDir>/libs/oidc/common/src",
       "@libs/oidc/common/src/(.*)": "<rootDir>/libs/oidc/common/src/$1",
       "@libs/support/infra-support-typeorm/src/(.*)": "<rootDir>/libs/support/infra-support-typeorm/src/$1",

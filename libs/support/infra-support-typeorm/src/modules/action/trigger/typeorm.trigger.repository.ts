@@ -1,16 +1,13 @@
-import { IRequestContext } from '@libs/nest-core';
+import { IContext } from '@libs/nest-core';
 import { ITriggerRepository } from 'libs/api/infra-api/src/action/trigger/trigger.repository';
 import { TenantAwareRepository } from 'libs/support/tenant-support-typeorm/src/modules/tenant/tenant-aware.repository';
-import { TriggerDto } from 'libs/api/infra-api/src/action/trigger/trigger.dto';
+import { TriggerModel } from 'libs/api/infra-api/src/action/trigger/trigger.model';
 import { TriggerEntity } from './trigger.entity';
 import { Inject } from '@nestjs/common';
 import { TriggerMapper } from './trigger.mapper';
 import { ActionMapper } from '../action/action.mapper';
-import {
-  PageDto,
-  PageQueryDto,
-} from 'libs/common/src/pagination/pagination.dto';
 import { paginate } from 'libs/common/src/pagination/typeorm-paginate';
+import { Page, PageQuery } from 'libs/common/src/pagination/pagination.model';
 
 export class TypeOrmTriggerRepository
   extends TenantAwareRepository
@@ -22,7 +19,7 @@ export class TypeOrmTriggerRepository
   @Inject()
   private triggerMapper: TriggerMapper;
 
-  async create(ctx: IRequestContext, trigger: TriggerDto): Promise<TriggerDto> {
+  async create(ctx: IContext, trigger: TriggerModel): Promise<TriggerModel> {
     const triggerRepo = await this.repo(ctx, TriggerEntity);
 
     const entity = this.triggerMapper.toEntity(trigger);
@@ -33,9 +30,9 @@ export class TypeOrmTriggerRepository
   }
 
   async retrieve(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-  ): Promise<TriggerDto | undefined> {
+  ): Promise<TriggerModel | undefined> {
     const triggerRepo = await this.repo(ctx, TriggerEntity);
     const entity = await triggerRepo.findOne({
       where: {
@@ -47,7 +44,7 @@ export class TypeOrmTriggerRepository
     return this.triggerMapper.toDTO(entity);
   }
 
-  async update(ctx: IRequestContext, trigger: TriggerDto): Promise<TriggerDto> {
+  async update(ctx: IContext, trigger: TriggerModel): Promise<TriggerModel> {
     const triggerRepo = await this.repo(ctx, TriggerEntity);
 
     await triggerRepo.findOneOrFail({
@@ -63,7 +60,7 @@ export class TypeOrmTriggerRepository
     return this.triggerMapper.toDTO(saved);
   }
 
-  async delete(ctx: IRequestContext, id: string): Promise<void> {
+  async delete(ctx: IContext, id: string): Promise<void> {
     const triggerRepo = await this.repo(ctx, TriggerEntity);
     const entity = await triggerRepo.findOneOrFail({
       where: {
@@ -76,9 +73,9 @@ export class TypeOrmTriggerRepository
   }
 
   async paginate(
-    ctx: IRequestContext,
-    query: PageQueryDto,
-  ): Promise<PageDto<TriggerDto>> {
+    ctx: IContext,
+    query: PageQuery,
+  ): Promise<Page<TriggerModel>> {
     const triggerRepo = await this.repo(ctx, TriggerEntity);
 
     query.tenant = ctx.tenant;

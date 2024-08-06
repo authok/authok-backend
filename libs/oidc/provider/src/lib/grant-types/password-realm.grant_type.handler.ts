@@ -6,7 +6,7 @@ import * as checkResource from '@authok/oidc-provider/lib/shared/check_resource'
 import { IGrantTypeHandler } from './grant_type.handler';
 import * as processResponseTypes from '@authok/oidc-provider/lib/actions/authorization/process_response_types';
 import * as sessionMiddleware from '@authok/oidc-provider/lib/shared/session';
-import { UserDto } from 'libs/api/infra-api/src/user/user.dto';
+import { UserModel } from 'libs/api/infra-api/src/user/user.model';
 
 @Injectable()
 export class PasswordRealmGrantTypeHandler implements IGrantTypeHandler {
@@ -63,7 +63,7 @@ export class PasswordRealmGrantTypeHandler implements IGrantTypeHandler {
       }
 
       // 并不需要做 sso
-      const user = principal as UserDto;
+      const user = principal as UserModel;
       await ctx.oidc.session.loginAccount({
         tenant,
         accountId: user.user_id,

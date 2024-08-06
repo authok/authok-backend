@@ -20,7 +20,7 @@ import * as Joi from 'joi';
 import { Request, Response } from 'express';
 import { ITicketRegistry, ITicketFactory } from 'libs/api/ticket-api/src';
 import { OIDCSessionInterceptor } from '@libs/oidc/common/lib/interceptors/oidc-session.interceptor';
-import { UserDto } from 'libs/api/infra-api/src/user/user.dto';
+import { UserDto } from 'libs/dto/src/user/user.dto';
 
 @JoiSchemaOptions({})
 export class CoCredentials {

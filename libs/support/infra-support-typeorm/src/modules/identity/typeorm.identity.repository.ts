@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { IdentityDto } from 'libs/api/infra-api/src/identity/identity.dto';
+import { IdentityModel } from 'libs/api/infra-api/src/identity/identity.model';
 import { IIdentityRepository } from 'libs/api/infra-api/src/identity/identity.repository';
 import { IContext } from '@libs/nest-core';
 import { TenantAwareRepository } from '../../../../tenant-support-typeorm/src/modules/tenant/tenant-aware.repository';
@@ -11,7 +11,7 @@ export class TypeOrmIdentityRepository
   implements IIdentityRepository {
   async update(
     ctx: IContext,
-    identity: Partial<IdentityDto>,
+    identity: Partial<IdentityModel>,
   ): Promise<{ affected?: number }> {
     const identityRepo = await this.repo(ctx, IdentityEntity);
     return await identityRepo.update(identity.id, {
@@ -23,7 +23,7 @@ export class TypeOrmIdentityRepository
   async retrieve(
     ctx: IContext,
     id: string,
-  ): Promise<IdentityDto | undefined> {
+  ): Promise<IdentityModel | undefined> {
     const identityRepo = await this.repo(ctx, IdentityEntity);
     return await identityRepo.findOne({
       where: {
@@ -36,7 +36,7 @@ export class TypeOrmIdentityRepository
     ctx: IContext,
     connection: string,
     user_id: string,
-  ): Promise<IdentityDto | undefined> {
+  ): Promise<IdentityModel | undefined> {
     const repo = await this.repo(ctx, IdentityEntity);
     return await repo.findOne({
       where: {

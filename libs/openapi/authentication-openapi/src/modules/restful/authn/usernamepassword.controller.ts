@@ -20,8 +20,7 @@ import { IAuthenticationManager } from 'libs/api/authentication-api/src';
 import { Request, Response } from 'express';
 import { ILogService } from 'libs/api/logstream-api/src/log.service';
 import * as consolidate from 'consolidate';
-import { APIException } from 'libs/common/src/exception/api.exception';
-import { UserDto } from 'libs/api/infra-api/src/user/user.dto';
+import { UserDto } from 'libs/dto/src/user/user.dto';
 import { IClientService } from 'libs/api/infra-api/src/client/client.service';
 
 const default_form_template = `

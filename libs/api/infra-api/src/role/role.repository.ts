@@ -1,45 +1,45 @@
+import { Page } from 'libs/common/src/pagination/pagination.model';
 import {
-  RoleDto,
-  RolePageQueryDto,
-  RolePermissionAssignmentDto,
-} from './role.dto';
-import { IRequestContext } from '@libs/nest-core';
-import { PageDto } from 'libs/common/src/pagination/pagination.dto';
+  RoleModel,
+  RolePageQuery,
+  RolePermissionAssignmentModel,
+} from './role.model';
+import { IContext } from '@libs/nest-core';
 
 export interface IRoleRepository {
-  create(ctx: IRequestContext, role: Partial<RoleDto>): Promise<RoleDto>;
+  create(ctx: IContext, role: Partial<RoleModel>): Promise<RoleModel>;
 
   batchCreate(
-    ctx: IRequestContext,
-    roles: Partial<RoleDto>[],
-  ): Promise<RoleDto[]>;
+    ctx: IContext,
+    roles: Partial<RoleModel>[],
+  ): Promise<RoleModel[]>;
 
   paginate(
-    ctx: IRequestContext,
-    query: RolePageQueryDto,
-  ): Promise<PageDto<RoleDto>>;
+    ctx: IContext,
+    query: RolePageQuery,
+  ): Promise<Page<RoleModel>>;
 
-  retrieve(ctx: IRequestContext, id: string): Promise<RoleDto | null>;
+  retrieve(ctx: IContext, id: string): Promise<RoleModel | null>;
 
-  findByIds(ctx: IRequestContext, ids: string[]): Promise<RoleDto[]>;
+  findByIds(ctx: IContext, ids: string[]): Promise<RoleModel[]>;
 
   update(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-    data: Partial<RoleDto>,
+    data: Partial<RoleModel>,
   ): Promise<{ affected?: number }>;
 
-  delete(ctx: IRequestContext, id: string): Promise<{ raw: any; affected?: number | null }>;
+  delete(ctx: IContext, id: string): Promise<{ raw: any; affected?: number | null }>;
 
   addPermissions(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-    data: RolePermissionAssignmentDto,
+    data: RolePermissionAssignmentModel,
   ): Promise<void>;
 
   removePermissions(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-    data: RolePermissionAssignmentDto,
+    data: RolePermissionAssignmentModel,
   ): Promise<void>;
 }

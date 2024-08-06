@@ -1,36 +1,36 @@
 import { ClientDto, CreateClientDto, UpdateClientDto } from './client.dto';
-import { IRequestContext } from '@libs/nest-core';
-import { PageDto, PageQueryDto } from 'libs/common/src/pagination/pagination.dto';
-import { ConnectionDto } from '../connection/connection.dto';
+import { IContext } from '@libs/nest-core';
+import { ConnectionModel } from '../connection/connection.model';
+import { Page, PageQuery } from 'libs/common/src/pagination/pagination.model';
 
 export interface IClientRepository {
   findByName(
-    ctx: IRequestContext,
+    ctx: IContext,
     name: string,
   ): Promise<ClientDto | undefined>;
 
-  retrieve(ctx: IRequestContext, id: string): Promise<ClientDto | undefined>;
+  retrieve(ctx: IContext, id: string): Promise<ClientDto | undefined>;
 
   create(
-    ctx: IRequestContext,
+    ctx: IContext,
     client: ClientDto,
   ): Promise<ClientDto | undefined>;
 
   update(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
     input: Partial<UpdateClientDto>,
   ): Promise<ClientDto | null>;
 
-  delete(ctx: IRequestContext, id: string);
+  delete(ctx: IContext, id: string);
 
   paginate(
-    ctx: IRequestContext,
-    query: PageQueryDto,
-  ): Promise<PageDto<ClientDto>>;
+    ctx: IContext,
+    query: PageQuery,
+  ): Promise<Page<ClientDto>>;
 
   findEnabledConnections(
-    ctx: IRequestContext,
+    ctx: IContext,
     client_id: string,
-  ): Promise<ConnectionDto[]>;
+  ): Promise<ConnectionModel[]>;
 }

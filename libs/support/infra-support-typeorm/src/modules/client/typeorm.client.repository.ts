@@ -13,7 +13,7 @@ import {
   PageQueryDto,
 } from 'libs/common/src/pagination/pagination.dto';
 import { TenantAwareRepository } from 'libs/support/tenant-support-typeorm/src/modules/tenant/tenant-aware.repository';
-import { ConnectionDto } from 'libs/api/infra-api/src/connection/connection.dto';
+import { ConnectionModel } from 'libs/api/infra-api/src/connection/connection.model';
 import { ConnectionEntity } from '../connection/connection.entity';
 import { paginate } from 'libs/common/src/pagination/typeorm-paginate';
 import { ClientMapper } from './client.mapper';
@@ -125,7 +125,7 @@ export class TypeOrmClientRepository
   async findEnabledConnections(
     ctx: IContext,
     client_id: string,
-  ): Promise<ConnectionDto[]> {
+  ): Promise<ConnectionModel[]> {
     const connectionRepo = await this.repo(ctx, ConnectionEntity);
     const connections = await connectionRepo
       .createQueryBuilder('connections')

@@ -2,14 +2,14 @@ import { Injectable, NotFoundException, Inject } from '@nestjs/common';
 
 import { IConnectionService } from 'libs/api/infra-api/src/connection/connection.service';
 import {
-  ConnectionDto,
-  UpdateConnectionDto,
-  CreateConnectionDto,
-} from 'libs/api/infra-api/src/connection/connection.dto';
+  ConnectionModel,
+  UpdateConnectionModel,
+  CreateConnectionModel,
+} from 'libs/api/infra-api/src/connection/connection.model';
 import { IConnectionRepository } from 'libs/api/infra-api/src/connection/connection.repository';
-import { IRequestContext, ReqCtx } from '@libs/nest-core';
-import { PageDto, PageQueryDto } from 'libs/common/src/pagination/pagination.dto';
+import { IContext, IRequestContext, ReqCtx } from '@libs/nest-core';
 import { SOCIAL_STRATEGIES } from 'libs/core/authorization-core/src/utils/utils';
+import { Page, PageQuery } from 'libs/common/src/pagination/pagination.model';
 
 @Injectable()
 export class ConnectionService implements IConnectionService {
@@ -19,35 +19,35 @@ export class ConnectionService implements IConnectionService {
   ) {}
 
   findByName(
-    ctx: IRequestContext,
+    ctx: IContext,
     name: string,
-  ): Promise<ConnectionDto | undefined> {
+  ): Promise<ConnectionModel | undefined> {
     return this.connectionRepository.findByName(ctx, name);
   }
 
-  retrieve(ctx: IRequestContext, id: string): Promise<ConnectionDto | null> {
+  retrieve(ctx: IContext, id: string): Promise<ConnectionModel | null> {
     return this.connectionRepository.retrieve(ctx, id);
   }
 
   async create(
-    ctx: IRequestContext,
-    input: CreateConnectionDto,
-  ): Promise<ConnectionDto> {
+    ctx: IContext,
+    input: CreateConnectionModel,
+  ): Promise<ConnectionModel> {
     const connection = await this.connectionRepository.create(ctx, input);
     return {
       ...connection,
     };
   }
 
-  async delete(ctx: IRequestContext, id: string): Promise<void> {
+  async delete(ctx: IContext, id: string): Promise<void> {
     this.connectionRepository.delete(ctx, id);
   }
 
   async update(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-    data: UpdateConnectionDto,
-  ): Promise<ConnectionDto> {
+    data: UpdateConnectionModel,
+  ): Promise<ConnectionModel> {
     await this.connectionRepository.update(ctx, id, data);
 
     return await this.connectionRepository.retrieve(ctx, id);
@@ -55,8 +55,8 @@ export class ConnectionService implements IConnectionService {
 
   async paginate(
     @ReqCtx() ctx: IRequestContext,
-    _query: PageQueryDto,
-  ): Promise<PageDto<ConnectionDto>> {
+    _query: PageQuery,
+  ): Promise<Page<ConnectionModel>> {
     const { strategy_type, ...rest} = _query;
 
     const query = { ...rest };

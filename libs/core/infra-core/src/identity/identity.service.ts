@@ -2,7 +2,7 @@ import { IRequestContext } from '@libs/nest-core';
 import { IIdentityService } from 'libs/api/infra-api/src/identity/identity.service';
 import { Inject, NotFoundException } from '@nestjs/common';
 import { IIdentityRepository } from 'libs/api/infra-api/src/identity/identity.repository';
-import { IdentityDto } from 'libs/api/infra-api/src/identity/identity.dto';
+import { IdentityModel } from 'libs/api/infra-api/src/identity/identity.model';
 
 export class IdentityService implements IIdentityService {
   constructor(
@@ -13,7 +13,7 @@ export class IdentityService implements IIdentityService {
   async retrieve(
     ctx: IRequestContext,
     id: string,
-  ): Promise<IdentityDto | undefined> {
+  ): Promise<IdentityModel | undefined> {
     return await this.identityRepository.retrieve(ctx, id);
   }
 
@@ -21,7 +21,7 @@ export class IdentityService implements IIdentityService {
     ctx: IRequestContext,
     connection: string,
     userId: string,
-  ): Promise<IdentityDto | undefined> {
+  ): Promise<IdentityModel | undefined> {
     return this.identityRepository.findByConnection(
       ctx,
       connection,
@@ -32,8 +32,8 @@ export class IdentityService implements IIdentityService {
   async update(
     ctx: IRequestContext,
     id: string,
-    identity: Partial<IdentityDto>,
-  ): Promise<IdentityDto> {
+    identity: Partial<IdentityModel>,
+  ): Promise<IdentityModel> {
     const { affected } = await this.identityRepository.update(ctx, {
       ...identity,
       id,

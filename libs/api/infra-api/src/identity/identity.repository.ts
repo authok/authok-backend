@@ -1,17 +1,17 @@
 import { IRequestContext } from '@libs/nest-core';
-import { IdentityDto } from './identity.dto';
+import { IdentityModel } from './identity.model';
 
 export interface IIdentityRepository {
-  retrieve(ctx: IRequestContext, id: string): Promise<IdentityDto | undefined>;
+  retrieve(ctx: IRequestContext, id: string): Promise<IdentityModel | undefined>;
 
   findByConnection(
     ctx: IRequestContext,
     connection: string,
     user_id: string,
-  ): Promise<IdentityDto | undefined>;
+  ): Promise<IdentityModel | undefined>;
 
   update(
     ctx: IRequestContext,
-    identity: Partial<IdentityDto>,
+    identity: Partial<IdentityModel>,
   ): Promise<{ affected?: number }>;
 }

@@ -3,7 +3,7 @@ import { PageDto } from "libs/common/src/pagination/pagination.dto";
 import { ScopesGuard } from "libs/oidc/client/src/lib/guards/scopes.guard";
 import { Scopes } from "libs/oidc/client/src/lib/guards/scopes.decorator";
 import { IOrganizationService } from "libs/api/infra-api/src/organization/organization.service";
-import { CreateOrganizationDto, OrganizationPageQueryDto, OrganizationDto, UpdateOrganizationDto, OrganizationEnabledConnectionDto, AddOrganizationEnabledConnectionDto, UpdateOrganizationEnabledConnectionDto } from "libs/api/infra-api/src/organization/organization.dto";
+import { CreateOrganizationDto, OrganizationPageQueryDto, OrganizationDto, UpdateOrganizationDto, OrganizationEnabledConnectionDto, AddOrganizationEnabledConnectionDto, UpdateOrganizationEnabledConnectionDto } from "libs/api/infra-api/src/organization/organization.model";
 import { ReqCtx, IRequestContext } from "@libs/nest-core";
 
 @Controller('/api/v1/organizations')

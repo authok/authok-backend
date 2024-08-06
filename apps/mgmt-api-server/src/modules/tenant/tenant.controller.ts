@@ -8,7 +8,7 @@ import { ApiOperation } from "@nestjs/swagger";
 import { IRequestContext, ReqCtx } from "@libs/nest-core";
 import { ITenantManager } from "libs/api/infra-api/src/tenant/tenant.manager";
 import { OrganizationMemberDto } from "libs/api/infra-api/src/organization/organization-member.dto";
-import { OrganizationMemberPageQueryDto } from "libs/api/infra-api/src/organization/organization.dto";
+import { OrganizationMemberPageQueryDto } from "libs/api/infra-api/src/organization/organization.model";
 import { PageDto } from "libs/common/src/pagination/pagination.dto";
 import { IOrganizationMemberService } from "libs/api/infra-api/src/organization/organization-member.service";
 import { RoleDto, RolePageQueryDto } from "libs/api/infra-api/src/role/role.dto";

@@ -1,29 +1,28 @@
 import { PageDto } from 'libs/common/src/pagination/pagination.dto';
-import { IRequestContext } from '@libs/nest-core';
-import { OrganizationMemberRolePageQueryDto } from './organization-member-role.dto';
-import { OrganizationMemberRoleModel } from './organization-member-role.model';
+import { OrganizationMemberRolePageQuery, OrganizationMemberRoleModel } from './organization-member-role.model';
+import { IContext } from '@libs/nest-core';
 
 export interface IOrganizationMemberRoleService {
   retrieve(
-    ctx: IRequestContext,
+    ctx: IContext,
     member_id: string,
     role_id: string,
   ): Promise<OrganizationMemberRoleModel | undefined>;
 
   update(
-    ctx: IRequestContext,
+    ctx: IContext,
     data: Partial<OrganizationMemberRoleModel>,
   ): Promise<OrganizationMemberRoleModel>;
 
-  delete(ctx: IRequestContext, member_id: string, role_id: string): Promise<void>;
+  delete(ctx: IContext, member_id: string, role_id: string): Promise<void>;
 
   create(
-    ctx: IRequestContext,
+    ctx: IContext,
     body: OrganizationMemberRoleModel,
   ): Promise<OrganizationMemberRoleModel>;
 
   paginate(
-    ctx: IRequestContext,
-    query: OrganizationMemberRolePageQueryDto,
+    ctx: IContext,
+    query: OrganizationMemberRolePageQuery,
   ): Promise<PageDto<OrganizationMemberRoleModel>>;
 }

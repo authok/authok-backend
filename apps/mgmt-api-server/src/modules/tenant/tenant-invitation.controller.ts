@@ -1,7 +1,7 @@
 import { Controller, Inject, Post, Body, Req, NotFoundException, BadRequestException, Query, Get, Param, Delete } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { IInvitationService } from "libs/api/infra-api/src/invitation/invitation.service";
-import { InvitationDto, InvitationPageQueryDto } from "libs/api/infra-api/src/invitation/invitation.dto";
+import { InvitationDto, InvitationPageQueryDto } from "libs/api/infra-api/src/invitation/invitation.model";
 import { OIDCRequest } from "../../types/oidc";
 import dayjs from 'moment';
 import { PageDto } from "libs/common/src/pagination/pagination.dto";

@@ -17,8 +17,8 @@ import {
   AddOrganizationMembersDto,
   RemoveOrganizationMembersDto,
   OrganizationMemberPageQueryDto,
-} from 'libs/api/infra-api/src/organization/organization.dto';
-import { OrganizationMemberDto } from 'libs/api/infra-api/src/organization/organization-member.dto';
+  OrganizationMemberDto,
+} from 'libs/dto/src';
 import { Scopes } from 'libs/oidc/client/src/lib/guards/scopes.decorator';
 import { IRequestContext, ReqCtx } from '@libs/nest-core';
 import {
@@ -65,7 +65,16 @@ export class OrganizationMemberController {
   ): Promise<OrganizationMemberDto | undefined> {
     const member = await this.organizationMemberService.findByRelation(ctx, orgId, userId);
     if (!member) throw new NotFoundException();
-    return member;
+
+    const { user, roles, ...rest } = member;
+
+    return {
+      ...rest,
+      roles: roles?.map(it => ({
+        id: it.role?.id,
+        name: it.role?.name,
+      })),
+    };
   }
 
   @ApiOperation({
@@ -81,7 +90,13 @@ export class OrganizationMemberController {
   ): Promise<PageDto<OrganizationMemberDto>> {
     const query = { ..._query, org_id };
 
-    return await this.organizationMemberService.paginate(ctx, query);
+    const { meta, items: _items } = await this.organizationMemberService.paginate(ctx, query);
+    const items = _items.map(it => it as unknown as OrganizationMemberDto);
+
+    return {
+      meta,
+      items,
+    }
   }
 
   @ApiOperation({

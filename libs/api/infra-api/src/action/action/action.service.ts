@@ -1,15 +1,15 @@
-import { ActionDto } from './action.dto';
-import { IRequestContext } from "@libs/nest-core";
+import { ActionModel } from './action.model';
+import { IContext } from "@libs/nest-core";
 import { PageQueryDto, PageDto } from "libs/common/src/pagination/pagination.dto";
 
 export interface IActionService { 
-  create(ctx: IRequestContext, action: Partial<ActionDto>): Promise<ActionDto>;
+  create(ctx: IContext, action: Partial<ActionModel>): Promise<ActionModel>;
 
-  retrieve(ctx: IRequestContext, id: string): Promise<ActionDto | undefined>;
+  retrieve(ctx: IContext, id: string): Promise<ActionModel | undefined>;
 
-  update(ctx: IRequestContext, action: Partial<ActionDto>): Promise<ActionDto>;
+  update(ctx: IContext, action: Partial<ActionModel>): Promise<ActionModel>;
 
-  delete(ctx: IRequestContext, id: string): Promise<void>;
+  delete(ctx: IContext, id: string): Promise<void>;
 
-  paginate(ctx: IRequestContext, query: PageQueryDto): Promise<PageDto<ActionDto>>;
+  paginate(ctx: IContext, query: PageQueryDto): Promise<PageDto<ActionModel>>;
 }

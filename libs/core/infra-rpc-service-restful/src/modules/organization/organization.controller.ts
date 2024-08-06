@@ -21,7 +21,7 @@ import {
   OrganizationDto,
   CreateOrganizationDto,
   UpdateOrganizationDto,
-} from 'libs/api/infra-api/src/organization/organization.dto';
+} from 'libs/api/infra-api/src/organization/organization.model';
 import { IRequestContext, ReqCtx } from '@libs/nest-core';
 import { PageDto, PageQueryDto } from 'libs/common/src/pagination/pagination.dto';
 

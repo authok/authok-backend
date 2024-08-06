@@ -1,22 +1,19 @@
 import { TenantAwareRepository } from 'libs/support/tenant-support-typeorm/src/modules/tenant/tenant-aware.repository';
 import {
-  UpdateTriggerBindingDto,
-  TriggerBindingDto,
-} from 'libs/api/infra-api/src/action/trigger-binding/trigger-binding.dto';
+  UpdateTriggerBindingModel,
+  TriggerBindingModel,
+} from 'libs/api/infra-api/src/action/trigger-binding/trigger-binding.model';
 import { Inject } from '@nestjs/common';
 import { TriggerBindingEntity } from './trigger-binding.entity';
 import { plainToClass } from 'class-transformer';
 import { ActionEntity } from '../action/action.entity';
 import { ActionMapper } from '../action/action.mapper';
-import {
-  PageDto,
-  PageQueryDto,
-} from 'libs/common/src/pagination/pagination.dto';
 import { paginate } from 'libs/common/src/pagination/typeorm-paginate';
 import { ITriggerBindingRepository } from 'libs/api/infra-api/src/action/trigger-binding/trigger-binding.repository';
 import { TriggerEntity } from '../trigger/trigger.entity';
 import { EntityManager } from 'typeorm';
 import { IContext } from '@libs/nest-core';
+import { Page, PageQuery } from 'libs/common/src/pagination/pagination.model';
 
 export class TypeOrmTriggerBindingRepository
   extends TenantAwareRepository
@@ -28,8 +25,8 @@ export class TypeOrmTriggerBindingRepository
   async update(
     ctx: IContext,
     trigger_id: string,
-    bindings: UpdateTriggerBindingDto[],
-  ): Promise<TriggerBindingDto[]> {
+    bindings: UpdateTriggerBindingModel[],
+  ): Promise<TriggerBindingModel[]> {
     const triggerBindingRepo = await this.repo(ctx, TriggerBindingEntity);
 
     const existBindings = await triggerBindingRepo.find({
@@ -83,7 +80,7 @@ export class TypeOrmTriggerBindingRepository
     console.log('updated: ', updated);
 
     return updated.map((entity) =>
-      plainToClass(TriggerBindingDto, {
+      plainToClass(TriggerBindingModel, {
         id: entity.id,
         trigger_id: entity.trigger_relation_id?.trigger_id,
         display_name: entity.display_name,
@@ -94,8 +91,8 @@ export class TypeOrmTriggerBindingRepository
 
   async paginate(
     ctx: IContext,
-    query: PageQueryDto,
-  ): Promise<PageDto<TriggerBindingDto>> {
+    query: PageQuery,
+  ): Promise<Page<TriggerBindingModel>> {
     const triggerBindingRepo = await this.repo(ctx, TriggerBindingEntity);
 
     query.tenant = ctx.tenant;
@@ -108,7 +105,7 @@ export class TypeOrmTriggerBindingRepository
     return {
       meta: page.meta,
       items: page.items.map((entity) =>
-        plainToClass(TriggerBindingDto, {
+        plainToClass(TriggerBindingModel, {
           id: entity.id,
           trigger_id: entity.trigger_relation_id?.trigger_id,
           display_name: entity.display_name,

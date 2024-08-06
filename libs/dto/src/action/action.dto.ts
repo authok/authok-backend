@@ -2,7 +2,7 @@ import { JoiSchemaOptions, JoiSchema, CREATE, UPDATE } from "nestjs-joi";
 import { PageQueryDto } from "libs/common/src/pagination/pagination.dto";
 import * as Joi from 'joi';
 import { ApiProperty, PickType, PartialType } from "@nestjs/swagger";
-import { TriggerDto } from "../trigger/trigger.dto";
+import { TriggerDto } from "./trigger.dto";
 
 export class IntegrationDto {
   @ApiProperty()

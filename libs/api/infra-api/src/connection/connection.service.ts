@@ -1,31 +1,31 @@
 import {
-  ConnectionDto,
-  CreateConnectionDto,
-  UpdateConnectionDto,
-} from './connection.dto';
-import { IRequestContext } from '@libs/nest-core';
-import { PageDto, PageQueryDto } from 'libs/common/src/pagination/pagination.dto';
+  ConnectionModel,
+  CreateConnectionModel,
+  UpdateConnectionModel,
+} from './connection.model';
+import { IContext } from '@libs/nest-core';
+import { Page, PageQuery } from 'libs/common/src/pagination/pagination.model';
 
 export interface IConnectionService {
-  findByName(ctx: IRequestContext, name: string): Promise<ConnectionDto | null>;
+  findByName(ctx: IContext, name: string): Promise<ConnectionModel | null>;
 
-  retrieve(ctx: IRequestContext, id: string): Promise<ConnectionDto | null>;
+  retrieve(ctx: IContext, id: string): Promise<ConnectionModel | null>;
 
   create(
-    ctx: IRequestContext,
-    input: CreateConnectionDto,
-  ): Promise<ConnectionDto | null>;
+    ctx: IContext,
+    input: CreateConnectionModel,
+  ): Promise<ConnectionModel | null>;
 
   update(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-    input: UpdateConnectionDto,
-  ): Promise<ConnectionDto | null>;
+    input: UpdateConnectionModel,
+  ): Promise<ConnectionModel | null>;
 
-  delete(ctx: IRequestContext, id: string);
+  delete(ctx: IContext, id: string);
 
   paginate(
-    ctx: IRequestContext,
-    query: PageQueryDto,
-  ): Promise<PageDto<ConnectionDto>>;
+    ctx: IContext,
+    query: PageQuery,
+  ): Promise<Page<ConnectionModel>>;
 }

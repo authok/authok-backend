@@ -4,7 +4,7 @@ import {
   PageDto,
   PageQueryDto,
 } from 'libs/common/src/pagination/pagination.dto';
-import { ConnectionDto } from '../connection/connection.dto';
+import { ConnectionModel } from '../connection/connection.model';
 
 export interface IClientService {
   findByName(ctx: IContext, name: string): Promise<ClientDto | null>;
@@ -31,5 +31,5 @@ export interface IClientService {
   findEnabledConnections(
     ctx: IContext,
     client_id: string,
-  ): Promise<ConnectionDto[]>;
+  ): Promise<ConnectionModel[]>;
 }

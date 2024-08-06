@@ -3,25 +3,18 @@ import {
   Injectable,
   Inject,
   BadRequestException,
-  NotFoundException,
 } from '@nestjs/common';
 import {
-  OrganizationDto,
-  OrganizationEnabledConnectionDto,
-  AddOrganizationEnabledConnectionDto,
-  UpdateOrganizationEnabledConnectionDto,
-} from 'libs/api/infra-api/src/organization/organization.dto';
+  OrganizationModel,
+  OrganizationEnabledConnection,
+  AddOrganizationEnabledConnection,
+  UpdateOrganizationEnabledConnection,
+} from 'libs/api/infra-api/src/organization/organization.model';
 import {
   OrganizationEntity,
-  OrganizationMemberEntity,
 } from './organization.entity';
 
 import {
-  PageDto,
-  PageQueryDto,
-} from 'libs/common/src/pagination/pagination.dto';
-import {
-  IRequestContext,
   MapperQueryRepository,
   getQueryRepositoryToken,
   Filter,
@@ -31,15 +24,16 @@ import {
 } from '@libs/nest-core';
 import { OrganizationMapper } from './organization.mapper';
 import { plainToClass } from 'class-transformer';
-import { OrganizationMemberDto } from 'libs/api/infra-api/src/organization/organization-member.dto';
 import { TenantAwareTypeOrmQueryRepository } from '@libs/nest-core-typeorm';
 import { OrganizationEnabledConnectionEntity } from './enabled-connection.entity';
 import { OrganizationEnabledConnectionMapper } from './organization-enabled-connection.mapper';
 import { ConnectionEntity } from '../connection/connection.entity';
+import { OrganizationMemberModel } from 'libs/api/infra-api/src/organization/organization-member.model';
+import { Page, PageQuery } from 'libs/common/src/pagination/pagination.model';
 
 @Injectable()
 export class TypeOrmOrganizationRepository
-  extends MapperQueryRepository<OrganizationDto, OrganizationEntity>
+  extends MapperQueryRepository<OrganizationModel, OrganizationEntity>
   implements IOrganizationRepository
 {
   constructor(
@@ -49,7 +43,7 @@ export class TypeOrmOrganizationRepository
     readonly repo: TenantAwareTypeOrmQueryRepository<OrganizationEntity>,
 
     @Inject('OrganizationMemberMapperQueryRepository')
-    readonly orgMemberRepo: QueryRepository<OrganizationMemberDto>,
+    readonly orgMemberRepo: QueryRepository<OrganizationMemberModel>,
     @Inject(getQueryRepositoryToken(OrganizationEnabledConnectionEntity))
     readonly orgEnabledConnectionRepo: TenantAwareTypeOrmQueryRepository<OrganizationEnabledConnectionEntity>,
   ) {
@@ -57,12 +51,12 @@ export class TypeOrmOrganizationRepository
   }
 
   async paginate(
-    ctx: IRequestContext,
-    _query: PageQueryDto,
-  ): Promise<PageDto<OrganizationDto>> {
+    ctx: IContext,
+    _query: PageQuery,
+  ): Promise<Page<OrganizationModel>> {
     const filter = {
       and: [],
-    } as Filter<OrganizationDto>;
+    } as Filter<OrganizationModel>;
     if (_query.org_id) {
       filter.and.push({
         id: {
@@ -77,7 +71,7 @@ export class TypeOrmOrganizationRepository
         limit: _query.page_size,
       },
       filter,
-    } as Query<OrganizationDto>;
+    } as Query<OrganizationModel>;
 
     const items = await this.query(ctx, query);
     const total = await this.count(ctx, query.filter);
@@ -93,10 +87,10 @@ export class TypeOrmOrganizationRepository
   }
 
   async addMembers(
-    ctx: IRequestContext,
+    ctx: IContext,
     org_id: string,
     user_ids: string[],
-  ): Promise<OrganizationMemberDto[]> {
+  ): Promise<OrganizationMemberModel[]> {
     const existingOrg = await this.queryOne(ctx, {
       and: [
         {
@@ -152,7 +146,7 @@ export class TypeOrmOrganizationRepository
     );
 
     const members = toAddUserIds.map((user_id) =>
-      plainToClass(OrganizationMemberDto, {
+      plainToClass(OrganizationMemberModel, {
         tenant: ctx.tenant,
         user_id: user_id,
         org_id,
@@ -209,7 +203,7 @@ export class TypeOrmOrganizationRepository
   async enabledConnections(
     ctx: IContext,
     org_id: string,
-  ): Promise<PageDto<OrganizationEnabledConnectionDto>> {
+  ): Promise<Page<OrganizationEnabledConnection>> {
     const query = {
       filter: {
         and: [
@@ -279,8 +273,8 @@ export class TypeOrmOrganizationRepository
   async addConnection(
     ctx: IContext,
     org_id: string,
-    dto: AddOrganizationEnabledConnectionDto,
-  ): Promise<OrganizationEnabledConnectionDto> {
+    dto: AddOrganizationEnabledConnection,
+  ): Promise<OrganizationEnabledConnection> {
     const entity = this.orgEnabledConnectionMapper.convertToCreateEntity(dto);
     entity.organization_id = org_id;
 
@@ -304,8 +298,8 @@ export class TypeOrmOrganizationRepository
     ctx: IContext,
     org_id: string,
     connection_id: string,
-    data: UpdateOrganizationEnabledConnectionDto,
-  ): Promise<OrganizationEnabledConnectionDto> {
+    data: UpdateOrganizationEnabledConnection,
+  ): Promise<OrganizationEnabledConnection> {
     return await this.orgEnabledConnectionMapper.convertAsyncToDTO(
       this.orgEnabledConnectionRepo.updateOne(
         ctx,

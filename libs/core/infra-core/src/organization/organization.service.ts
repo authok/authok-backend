@@ -3,18 +3,18 @@ import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { IOrganizationService } from 'libs/api/infra-api/src/organization/organization.service';
 import { IOrganizationRepository } from 'libs/api/infra-api/src/organization/organization.repository';
 import {
-  OrganizationDto,
-  UpdateOrganizationDto,
-  OrganizationEnabledConnectionDto,
-  AddOrganizationEnabledConnectionDto,
-  UpdateOrganizationEnabledConnectionDto,
-} from 'libs/api/infra-api/src/organization/organization.dto';
+  OrganizationModel,
+  UpdateOrganizationModel,
+  OrganizationEnabledConnection,
+  AddOrganizationEnabledConnection,
+  UpdateOrganizationEnabledConnection,
+} from 'libs/api/infra-api/src/organization/organization.model';
 import { PageDto, PageQueryDto } from 'libs/common/src/pagination/pagination.dto';
 import { IContext } from '@libs/nest-core';
-import { OrganizationMemberDto } from 'libs/api/infra-api/src/organization/organization-member.dto';
+import { OrganizationMemberModel } from 'libs/api/infra-api/src/organization/organization-member.model';
 import { IInvitationRepository } from 'libs/api/infra-api/src/invitation/invitation.repository';
 import { APIException } from 'libs/common/src/exception/api.exception';
-import { InvitationDto } from 'libs/api/infra-api/src/invitation/invitation.dto';
+import { InvitationModel } from 'libs/api/infra-api/src/invitation/invitation.model';
 
 @Injectable()
 export class OrganizationService implements IOrganizationService {
@@ -28,14 +28,14 @@ export class OrganizationService implements IOrganizationService {
   async retrieve(
     ctx: IContext,
     id: string,
-  ): Promise<OrganizationDto | undefined> {
+  ): Promise<OrganizationModel | undefined> {
     return await this.organizationRepository.findById(ctx, id);
   }
 
   async findByName(
     ctx: IContext,
     name: string,
-  ): Promise<OrganizationDto | undefined> {
+  ): Promise<OrganizationModel | undefined> {
     return await this.organizationRepository.queryOne(ctx, {
       and: [
         {
@@ -49,8 +49,8 @@ export class OrganizationService implements IOrganizationService {
 
   async create(
     ctx: IContext,
-    input: OrganizationDto,
-  ): Promise<OrganizationDto> {
+    input: OrganizationModel,
+  ): Promise<OrganizationModel> {
     return await this.organizationRepository.createOne(ctx, input);
   }
 
@@ -61,19 +61,19 @@ export class OrganizationService implements IOrganizationService {
   async update(
     ctx: IContext,
     id: string,
-    body: UpdateOrganizationDto,
-  ): Promise<OrganizationDto> {
+    body: UpdateOrganizationModel,
+  ): Promise<OrganizationModel> {
     return await this.organizationRepository.updateOne(ctx, id, body);
   }
 
   async paginate(
     ctx: IContext,
     query: PageQueryDto,
-  ): Promise<PageDto<OrganizationDto>> {
+  ): Promise<PageDto<OrganizationModel>> {
     return await this.organizationRepository.paginate(ctx, query);
   }
 
-  async addMembers(ctx: IContext, org_id: string, user_ids: string[]): Promise<OrganizationMemberDto[]> {
+  async addMembers(ctx: IContext, org_id: string, user_ids: string[]): Promise<OrganizationMemberModel[]> {
     return await this.organizationRepository.addMembers(ctx, org_id, user_ids);
   }
 
@@ -92,7 +92,7 @@ export class OrganizationService implements IOrganizationService {
     await this.invitationRepository.deleteOne(ctx, invitation_id);
   }
 
-  async getInvitation(ctx: IContext, org_id: string, invitation_id: string): Promise<InvitationDto | undefined> {
+  async getInvitation(ctx: IContext, org_id: string, invitation_id: string): Promise<InvitationModel | undefined> {
     return await this.invitationRepository.queryOne(ctx, {
       and: [
         {
@@ -107,15 +107,15 @@ export class OrganizationService implements IOrganizationService {
     });
   }
 
-  async enabledConnections(ctx: IContext, org_id: string): Promise<PageDto<OrganizationEnabledConnectionDto>> {
+  async enabledConnections(ctx: IContext, org_id: string): Promise<PageDto<OrganizationEnabledConnection>> {
     return await this.organizationRepository.enabledConnections(ctx, org_id);
   }
 
   async addConnection(
     ctx: IContext, 
     org_id: string, 
-    connection: AddOrganizationEnabledConnectionDto,
-  ): Promise<OrganizationEnabledConnectionDto> {
+    connection: AddOrganizationEnabledConnection,
+  ): Promise<OrganizationEnabledConnection> {
     return await this.organizationRepository.addConnection(ctx, org_id, connection);
   }
 
@@ -127,9 +127,8 @@ export class OrganizationService implements IOrganizationService {
     ctx: IContext, 
     org_id: string, 
     connection_id: string, 
-    data: UpdateOrganizationEnabledConnectionDto
-  ): Promise<OrganizationEnabledConnectionDto> {
+    data: UpdateOrganizationEnabledConnection
+  ): Promise<OrganizationEnabledConnection> {
     return await this.organizationRepository.updateConnection(ctx, org_id, connection_id, data);
   }
-
 }

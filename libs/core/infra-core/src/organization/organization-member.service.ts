@@ -2,8 +2,8 @@ import { PageQueryDto, PageDto } from "libs/common/src/pagination/pagination.dto
 import { Inject, Injectable } from "@nestjs/common";
 import { IOrganizationMemberRepository } from "libs/api/infra-api/src/organization/organization-member.repository";
 import { IOrganizationMemberService } from "libs/api/infra-api/src/organization/organization-member.service";
-import { OrganizationMemberDto } from "libs/api/infra-api/src/organization/organization-member.dto";
-import { PermissionDto } from "libs/api/infra-api/src/permission/permission.dto";
+import { OrganizationMemberModel } from "libs/api/infra-api/src/organization/organization-member.model";
+import { PermissionModel } from "libs/api/infra-api/src/permission/permission.model";
 import { IContext } from "@libs/nest-core";
 import { PageQuery } from "libs/common/src/pagination/pagination.model";
 
@@ -14,19 +14,19 @@ export class OrganizationMemberService implements IOrganizationMemberService {
     private readonly organizationMemberRepository: IOrganizationMemberRepository,
   ) {}
   
-  async create(ctx: IContext, organizationMember: Partial<OrganizationMemberDto>): Promise<OrganizationMemberDto> {
+  async create(ctx: IContext, organizationMember: Partial<OrganizationMemberModel>): Promise<OrganizationMemberModel> {
     return await this.organizationMemberRepository.createOne(ctx, organizationMember);
   }
 
-  async retrieve(ctx: IContext, id: string): Promise<OrganizationMemberDto | undefined> {
+  async retrieve(ctx: IContext, id: string): Promise<OrganizationMemberModel | undefined> {
     return await this.organizationMemberRepository.findById(ctx, id);
   }
 
-  async findByRelation(ctx: IContext, org_id: string, user_id: string): Promise<OrganizationMemberDto | undefined> {
+  async findByRelation(ctx: IContext, org_id: string, user_id: string): Promise<OrganizationMemberModel | undefined> {
     return await this.organizationMemberRepository.findByOrgIdAndUserId(ctx, org_id, user_id);
   }
 
-  async update(ctx: IContext, id: string, organizationMember: Partial<OrganizationMemberDto>): Promise<OrganizationMemberDto> {
+  async update(ctx: IContext, id: string, organizationMember: Partial<OrganizationMemberModel>): Promise<OrganizationMemberModel> {
     return await this.organizationMemberRepository.updateOne(ctx, id, organizationMember);
   }
 
@@ -34,7 +34,7 @@ export class OrganizationMemberService implements IOrganizationMemberService {
     await this.organizationMemberRepository.deleteOne(ctx, id);
   }
 
-  async paginate(ctx: IContext, query: PageQueryDto): Promise<PageDto<OrganizationMemberDto>> {
+  async paginate(ctx: IContext, query: PageQueryDto): Promise<PageDto<OrganizationMemberModel>> {
     return await this.organizationMemberRepository.paginate(ctx, query);
   }
 
@@ -46,8 +46,7 @@ export class OrganizationMemberService implements IOrganizationMemberService {
     await this.organizationMemberRepository.removeRoles(ctx, member_id, role_ids);
   }
 
-  async listPermissions(ctx: IContext, org_id: string, user_id: string, query: PageQuery): Promise<PageDto<PermissionDto>> {
+  async listPermissions(ctx: IContext, org_id: string, user_id: string, query: PageQuery): Promise<PageDto<PermissionModel>> {
     return this.organizationMemberRepository.listPermissions(ctx, org_id, user_id, query);
   }
-
 }

@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { IRequestContext } from '@libs/nest-core';
-import { ProfileDataDto } from 'libs/api/infra-api/src/identity/identity.dto';
 import { ISandboxService } from 'libs/api/sandbox-api/src/sandbox.service';
 import {
   TokenExchangeFn,
@@ -11,6 +10,7 @@ import * as _ from 'lodash';
 import { URL } from 'url';
 import { IAuthorizationHandler } from 'libs/api/authorization-api/src/authorization.handler';
 import { AccessTokenResult } from './interface';
+import { ProfileDataModel } from 'libs/api/infra-api/src/identity/identity.model';
 
 @Injectable()
 export class OAuth2IdentityProvider implements IAuthorizationHandler {
@@ -71,7 +71,7 @@ export class OAuth2IdentityProvider implements IAuthorizationHandler {
   async fetchUserInfo(
     ctx: IRequestContext,
     access_token: string,
-  ): Promise<ProfileDataDto> {
+  ): Promise<ProfileDataModel> {
     const fetchUserProfileFn =
       await this.sandboxService.run<FetchUserProfileFn>(
         ctx.connection.options.scripts.fetchUserProfile,

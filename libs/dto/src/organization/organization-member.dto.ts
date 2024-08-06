@@ -23,7 +23,7 @@ export class OrganizationMemberDto {
   @ApiProperty()
   user_metadata?: Record<string, any>;
 
-  user: Partial<UserDto>;
+  user?: Partial<UserDto>;
 
   @Exclude()
   @ApiHideProperty()

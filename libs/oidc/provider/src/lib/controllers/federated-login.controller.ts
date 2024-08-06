@@ -17,12 +17,11 @@ import { Request, Response } from 'express';
 
 import { IRequestContext, ReqCtx } from '@libs/nest-core';
 import { IUserService } from 'libs/api/infra-api/src/user/user.service';
-import { UserDto, UpdateUserDto } from 'libs/api/infra-api/src/user/user.dto';
+import { UserDto, UpdateUserDto } from 'libs/dto/src/user/user.dto';
 import { IAuthorizationManager } from 'libs/api/authorization-api/src/authorization.manager';
 import { IConnectionService } from 'libs/api/infra-api/src/connection/connection.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { IIdentityService } from 'libs/api/infra-api/src/identity/identity.service';
-import { IdentityDto } from 'libs/api/infra-api/src/identity/identity.dto';
 import { APIException } from 'libs/common/src/exception/api.exception';
 import { isSocialStrategy } from 'libs/core/authorization-core/src/utils/utils';
 import { UserEvents } from 'libs/api/infra-api/src/user/user.event';
@@ -33,6 +32,7 @@ import * as sessionHandler from '@authok/oidc-provider/lib/shared/session';
 import * as instance from '@authok/oidc-provider/lib/helpers/weak_cache';
 import * as ssHandler from '@authok/oidc-provider/lib/helpers/samesite_handler';
 import * as url from 'url';
+import { IdentityDto } from 'libs/dto/src';
 
 @Controller()
 export class FederatedLoginController {
@@ -178,7 +178,7 @@ export class FederatedLoginController {
       });
     } else {
       // 把 identity 合并到主 user
-      this.validateUser(federatedUser);
+      this.validateUser(federatedUser as unknown as UserDto);
 
       Logger.debug(
         `找到 联合登录账户,  connection: ${connection.name}, user_id: ${identity.user_id}, nickname: ${identity.profile_data.nickname}`,
@@ -514,7 +514,7 @@ export class FederatedLoginController {
       });
     } else {
       // 把 identity 合并到主 user
-      this.validateUser(federatedUser);
+      this.validateUser(federatedUser as unknown as UserDto);
 
       Logger.debug(
         `找到 联合登录账户,  connection: ${connection.name}, user_id: ${identity.user_id}, nickname: ${identity.profile_data.nickname}`,

@@ -1,6 +1,6 @@
 import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiUnauthorizedResponse, ApiForbiddenResponse } from '@nestjs/swagger';
-import { BrandingDto } from 'libs/api/infra-api/src/branding/branding.dto';
+import { BrandingDto } from 'libs/api/infra-api/src/branding/branding.model';
 import { ThrottlerGuard, Throttle } from '@nestjs/throttler';
 import { AuthGuard } from '@nestjs/passport';
 import { ScopesGuard } from 'libs/oidc/client/src/lib/guards/scopes.guard';

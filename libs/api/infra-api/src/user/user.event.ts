@@ -1,7 +1,7 @@
-import { UserDto } from './user.dto';
+import { UserModel } from './user.model';
 
 export class UserCreatedEvent {
-  user: UserDto;
+  user: UserModel;
 }
 
 export interface LoginEvent {

@@ -1,83 +1,79 @@
-import { IdentityDto, LinkIdentityReq } from '../identity/identity.dto';
-import {
-  PostPermissionsDto,
-  UserDto,
-  UserPageQueryDto,
-} from './user.dto';
 import { IContext } from '@libs/nest-core';
-import { PageDto, PageQueryDto } from 'libs/common/src/pagination/pagination.dto';
-import { PermissionDto } from '../permission/permission.dto';
-import { OrganizationDto } from '../organization/organization.dto';
+import { PermissionModel } from '../permission/permission.model';
+import { OrganizationModel } from '../organization/organization.model';
 import { FindOptions } from 'libs/common/src/types';
+import { PostPermissions, UserModel } from './user.model';
+import { IdentityModel, LinkIdentityReq } from '../identity/identity.model';
+import { Page, PageQuery } from 'libs/common/src/pagination/pagination.model';
 
 export interface IUserRepository {
   create(
     ctx: IContext,
-    user: Partial<UserDto>,
-  ): Promise<UserDto | undefined>;
+    user: Partial<UserModel>,
+  ): Promise<UserModel | undefined>;
 
-  retrieve(ctx: IContext, user_id: string): Promise<UserDto | undefined>;
+  retrieve(ctx: IContext, user_id: string): Promise<UserModel | undefined>;
 
   update(
     ctx: IContext,
     user_id: string,
-    user: Partial<UserDto>,
-  ): Promise<UserDto>;
+    user: Partial<UserModel>,
+  ): Promise<UserModel>;
 
-  delete(ctx: IContext, id: string): Promise<UserDto>;
+  delete(ctx: IContext, id: string): Promise<UserModel>;
 
   paginate(
     ctx: IContext,
-    query: UserPageQueryDto,
-  ): Promise<PageDto<UserDto>>;
+    query: PageQuery,
+  ): Promise<Page<UserModel>>;
 
   findByEmail(
     ctx: IContext,
     connection: string,
     email: string,
     options?: FindOptions,
-  ): Promise<UserDto | undefined>;
+  ): Promise<UserModel | undefined>;
 
-  findByGuid(ctx: IContext, guid: string): Promise<UserDto | undefined>;
+  findByGuid(ctx: IContext, guid: string): Promise<UserModel | undefined>;
 
-  findByUserIds(ctx: IContext, user_ids: string[]): Promise<Partial<UserDto>[]>;
+  findByUserIds(ctx: IContext, user_ids: string[]): Promise<Partial<UserModel>[]>;
 
   findByPhoneNumber(
     ctx: IContext,
     connection: string,
     phone_number: string,
     options?: FindOptions,
-  ): Promise<UserDto | undefined>;
+  ): Promise<UserModel | undefined>;
 
   findByUsername(
     ctx: IContext,
     connection: string,
     username: string,
     options?: FindOptions,
-  ): Promise<UserDto | undefined>;
+  ): Promise<UserModel | undefined>;
 
   findByConnection(
     ctx: IContext,
     connection: string,
     user_id: string,
-  ): Promise<UserDto | undefined>;
+  ): Promise<UserModel | undefined>;
 
   findByIdentityProvider(
     ctx: IContext,
     provider: string,
     user_id: string,
-  ): Promise<UserDto | undefined>;
+  ): Promise<UserModel | undefined>;
 
   updateFederatedIdentity(
     ctx: IContext,
-    identity: Partial<IdentityDto>,
+    identity: Partial<IdentityModel>,
   ): Promise<{ affected?: number }>;
 
   addFederatedIdentity(
     ctx: IContext,
     user_id: string,
-    identity: IdentityDto,
-  ): Promise<IdentityDto>;
+    identity: IdentityModel,
+  ): Promise<IdentityModel>;
 
   removeFederatedIdentity(
     ctx: IContext,
@@ -88,20 +84,20 @@ export interface IUserRepository {
   assignPermissions(
     ctx: IContext,
     id: string,
-    body: PostPermissionsDto,
+    body: PostPermissions,
   ): Promise<void>;
 
   removePermissions(
     ctx: IContext,
     user_id: string,
-    body: PostPermissionsDto,
+    body: PostPermissions,
   ): Promise<void>;
 
   paginatePermissions(
     ctx: IContext,
     user_id: string,
-    query: PageQueryDto,
-  ): Promise<PageDto<PermissionDto>>;
+    query: PageQuery,
+  ): Promise<Page<PermissionModel>>;
 
   updateGroupsToUser(
     ctx: IContext,
@@ -110,13 +106,13 @@ export interface IUserRepository {
     overwrite: boolean,
   ): Promise<void>;
 
-  linkIdentity(ctx: IContext, primaryUserId: string, linkIdentityReq: LinkIdentityReq): Promise<IdentityDto[]>;
+  linkIdentity(ctx: IContext, primaryUserId: string, linkIdentityReq: LinkIdentityReq): Promise<IdentityModel[]>;
 
-  unlinkIdentity(ctx: IContext, primaryUserId: string, connection: string, secondaryUserId: string): Promise<IdentityDto[]>;
+  unlinkIdentity(ctx: IContext, primaryUserId: string, connection: string, secondaryUserId: string): Promise<IdentityModel[]>;
 
   listOrganizations(
     ctx: IContext,
     user_id: string,
-    query: PageQueryDto,
-  ): Promise<PageDto<OrganizationDto>>;
+    query: PageQuery,
+  ): Promise<Page<OrganizationModel>>;
 }

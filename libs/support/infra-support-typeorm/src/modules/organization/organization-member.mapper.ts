@@ -3,24 +3,24 @@ import {
   OrganizationEntity,
   OrganizationMemberEntity,
 } from './organization.entity';
-import { OrganizationDto } from 'libs/api/infra-api/src/organization/organization.dto';
-import { OrganizationMemberDto } from 'libs/api/infra-api/src/organization/organization-member.dto';
+import { OrganizationModel } from 'libs/api/infra-api/src/organization/organization.model';
+import { OrganizationMemberModel } from 'libs/api/infra-api/src/organization/organization-member.model';
 import { UserEntity } from '../user/user.entity';
-import { UserDto } from 'libs/api/infra-api/src/user/user.dto';
 import { Mapper, ClassTransformerMapper } from '@libs/nest-core';
+import { UserModel } from 'libs/api/infra-api/src/user/user.model';
 
-@Mapper(OrganizationMemberDto, OrganizationMemberEntity)
+@Mapper(OrganizationMemberModel, OrganizationMemberEntity)
 export class OrganizationMemberMapper extends ClassTransformerMapper<
-  OrganizationMemberDto,
+  OrganizationMemberModel,
   OrganizationMemberEntity
 > {
-  convertToDTO(entity: OrganizationMemberEntity): OrganizationMemberDto {
+  convertToDTO(entity: OrganizationMemberEntity): OrganizationMemberModel {
     const { organization, user, roles, ...rest } = entity;
 
     const dto = super.convertToDTO(rest as OrganizationMemberEntity);
 
     if (organization) {
-      dto.organization = plainToClass(OrganizationDto, {
+      dto.organization = plainToClass(OrganizationModel, {
         id: organization.id,
         ...(organization.name && { name: organization.name }),
         ...(organization.display_name && { name: organization.display_name }),
@@ -28,7 +28,7 @@ export class OrganizationMemberMapper extends ClassTransformerMapper<
     }
 
     if (user) {
-      dto.user = plainToClass(UserDto, {
+      dto.user = plainToClass(UserModel, {
         user_id: user.user_id,
         ...(user.nickname && { nickname: user.nickname }),
         ...(user.username && { username: user.username }),
@@ -43,20 +43,15 @@ export class OrganizationMemberMapper extends ClassTransformerMapper<
       });
     }
 
-    if (roles) {
-      dto.roles = roles.map(it => ({
-        id: it.role?.id,
-        name: it.role?.name,
-      }))
-    }
+    dto.roles = roles;
 
     return dto;
   }
 
-  convertToEntity(dto: OrganizationMemberDto): OrganizationMemberEntity {
+  convertToEntity(dto: OrganizationMemberModel): OrganizationMemberEntity {
     const { organization, user, ...rest } = dto;
 
-    const entity = super.convertToEntity(rest as OrganizationMemberDto);
+    const entity = super.convertToEntity(rest as OrganizationMemberModel);
     if (organization) {
       entity.organization = plainToClass(OrganizationEntity, {
         id: organization.id,

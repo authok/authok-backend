@@ -1,66 +1,29 @@
 import {
   Controller,
-  Patch,
   Get,
-  Param,
-  Post,
-  Body,
-  Delete,
-  Req,
   Inject,
   Query,
   UseGuards,
-  UseInterceptors,
-  NotFoundException,
-  Logger,
-  ForbiddenException,
 } from '@nestjs/common';
-import {
-  CacheTTL,
-  CacheInterceptor,
-} from '@nestjs/cache-manager';
 import {
   ApiOkResponse,
   ApiTags,
   ApiOperation,
   ApiBearerAuth,
-  ApiParam,
   ApiForbiddenResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import {
   UserDto,
-  RecoveryCodeRegenerationDto,
-  CreateUserDto,
-  UpdateUserDto,
-  UserPageQueryDto,
-  PostPermissionsDto,
-} from 'libs/api/infra-api/src/user/user.dto';
+} from 'libs/dto/src/user/user.dto';
 import { IRequestContext, ReqCtx } from '@libs/nest-core';
 import { IUserService } from 'libs/api/infra-api/src/user/user.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ScopesGuard } from 'libs/oidc/client/src/lib/guards/scopes.guard';
 import { Scopes } from 'libs/oidc/client/src/lib/guards/scopes.decorator';
-import { Request } from 'express';
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
-import {
-  PageDto,
-  PageQueryDto,
-  pageDtoFactory,
-} from 'libs/common/src/pagination/pagination.dto';
-import { PermissionDto } from 'libs/api/infra-api/src/permission/permission.dto';
-import { PostUserRoleDto, RoleDto } from 'libs/api/infra-api/src/role/role.dto';
 import { IRoleService } from 'libs/api/infra-api/src/role/role.service';
-import {
-  CreateIdentityDto,
-  IdentityDto,
-  LinkIdentityReq,
-} from 'libs/api/infra-api/src/identity/identity.dto';
-import * as jwt from 'jsonwebtoken';
-import { nanoid } from 'nanoid';
 import { IConnectionService } from 'libs/api/infra-api/src/connection/connection.service';
-import { APIException } from 'libs/common/src/exception/api.exception';
-import { OrganizationDto } from 'libs/api/infra-api/src/organization/organization.dto';
 import { IIdentityService } from 'libs/api/infra-api/src/identity/identity.service';
 
 @ApiTags('用户')
@@ -105,6 +68,8 @@ export class UserFilterController {
       email,
       page_size: 100,
     });
-    return page.items;
+    
+    const items = page.items.map(it => it as unknown as UserDto);
+    return items;
   }
 }

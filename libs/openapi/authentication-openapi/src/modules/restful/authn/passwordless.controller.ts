@@ -37,9 +37,8 @@ import { Request, Response } from 'express';
 import { IAuthenticationManager } from 'libs/api/authentication-api/src';
 import { PasswordlessCredentials } from 'libs/support/passwordless/src/credentials';
 import { saveOidcSession } from '@libs/oidc/common/lib/utils/session/session';
-import { WrongUsernameOrPasswordError } from 'libs/common/src/exception/exceptions';
 import { OIDCSessionInterceptor } from '@libs/oidc/common/lib/interceptors/oidc-session.interceptor';
-import { UserDto } from 'libs/api/infra-api/src/user/user.dto';
+import { UserDto } from 'libs/dto/src/user/user.dto';
 import { IEmailTemplateService } from 'libs/api/infra-api/src/email-template/email-template.service';
 import { EmailTemplateDto } from 'libs/api/infra-api/src/email-template/email-template.dto';
 

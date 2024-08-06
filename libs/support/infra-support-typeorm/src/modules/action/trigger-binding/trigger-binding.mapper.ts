@@ -1,6 +1,6 @@
 import { TriggerBindingEntity } from './trigger-binding.entity';
 import { plainToClass } from 'class-transformer';
-import { TriggerBindingDto } from 'libs/api/infra-api/src/action/trigger-binding/trigger-binding.dto';
+import { TriggerBindingDto } from 'libs/api/infra-api/src/action/trigger-binding/trigger-binding.model';
 
 export class TriggerBindingMapper {
   toEntity(model?: TriggerBindingDto): TriggerBindingEntity | undefined {

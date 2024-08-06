@@ -1,19 +1,18 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
-  PermissionDto,
-  PermissionPageQueryDto,
-} from 'libs/api/infra-api/src/permission/permission.dto';
+  PermissionModel,
+  PermissionPageQuery,
+} from 'libs/api/infra-api/src/permission/permission.model';
 import { IPermissionRepository } from 'libs/api/infra-api/src/permission/permission.repository';
-import { PageDto, PageMeta } from 'libs/common/src/pagination/pagination.dto';
-import { IRequestContext } from '@libs/nest-core';
+import { IContext } from '@libs/nest-core';
 import {
   IPaginationMeta,
   IPaginationOptions,
   paginate,
 } from 'nestjs-typeorm-paginate';
-import { FindManyOptions, SelectQueryBuilder } from 'typeorm';
 import { TenantAwareRepository } from '../../../../tenant-support-typeorm/src/modules/tenant/tenant-aware.repository';
 import { PermissionEntity } from './permission.entity';
+import { Page, PageMeta } from 'libs/common/src/pagination/pagination.model';
 
 @Injectable()
 export class TypeOrmPermissionRepository
@@ -21,9 +20,9 @@ export class TypeOrmPermissionRepository
   implements IPermissionRepository {
 
   async paginate(
-    ctx: IRequestContext,
-    query: PermissionPageQueryDto,
-  ): Promise<PageDto<PermissionDto>> {
+    ctx: IContext,
+    query: PermissionPageQuery,
+  ): Promise<Page<PermissionModel>> {
     const repo = await this.repo(ctx, PermissionEntity);
 
     const options: IPaginationOptions<PageMeta> = {

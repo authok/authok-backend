@@ -12,7 +12,7 @@ import {
 } from 'libs/api/infra-api/src/tenant/tenant.dto';
 import { ConfigService } from '@nestjs/config';
 import { IResourceServerService } from 'libs/api/infra-api/src/resource-server/resource-server.service';
-import { OrganizationDto } from 'libs/api/infra-api/src/organization/organization.dto';
+import { OrganizationDto } from 'libs/api/infra-api/src/organization/organization.model';
 import { IOrganizationService } from 'libs/api/infra-api/src/organization/organization.service';
 import { IRoleService } from 'libs/api/infra-api/src/role/role.service';
 import { IOrganizationMemberService } from 'libs/api/infra-api/src/organization/organization-member.service';

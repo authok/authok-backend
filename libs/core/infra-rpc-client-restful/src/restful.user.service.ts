@@ -1,11 +1,6 @@
 import { Injectable, Param } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { IdentityDto } from 'libs/api/infra-api/src/identity/identity.dto';
 import {
-  CreateUserDto,
-  UpdateUserDto,
-  UserDto,
-  UserPageQueryDto,
   PostPermissionsDto,
 } from 'libs/api/infra-api/src/user/user.dto';
 import { IUserService } from 'libs/api/infra-api/src/user/user.service';
@@ -13,8 +8,13 @@ import { PromisifyHttpService } from 'libs/shared/src/services/promisifyHttp.ser
 import { IRequestContext, IContext } from '@libs/nest-core';
 import { PageDto, PageQueryDto } from 'libs/common/src/pagination/pagination.dto';
 import { PostUserRoleDto } from 'libs/api/infra-api/src/role/role.dto';
-import { PermissionDto } from 'libs/api/infra-api/src/permission/permission.dto';
-import { IdentifierType } from 'libs/core/authentication-core/src/credentials';
+import { PermissionDto } from 'libs/api/infra-api/src/permission/permission.model';
+import { IdentityModel } from 'libs/api/infra-api/src/identity/identity.model';
+import { CreateUserModel, UpdateUserModel, UserModel } from 'libs/api/infra-api/src/user/user.model';
+import { PageQuery } from 'libs/common/src/pagination/pagination.model';
+import { LinkIdentityReq } from 'libs/api/infra-api/src/identity/identity.dto';
+import { OrganizationDto } from 'libs/api/infra-api/src/organization/organization.model';
+import { UserRoleDto } from 'libs/api/infra-api/src/user/user-role.dto';
 
 @Injectable()
 export class RestfulUserService implements IUserService {
@@ -28,9 +28,9 @@ export class RestfulUserService implements IUserService {
   }
 
   async create(
-    ctx: IRequestContext,
-    user: CreateUserDto,
-  ): Promise<UserDto | null> {
+    ctx: IContext,
+    user: CreateUserModel,
+  ): Promise<UserModel | null> {
     return await this.promisifyHttp.post(`${this.serviceBaseUrl}/users`, user, {
       headers: {
         tenant: ctx.tenant,
@@ -39,9 +39,9 @@ export class RestfulUserService implements IUserService {
   }
 
   async createByFederatedIdentity(
-    ctx: IRequestContext,
-    identity: Partial<IdentityDto>,
-  ): Promise<UserDto> {
+    ctx: IContext,
+    identity: Partial<IdentityModel>,
+  ): Promise<UserModel> {
     return await this.promisifyHttp.post(`${this.serviceBaseUrl}/users/createByFederatedIdentity`, identity, {
       headers: {
         tenant: ctx.tenant,
@@ -50,9 +50,9 @@ export class RestfulUserService implements IUserService {
   }
 
   async retrieve(
-    ctx: IRequestContext,
+    ctx: IContext,
     user_id: string,
-  ): Promise<UserDto | undefined> {
+  ): Promise<UserModel | undefined> {
     return await this.promisifyHttp.get(`${this.serviceBaseUrl}/users/${user_id}`, {
       headers: {
         tenant: ctx.tenant,
@@ -61,9 +61,9 @@ export class RestfulUserService implements IUserService {
   }
 
   async findByGuid(
-    ctx: IRequestContext,
+    ctx: IContext,
     guid: string,
-  ): Promise<UserDto | undefined> {
+  ): Promise<UserModel | undefined> {
     return await this.promisifyHttp.get(`${this.serviceBaseUrl}/users/findByGuid/${guid}`, {
       headers: {
         tenant: ctx.tenant,
@@ -71,7 +71,7 @@ export class RestfulUserService implements IUserService {
     });
   }
 
-  async userVerifiedEmail(ctx: IRequestContext, user_id: string) {
+  async userVerifiedEmail(ctx: IContext, user_id: string) {
     return await this.promisifyHttp.post(
       `${this.serviceBaseUrl}/users/${user_id}/email_verified`,
       null,
@@ -84,15 +84,15 @@ export class RestfulUserService implements IUserService {
   }
 
   async validateUser(
-    ctx: IRequestContext,
-    user: UserDto,
+    ctx: IContext,
+    user: UserModel,
     password: string,
   ) {
     // TODO
     return undefined;
   }
 
-  async enable2fa(ctx: IRequestContext, user_id: string): Promise<void> {
+  async enable2fa(ctx: IContext, user_id: string): Promise<void> {
     return await this.promisifyHttp.post(
       `${this.serviceBaseUrl}/users/${user_id}/enable2fa`,
       null,
@@ -104,7 +104,7 @@ export class RestfulUserService implements IUserService {
     );
   }
 
-  async disable2fa(ctx: IRequestContext, user_id: string): Promise<void> {
+  async disable2fa(ctx: IContext, user_id: string): Promise<void> {
     return await this.promisifyHttp.post(
       `${this.serviceBaseUrl}/users/${user_id}/disable2fa`,
       null,
@@ -117,9 +117,9 @@ export class RestfulUserService implements IUserService {
   }
 
   async findByEmail(
-    ctx: IRequestContext,
+    ctx: IContext,
     email: string,
-  ): Promise<UserDto | undefined> {
+  ): Promise<UserModel | undefined> {
     return await this.promisifyHttp.get(
       `${this.serviceBaseUrl}/users/findByEmail`,
       {
@@ -132,9 +132,9 @@ export class RestfulUserService implements IUserService {
   }
 
   async findByPhoneNumber(
-    ctx: IRequestContext,
+    ctx: IContext,
     phone_number: string,
-  ): Promise<UserDto | undefined> {
+  ): Promise<UserModel | undefined> {
     return await this.promisifyHttp.get(
       `${this.serviceBaseUrl}/users/findByPhoneNumber`,
       {
@@ -149,9 +149,9 @@ export class RestfulUserService implements IUserService {
   }
 
   async findByName(
-    ctx: IRequestContext,
+    ctx: IContext,
     username: string,
-  ): Promise<UserDto | undefined> {
+  ): Promise<UserModel | undefined> {
     return await this.promisifyHttp.get(
       `${this.serviceBaseUrl}/users/findByName`,
       {
@@ -166,10 +166,10 @@ export class RestfulUserService implements IUserService {
   }
 
   async update(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-    data: Partial<UpdateUserDto>,
-  ): Promise<UserDto> {
+    data: Partial<UpdateUserModel>,
+  ): Promise<UserModel> {
     return await this.promisifyHttp.patch(
       `${this.serviceBaseUrl}/users/${id}`,
       data,
@@ -181,7 +181,7 @@ export class RestfulUserService implements IUserService {
     );
   }
 
-  async delete(ctx: IRequestContext, user_id: string): Promise<void> {
+  async delete(ctx: IContext, user_id: string): Promise<void> {
     return await this.promisifyHttp.delete(
       `${this.serviceBaseUrl}/users/${user_id}`,
       {
@@ -193,9 +193,9 @@ export class RestfulUserService implements IUserService {
   }
 
   async paginate(
-    ctx: IRequestContext,
-    query: UserPageQueryDto,
-  ): Promise<PageDto<UserDto>> {
+    ctx: IContext,
+    query: PageQuery,
+  ): Promise<PageDto<UserModel>> {
     return await this.promisifyHttp.get(`${this.serviceBaseUrl}/users/`, {
       params: query,
       headers: {
@@ -208,17 +208,17 @@ export class RestfulUserService implements IUserService {
     ctx: IContext,
     connection: string,
     user_id: string,
-  ): Promise<UserDto | undefined> {
+  ): Promise<UserModel | undefined> {
     // TODO
     return null;
   }
 
-  async updateFederatedIdentity(ctx: IRequestContext, identity: IdentityDto) {
+  async updateFederatedIdentity(ctx: IRequestContext, identity: IdentityModel) {
     // TODO
     return null;
   }
 
-  async addFederatedIdentity(ctx: IRequestContext, user_id: string, identity: IdentityDto) {
+  async addFederatedIdentity(ctx: IRequestContext, user_id: string, identity: IdentityModel) {
     // TODO
     return null;
   }
@@ -296,7 +296,7 @@ export class RestfulUserService implements IUserService {
     ctx: IRequestContext,
     connection: string,
     username: string,
-  ): Promise<UserDto | undefined> {
+  ): Promise<UserModel | undefined> {
     return this.promisifyHttp.post(
       `${this.serviceBaseUrl}/users/findByUsername`,
       {
@@ -339,5 +339,33 @@ export class RestfulUserService implements IUserService {
         },
       },
     );
+  }
+
+  linkIdentity(ctx: IContext, primaryUserId: string, linkIdentityReq: LinkIdentityReq): Promise<IdentityModel[]> {
+      return null;
+  }
+
+  unlinkIdentity(ctx: IContext, primaryUserId: string, connection: string, secondaryUserId: string): Promise<IdentityModel[]> {
+      return null;
+  }
+
+  findByIdentityProvider(ctx: IContext, provider: string, user_id: string): Promise<UserModel> {
+      return null;
+  }
+
+  listOrganizations(ctx: IContext, user_id: string, query: PageQueryDto): Promise<PageDto<OrganizationDto>> {
+      return null;
+  }
+
+  listRoles(ctx: IContext, user_id: string, query: PageQueryDto): Promise<PageDto<UserRoleDto>> {
+      return null;
+  }
+
+  updateGroupsToUser(ctx: IContext, user_id: string, group_ids: string[], overwrite: boolean): Promise<void> {
+      return null;
+  }
+
+  startResetPasswordByEmail(ctx: IContext, connection: string, email: string, ip: string): Promise<void> {
+      return null;
   }
 }

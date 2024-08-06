@@ -2,23 +2,20 @@ import { Injectable, NotFoundException, Inject } from '@nestjs/common';
 import { ConnectionEntity } from './connection.entity';
 
 import {
-  ConnectionDto,
-  CreateConnectionDto,
-  UpdateConnectionDto,
-} from 'libs/api/infra-api/src/connection/connection.dto';
+  ConnectionModel,
+  CreateConnectionModel,
+  UpdateConnectionModel,
+} from 'libs/api/infra-api/src/connection/connection.model';
 import { IConnectionRepository } from 'libs/api/infra-api/src/connection/connection.repository';
-import { IRequestContext } from '@libs/nest-core';
+import { IContext, IRequestContext } from '@libs/nest-core';
 import { plainToClass } from 'class-transformer';
-import {
-  PageDto,
-  PageQueryDto,
-} from 'libs/common/src/pagination/pagination.dto';
 import { TenantAwareRepository } from 'libs/support/tenant-support-typeorm/src/modules/tenant/tenant-aware.repository';
 import { ClientEntity } from '../client/client.entity';
 import { paginate } from 'libs/common/src/pagination/typeorm-paginate';
 import deepmerge from 'deepmerge';
 import { ConnectionMapper } from './connection.mapper';
 import { APIException } from 'libs/common/src/exception/api.exception';
+import { Page, PageQuery } from 'libs/common/src/pagination/pagination.model';
 
 @Injectable()
 export class TypeOrmConnectionRepository
@@ -29,9 +26,9 @@ export class TypeOrmConnectionRepository
   private readonly connectionMapper: ConnectionMapper;
 
   async findByName(
-    ctx: IRequestContext,
+    ctx: IContext,
     name: string,
-  ): Promise<ConnectionDto | undefined> {
+  ): Promise<ConnectionModel | undefined> {
     const connectionRepository = await this.repo(ctx, ConnectionEntity);
     const connection = await connectionRepository.findOne({
       where: { tenant: ctx.tenant, name },
@@ -53,7 +50,7 @@ export class TypeOrmConnectionRepository
   async retrieve(
     ctx: IRequestContext,
     id: string,
-  ): Promise<ConnectionDto | null> {
+  ): Promise<ConnectionModel | null> {
     const connectionRepository = await this.repo(ctx, ConnectionEntity);
     const connection = await connectionRepository.findOne({
       where: {
@@ -77,8 +74,8 @@ export class TypeOrmConnectionRepository
 
   async create(
     ctx: IRequestContext,
-    input: CreateConnectionDto,
-  ): Promise<ConnectionDto> {
+    input: CreateConnectionModel,
+  ): Promise<ConnectionModel> {
     const connectionRepository = await this.repo(ctx, ConnectionEntity);
 
     const existConnection = await connectionRepository.findOne({
@@ -112,7 +109,7 @@ export class TypeOrmConnectionRepository
   }
 
   async delete(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
   ): Promise<{ affected?: number }> {
     const connectionRepository = await this.repo(ctx, ConnectionEntity);
@@ -123,9 +120,9 @@ export class TypeOrmConnectionRepository
   }
 
   async update(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-    data: UpdateConnectionDto,
+    data: UpdateConnectionModel,
   ): Promise<void> {
     const connectionRepo = await this.repo(ctx, ConnectionEntity);
     const clientRepo = await this.repo(ctx, ClientEntity);
@@ -168,9 +165,9 @@ export class TypeOrmConnectionRepository
   }
 
   async paginate(
-    ctx: IRequestContext,
-    _query: PageQueryDto,
-  ): Promise<PageDto<ConnectionDto>> {
+    ctx: IContext,
+    _query: PageQuery,
+  ): Promise<Page<ConnectionModel>> {
     const connectionRepository = await this.repo(ctx, ConnectionEntity);
 
     const query = {

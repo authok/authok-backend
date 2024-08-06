@@ -1,13 +1,13 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { Provider } from '@authok/oidc-provider';
-import * as checkResource from '@authok/oidc-provider/lib/shared/check_resource';
+import checkResource from '@authok/oidc-provider/lib/shared/check_resource';
 import { InvalidTarget } from '@authok/oidc-provider/lib/helpers/errors';
 import { ResourceServer } from '@authok/oidc-provider/lib/helpers/resource_server';
 import { IGrantTypeHandler } from './grant_type.handler';
 
 import { IAuthenticationManager } from 'libs/api/authentication-api/src';
 import { PasswordlessCredentials } from 'libs/support/passwordless/src/credentials';
-import { UserDto } from 'libs/api/infra-api/src/user/user.dto';
+import { UserModel } from 'libs/api/infra-api/src/user/user.model';
 
 @Injectable()
 export class PasswordlessOtpGrantTypeHandler implements IGrantTypeHandler {
@@ -64,7 +64,7 @@ export class PasswordlessOtpGrantTypeHandler implements IGrantTypeHandler {
           return;
         }
 
-        const user = principal as UserDto;
+        const user = principal as UserModel;
 
         const grant = new provider.Grant({
           accountId: user.user_id,

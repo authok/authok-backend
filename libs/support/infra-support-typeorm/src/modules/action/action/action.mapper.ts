@@ -1,16 +1,16 @@
 import { ActionEntity } from './action.entity';
-import { ActionDto } from 'libs/api/infra-api/src/action/action/action.dto';
+import { ActionModel } from 'libs/api/infra-api/src/action/action/action.model';
 import { plainToClass } from 'class-transformer';
 import { TriggerEntity } from '../trigger/trigger.entity';
-import { IRequestContext } from '@libs/nest-core';
+import { IContext } from '@libs/nest-core';
 
 export class ActionMapper {
-  toDTO(entity?: Partial<ActionEntity>): ActionDto | undefined {
+  toDTO(entity?: Partial<ActionEntity>): ActionModel | undefined {
     if (!entity) return undefined;
 
     const { supported_triggers, dependencies, secrets, ...rest } = entity;
 
-    const model = plainToClass(ActionDto, rest);
+    const model = plainToClass(ActionModel, rest);
     if (supported_triggers) {
       model.supported_triggers = supported_triggers;
     }
@@ -27,8 +27,8 @@ export class ActionMapper {
   }
 
   toEntity(
-    ctx: IRequestContext,
-    model?: Partial<ActionDto>,
+    ctx: IContext,
+    model?: Partial<ActionModel>,
   ): ActionEntity | undefined {
     if (!model) return undefined;
 

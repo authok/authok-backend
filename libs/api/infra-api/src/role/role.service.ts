@@ -1,55 +1,56 @@
 import {
-  RoleDto,
-  RolePermissionAssignmentDto,
-  RoleUsersDto,
-} from './role.dto';
-import { IRequestContext } from '@libs/nest-core';
+  RoleModel,
+  RolePermissionAssignmentModel,
+  RoleUsersModel,
+} from './role.model';
+import { IContext, IRequestContext } from '@libs/nest-core';
 import { PageDto, PageQueryDto } from 'libs/common/src/pagination/pagination.dto';
+import { Page, PageQuery } from 'libs/common/src/pagination/pagination.model';
 
 export interface IRoleService {
-  create(ctx: IRequestContext, role: Partial<RoleDto>): Promise<RoleDto | undefined>;
+  create(ctx: IContext, role: Partial<RoleModel>): Promise<RoleModel | undefined>;
 
   batchCreate(
-    ctx: IRequestContext,
-    roles: Partial<RoleDto>[],
-  ): Promise<RoleDto[]>;
+    ctx: IContext,
+    roles: Partial<RoleModel>[],
+  ): Promise<RoleModel[]>;
 
   paginate(
-    ctx: IRequestContext,
-    query: PageQueryDto,
-  ): Promise<PageDto<RoleDto>>;
+    ctx: IContext,
+    query: PageQuery,
+  ): Promise<Page<RoleModel>>;
 
-  retrieve(ctx: IRequestContext, id: string): Promise<RoleDto | undefined>;
+  retrieve(ctx: IContext, id: string): Promise<RoleModel | undefined>;
 
   update(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-    data: Partial<RoleDto>,
-  ): Promise<RoleDto>;
+    data: Partial<RoleModel>,
+  ): Promise<RoleModel>;
 
-  delete(ctx: IRequestContext, id: string): Promise<void>;
+  delete(ctx: IContext, id: string): Promise<void>;
 
   addPermissions(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-    data: RolePermissionAssignmentDto,
+    data: RolePermissionAssignmentModel,
   ): Promise<void>;
 
   removePermissions(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-    data: RolePermissionAssignmentDto,
+    data: RolePermissionAssignmentModel,
   ): Promise<void>;
 
   assignUsers(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-    data: RoleUsersDto,
+    data: RoleUsersModel,
   ): Promise<void>;
 
   unassignUsers(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-    data: RoleUsersDto,
+    data: RoleUsersModel,
   ): Promise<void>;
 }

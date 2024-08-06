@@ -1,6 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { PasswordResetDto } from 'libs/api/infra-api/src/password-reset/password-reset.dto';
-import { UserDto } from 'libs/api/infra-api/src/user/user.dto';
 import { Mail } from './mail/mail';
 import { IMailSender } from './mail/mail-sender.interface';
 import { ISmsSender } from './sms/sms-sender.interface';

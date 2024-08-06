@@ -1,7 +1,7 @@
-import { UserDto } from "../user/user.dto";
+import { UserModel } from "../user/user.model";
 
 export class TenantCreatedEvent {
   id: string;
 
-  creator: UserDto;
+  creator: UserModel;
 }

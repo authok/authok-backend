@@ -1,12 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { UserRoleDto } from 'libs/api/infra-api/src/user/user-role.dto';
+import { UserRoleModel } from 'libs/api/infra-api/src/user/user-role.model';
 import { IUserRoleRepository } from 'libs/api/infra-api/src/user/user-role.repository';
-import { IRequestContext } from '@libs/nest-core';
+import { IContext } from '@libs/nest-core';
 import { TenantAwareRepository } from '../../../../tenant-support-typeorm/src/modules/tenant/tenant-aware.repository';
 import { UserRoleEntity } from './role.entity';
-import { PageQueryDto, PageDto } from 'libs/common/src/pagination/pagination.dto';
 import { paginate } from 'libs/common/src/pagination/typeorm-paginate';
 import { plainToClass } from 'class-transformer';
+import { Page, PageQuery } from 'libs/common/src/pagination/pagination.model';
 
 @Injectable()
 export class TypeOrmUserRoleRepository
@@ -14,17 +14,17 @@ export class TypeOrmUserRoleRepository
   implements IUserRoleRepository {
 
   async update(
-    ctx: IRequestContext,
-    userRole: UserRoleDto,
+    ctx: IContext,
+    userRole: UserRoleModel,
   ): Promise<{ affected?: number; }> {
     // TODO
     return null;
   }
 
   async findBy(
-    ctx: IRequestContext,
-    userRole: UserRoleDto,
-  ): Promise<UserRoleDto | undefined> {
+    ctx: IContext,
+    userRole: UserRoleModel,
+  ): Promise<UserRoleModel | undefined> {
     const repo = await this.repo(ctx, UserRoleEntity);
     const finded = await repo.findOne({
       where: {
@@ -43,8 +43,8 @@ export class TypeOrmUserRoleRepository
   }
 
   async deleteBy(
-    ctx: IRequestContext,
-    userRole: UserRoleDto,
+    ctx: IContext,
+    userRole: UserRoleModel,
   ): Promise<{ affected?: number; }> {
     const repo = await this.repo(ctx, UserRoleEntity);
     const finded = await repo.findOne({
@@ -64,9 +64,9 @@ export class TypeOrmUserRoleRepository
   }
 
   async retrieve(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-  ): Promise<UserRoleDto | undefined> {
+  ): Promise<UserRoleModel | undefined> {
     const repo = await this.repo(ctx, UserRoleEntity);
     const userRole = await repo.findOne({
       where: { id },
@@ -81,9 +81,9 @@ export class TypeOrmUserRoleRepository
   }
 
   async create(
-    ctx: IRequestContext,
-    userRole: UserRoleDto,
-  ): Promise<UserRoleDto> {
+    ctx: IContext,
+    userRole: UserRoleModel,
+  ): Promise<UserRoleModel> {
     const repo = await this.repo(ctx, UserRoleEntity);
     const newUserRole = await repo.save({
       role: {
@@ -103,9 +103,9 @@ export class TypeOrmUserRoleRepository
   }
 
   async batchCreate(
-    ctx: IRequestContext,
-    _userRoles: Partial<UserRoleDto>[],
-  ): Promise<Partial<UserRoleDto>[]> {
+    ctx: IContext,
+    _userRoles: Partial<UserRoleModel>[],
+  ): Promise<Partial<UserRoleModel>[]> {
     const repo = await this.repo(ctx, UserRoleEntity);
     const userRoles = _userRoles.map((it) => repo.create({
         role: {
@@ -124,8 +124,8 @@ export class TypeOrmUserRoleRepository
   }
 
   async batchDelete(
-    ctx: IRequestContext,
-    userRoles: Partial<UserRoleDto>[],  
+    ctx: IContext,
+    userRoles: Partial<UserRoleModel>[],  
   ): Promise<void> {
     const repo = await this.repo(ctx, UserRoleEntity);
 
@@ -146,16 +146,16 @@ export class TypeOrmUserRoleRepository
   }
 
   async paginate(
-    ctx: IRequestContext,
-    query: PageQueryDto,
-  ): Promise<PageDto<UserRoleDto>> {
+    ctx: IContext,
+    query: PageQuery,
+  ): Promise<Page<UserRoleModel>> {
     const repo = await this.repo(ctx, UserRoleEntity);
 
     query.tenant = ctx.tenant;
     const page = await paginate(repo, query, ['user.user_id', 'role.id']);
     return {
       meta: page.meta,
-      items: page.items.map(it => (plainToClass(UserRoleDto, {
+      items: page.items.map(it => (plainToClass(UserRoleModel, {
         user_id: it.user_id,
         role: it.role,
         created_at: it.created_at,

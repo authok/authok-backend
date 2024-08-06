@@ -25,7 +25,7 @@ import { SessionNotFound } from '@authok/oidc-provider/lib/helpers/errors';
 import { urlHas, urlFragment, TwoFactorAuthUtils } from 'libs/oidc/common/src';
 import { IRequestContext, ReqCtx } from '@libs/nest-core';
 import { IUserService } from 'libs/api/infra-api/src/user/user.service';
-import { UserDto, UpdateUserDto } from 'libs/api/infra-api/src/user/user.dto';
+import { UserDto, UpdateUserDto } from 'libs/dto/src/user/user.dto';
 import { IAuthenticationManager } from 'libs/api/authentication-api/src';
 import { PasswordCredentials } from 'libs/core/authentication-core/src/credentials';
 import { IAuthorizationManager } from 'libs/api/authorization-api/src/authorization.manager';
@@ -39,8 +39,8 @@ import { ITenantService } from 'libs/api/infra-api/src/tenant/tenant.service';
 import { APIException } from 'libs/common/src/exception/api.exception';
 import { IInvitationService } from 'libs/api/infra-api/src/invitation/invitation.service';
 import { IOrganizationMemberService } from 'libs/api/infra-api/src/organization/organization-member.service';
-import { IdentityDto } from 'libs/api/infra-api/src/identity/identity.dto';
 import { IIdentityService } from 'libs/api/infra-api/src/identity/identity.service';
+import { IdentityDto } from 'libs/dto/src';
 
 @Controller()
 export class InteractionController {
@@ -676,7 +676,7 @@ export class InteractionController {
   ) {
     const provider = await ctx.currentProvider();
     const details = await provider.interactionDetails(req, res);
-    const user: UserDto = await this.userService.retrieve(ctx, body.id);
+    const user = await this.userService.retrieve(ctx, body.id);
 
     try {
       const inputToken = body.token;

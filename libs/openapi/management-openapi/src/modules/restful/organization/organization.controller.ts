@@ -24,7 +24,7 @@ import {
   OrganizationPageQueryDto,
   UpdateOrganizationDto,
   OrganizationEnabledConnectionDto,
-} from 'libs/api/infra-api/src/organization/organization.dto';
+} from 'libs/dto/src';
 import { IOrganizationService } from 'libs/api/infra-api/src/organization/organization.service';
 import {
   PageDto,

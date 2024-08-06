@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { IGroup } from 'libs/api/infra-api/src/group/group';
 import { GroupEntity } from './group.entity';
 import { plainToClass } from 'class-transformer';
+import { GroupModel } from 'libs/api/infra-api/src/group/group.model';
 
 @Injectable()
 export class GroupMapper {
-  toDTO(entity?: GroupEntity): IGroup | undefined {
+  toModel(entity?: GroupEntity): GroupModel | undefined {
     if (!entity) return undefined;
 
     const { parent, ...rest } = entity;
     return rest;
   }
 
-  toEntity(model?: Partial<IGroup>): GroupEntity | undefined {
+  toEntity(model?: Partial<GroupModel>): GroupEntity | undefined {
     if (!model) return undefined;
 
     const { parent_id, ...rest } = model;

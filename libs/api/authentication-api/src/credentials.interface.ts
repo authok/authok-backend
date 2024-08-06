@@ -1,4 +1,4 @@
-import { ProfileDataDto } from "libs/api/infra-api/src/identity/identity.dto";
+import { ProfileDataModel } from "libs/api/infra-api/src/identity/identity.model";
 
 export interface IPrincipal {
   user_id: string;
@@ -16,7 +16,7 @@ export abstract class AbstractCredentials implements ICredentials {
   connection: string;
 }
 
-export type LoginCallback = (err: Error, profile: ProfileDataDto) => void;
+export type LoginCallback = (err: Error, profile: ProfileDataModel) => void;
 
 export interface LoginFunc {
   (credentials: ICredentials, callback: LoginCallback): void;

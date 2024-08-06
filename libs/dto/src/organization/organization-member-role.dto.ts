@@ -1,4 +1,3 @@
-import { RoleDto } from "../role/role.dto";
 import { PageQueryDto } from "libs/common/src/pagination/pagination.dto";
 import { JoiSchemaOptions, JoiSchema } from "nestjs-joi";
 import * as Joi from 'joi';

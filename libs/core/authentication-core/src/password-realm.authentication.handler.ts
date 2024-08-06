@@ -12,8 +12,8 @@ import { ISandboxService } from 'libs/api/sandbox-api/src/sandbox.service';
 import { IRequestContext } from '@libs/nest-core';
 import { nanoid } from 'nanoid';
 import { WrongUsernameOrPasswordError } from 'libs/common/src/exception/exceptions';
-import { IdentityDto, ProfileDataDto } from 'libs/api/infra-api/src/identity/identity.dto';
 import { IClientService } from 'libs/api/infra-api/src/client/client.service';
+import { IdentityModel, ProfileDataModel } from 'libs/api/infra-api/src/identity/identity.model';
 @Injectable()
 export class PasswordRealmAuthenticationHandler extends AuthenticationHandler {
   constructor(
@@ -54,7 +54,7 @@ export class PasswordRealmAuthenticationHandler extends AuthenticationHandler {
       throw new NotFoundException('找不到对应身份源');
     }
 
-    const customLogin = async (): Promise<ProfileDataDto> => {
+    const customLogin = async (): Promise<ProfileDataModel> => {
       // 执行脚本
       const loginFunc = await this.sandboxService.run<LoginFunc>(
         connection.options.customScripts.login,
@@ -64,7 +64,7 @@ export class PasswordRealmAuthenticationHandler extends AuthenticationHandler {
         },
       );
 
-      const profile = await new Promise<ProfileDataDto>((resolver, reject) => {
+      const profile = await new Promise<ProfileDataModel>((resolver, reject) => {
         loginFunc(
           _credentials,
           function (err: Error, user: any) {
@@ -174,7 +174,7 @@ export class PasswordRealmAuthenticationHandler extends AuthenticationHandler {
                 connection: connection.name,
                 provider: connection.strategy,
                 is_social: false,
-              } as IdentityDto,
+              } as IdentityModel,
             ],
           });
 

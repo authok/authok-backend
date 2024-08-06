@@ -35,7 +35,7 @@ import {
   UpdateUserDto,
   UserPageQueryDto,
   PostPermissionsDto,
-} from 'libs/api/infra-api/src/user/user.dto';
+} from 'libs/dto/src/user/user.dto';
 import { IRequestContext, ReqCtx } from '@libs/nest-core';
 import { IUserService } from 'libs/api/infra-api/src/user/user.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -48,19 +48,20 @@ import {
   PageQueryDto,
   pageDtoFactory,
 } from 'libs/common/src/pagination/pagination.dto';
-import { PermissionDto } from 'libs/api/infra-api/src/permission/permission.dto';
-import { PostUserRoleDto, RoleDto } from 'libs/api/infra-api/src/role/role.dto';
 import { IRoleService } from 'libs/api/infra-api/src/role/role.service';
 import {
   CreateIdentityDto,
   IdentityDto,
   LinkIdentityReq,
-} from 'libs/api/infra-api/src/identity/identity.dto';
+  OrganizationDto,
+  PermissionDto,
+  PostUserRoleDto,
+  RoleDto,
+} from 'libs/dto/src';
 import * as jwt from 'jsonwebtoken';
 import { nanoid } from 'nanoid';
 import { IConnectionService } from 'libs/api/infra-api/src/connection/connection.service';
 import { APIException } from 'libs/common/src/exception/api.exception';
-import { OrganizationDto } from 'libs/api/infra-api/src/organization/organization.dto';
 import { IIdentityService } from 'libs/api/infra-api/src/identity/identity.service';
 
 @ApiTags('用户')
@@ -100,7 +101,9 @@ export class UserController {
     const user = await this.userService.retrieve(ctx, user_id);
     if (!user) throw new NotFoundException();
 
-    return user;
+    const { roles: userRoles, ...rest } = user;
+    const roles = userRoles?.map(it => it.role);
+    return { ...rest, roles };
   }
 
   @Post()
@@ -137,7 +140,7 @@ export class UserController {
 
     const user_id = nanoid(24);
 
-    return await this.userService.create(ctx, {
+    const user = await this.userService.create(ctx, {
       ..._user,
       user_id: connection.strategy + '|' + user_id,
       identities: [
@@ -152,6 +155,11 @@ export class UserController {
       last_ip: req.ip,
       signup_at: new Date(),
     });
+
+    const { roles: userRoles, ...rest } = user;
+    const roles = userRoles?.map(it => it.role);
+    return { ...rest, roles };
+
   }
 
   @Patch(':user_id')
@@ -161,12 +169,16 @@ export class UserController {
     description: '返回更新后的用户',
   })
   @Scopes('update:users')
-  update(
+  async update(
     @ReqCtx() ctx: IRequestContext,
     @Param('user_id') user_id: string,
     @Body() input: UpdateUserDto,
   ): Promise<UserDto | null> {
-    return this.userService.update(ctx, user_id, input);
+    const user = await this.userService.update(ctx, user_id, input);
+
+    const { roles: userRoles, ...rest } = user;
+    const roles = userRoles?.map(it => it.role);
+    return { ...rest, roles };
   }
 
   @Delete(':user_id')
@@ -191,7 +203,18 @@ export class UserController {
     @ReqCtx() ctx: IRequestContext,
     @Query() query: UserPageQueryDto,
   ): Promise<PageDto<UserDto>> {
-    return await this.userService.paginate(ctx, query);
+    const { meta, items: _items } = await this.userService.paginate(ctx, query);
+
+    const items = _items.map(user => {
+      const { roles: userRoles, ...rest } = user;
+      const roles = userRoles?.map(it => it.role);
+      return { ...rest, roles };
+    })
+
+    return {
+      meta,
+      items,
+    }
   }
 
   @Get('/by-provider/:provider/user_id/:user_id')
@@ -214,7 +237,10 @@ export class UserController {
       user_id,
     );
     if (!user) throw new NotFoundException();
-    return user;
+    
+    const { roles: userRoles, ...rest } = user;
+    const roles = userRoles?.map(it => it.role);
+    return { ...rest, roles };  
   }
 
   @Post('/create-by-identity-provider')
@@ -352,7 +378,9 @@ export class UserController {
       }
     }
 
-    return federatedUser;
+    const { roles: userRoles, ...rest } = federatedUser;
+    const roles = userRoles?.map(it => it.role);
+    return { ...rest, roles };
   }
 
   @Post(':user_id/permissions')

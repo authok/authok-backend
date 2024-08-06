@@ -18,8 +18,8 @@ import {
   RoleUsersDto,
   CreateRoleDto,
   UpdateRoleDto,
-} from 'libs/api/infra-api/src/role/role.dto';
-import { UserDto } from 'libs/api/infra-api/src/user/user.dto';
+} from 'libs/dto/src';
+import { UserDto } from 'libs/dto/src/user/user.dto';
 import { IRoleService } from 'libs/api/infra-api/src/role/role.service';
 import { IRequestContext, ReqCtx } from '@libs/nest-core';
 import { PageDto, PageQueryDto } from 'libs/common/src/pagination/pagination.dto';
@@ -146,10 +146,17 @@ export class RoleController {
     @Param('id') id: string,
     @Query() query: PageQueryDto,
   ): Promise<PageDto<UserDto>> {
-    return this.userService.paginate(ctx, {
+    const { meta, items: _items } = await this.userService.paginate(ctx, {
       ...query,
       role_id: id,
     });
+
+    const items = _items.map(it => it as unknown as UserDto);
+
+    return {
+      meta,
+      items,
+    }
   }
 
   @ApiOperation({ summary: '分配角色给指定用户', description: '分配角色给指定用户' })

@@ -3,15 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { TwoFactorAuthUtils } from '../../../../oidc/common/src/lib/utils/security/twofactorauth.util';
 import * as _ from 'lodash';
 import {
-  IdentityDto,
   LinkIdentityReq,
-} from 'libs/api/infra-api/src/identity/identity.dto';
-import {
-  CreateUserDto,
-  PostPermissionsDto,
-  UserDto,
-  UserPageQueryDto,
-} from 'libs/api/infra-api/src/user/user.dto';
+} from 'libs/api/infra-api/src/identity/identity.model';
 import { IUserService } from 'libs/api/infra-api/src/user/user.service';
 import { IIdentityRepository } from 'libs/api/infra-api/src/identity/identity.repository';
 import { IUserRepository } from 'libs/api/infra-api/src/user/user.repository';
@@ -24,16 +17,12 @@ import {
   UserCreatedEvent,
   UserEvents,
 } from 'libs/api/infra-api/src/user/user.event';
-import { UserRoleDto } from 'libs/api/infra-api/src/user/user-role.dto';
+import { UserRoleModel } from 'libs/api/infra-api/src/user/user-role.model';
 import { APIException } from 'libs/common/src/exception/api.exception';
 import { IContext } from '@libs/nest-core';
-import {
-  PageDto,
-  PageQueryDto,
-} from 'libs/common/src/pagination/pagination.dto';
-import { PostUserRoleDto } from 'libs/api/infra-api/src/role/role.dto';
-import { PermissionDto } from 'libs/api/infra-api/src/permission/permission.dto';
-import { OrganizationDto } from 'libs/api/infra-api/src/organization/organization.dto';
+import { PostUserRoleModel } from 'libs/api/infra-api/src/role/role.model';
+import { PermissionModel } from 'libs/api/infra-api/src/permission/permission.model';
+import { OrganizationModel } from 'libs/api/infra-api/src/organization/organization.model';
 import { FindOptions } from 'libs/common/src/types';
 import { IPasswordCryptor } from 'libs/api/infra-api/src/user/password-cryptor/password-cryptor';
 import { IPasswordResetRepository } from 'libs/api/infra-api/src/password-reset/password-reset.repository';
@@ -42,6 +31,9 @@ import { IPService } from 'libs/support/ipservice-support/src/ip.service';
 import dayjs from 'dayjs';
 import { v4 as guid } from 'uuid';
 import { IEmailTemplateRepository } from 'libs/api/infra-api/src/email-template/email-template.repository';
+import { CreateUserModel, PostPermissions, UserModel } from 'libs/api/infra-api/src/user/user.model';
+import { IdentityModel } from 'libs/api/infra-api/src/identity/identity.model';
+import { Page, PageQuery } from 'libs/common/src/pagination/pagination.model';
 
 @Injectable()
 export class UserService implements IUserService {
@@ -71,14 +63,14 @@ export class UserService implements IUserService {
     @Inject('IEmailTemplateRepository')
     private readonly emailTemplateRepository: IEmailTemplateRepository,
   ) {}
-  async retrieve(ctx: IContext, user_id: string): Promise<UserDto | undefined> {
+  async retrieve(ctx: IContext, user_id: string): Promise<UserModel | undefined> {
     return await this.userRepo.retrieve(ctx, user_id);
   }
 
   public async create(
     ctx: IContext,
-    user: CreateUserDto,
-  ): Promise<UserDto | undefined> {
+    user: CreateUserModel,
+  ): Promise<UserModel | undefined> {
     if (user.username) {
       const existingUser = await this.userRepo.findByUsername(
         ctx,
@@ -169,7 +161,7 @@ export class UserService implements IUserService {
 
   public async validateUser(
     ctx: IContext,
-    user: UserDto,
+    user: UserModel,
     password: string,
   ): Promise<boolean> {
     return await this.passwordCryptor.compare(ctx, password, user.password);
@@ -246,7 +238,7 @@ export class UserService implements IUserService {
     connection: string,
     email: string,
     options?: FindOptions,
-  ): Promise<UserDto | undefined> {
+  ): Promise<UserModel | undefined> {
     return this.userRepo.findByEmail(ctx, connection, email, options);
   }
 
@@ -255,7 +247,7 @@ export class UserService implements IUserService {
     connection: string,
     phone_number: string,
     options?: FindOptions,
-  ): Promise<UserDto | undefined> {
+  ): Promise<UserModel | undefined> {
     return await this.userRepo.findByPhoneNumber(
       ctx,
       connection,
@@ -269,7 +261,7 @@ export class UserService implements IUserService {
     connection: string,
     username: string,
     options?: FindOptions,
-  ): Promise<UserDto | undefined> {
+  ): Promise<UserModel | undefined> {
     return await this.userRepo.findByUsername(
       ctx,
       connection,
@@ -280,8 +272,8 @@ export class UserService implements IUserService {
 
   async updateFederatedIdentity(
     ctx: IContext,
-    identity: IdentityDto,
-  ): Promise<IdentityDto> {
+    identity: IdentityModel,
+  ): Promise<IdentityModel> {
     const { affected } = await this.identityRepo.update(ctx, identity);
     if (!affected) {
       throw new NotFoundException(`FederatedIentity id: ${identity} not found`);
@@ -292,8 +284,8 @@ export class UserService implements IUserService {
   async update(
     ctx: IContext,
     user_id: string,
-    _data: Partial<UserDto>,
-  ): Promise<UserDto> {
+    _data: Partial<UserModel>,
+  ): Promise<UserModel> {
     const data = { ..._data };
     // 构造密码
     if (_data.password) {
@@ -319,16 +311,16 @@ export class UserService implements IUserService {
 
   async paginate(
     ctx: IContext,
-    query: UserPageQueryDto,
-  ): Promise<PageDto<UserDto>> {
+    query: PageQuery,
+  ): Promise<Page<UserModel>> {
     return await this.userRepo.paginate(ctx, query);
   }
 
   async addFederatedIdentity(
     ctx: IContext,
     user_id: string,
-    identity: IdentityDto,
-  ): Promise<IdentityDto> {
+    identity: IdentityModel,
+  ): Promise<IdentityModel> {
     // TODO
     return null;
   }
@@ -346,7 +338,7 @@ export class UserService implements IUserService {
     ctx: IContext,
     connection: string,
     user_id: string, // identity 的 userId
-  ): Promise<UserDto | undefined> {
+  ): Promise<UserModel | undefined> {
     return this.userRepo.findByConnection(ctx, connection, user_id);
   }
 
@@ -354,14 +346,14 @@ export class UserService implements IUserService {
     ctx: IContext,
     provider: string,
     user_id: string,
-  ): Promise<UserDto | undefined> {
+  ): Promise<UserModel | undefined> {
     return this.userRepo.findByIdentityProvider(ctx, provider, user_id);
   }
 
   async assignPermissions(
     ctx: IContext,
     user_id: string,
-    body: PostPermissionsDto,
+    body: PostPermissions,
   ): Promise<void> {
     await this.userRepo.assignPermissions(ctx, user_id, body);
   }
@@ -369,7 +361,7 @@ export class UserService implements IUserService {
   async removePermissions(
     ctx: IContext,
     user_id: string,
-    body: PostPermissionsDto,
+    body: PostPermissions,
   ): Promise<void> {
     return await this.userRepo.removePermissions(ctx, user_id, body);
   }
@@ -377,13 +369,13 @@ export class UserService implements IUserService {
   async addRolesToUser(
     ctx: IContext,
     user_id: string,
-    body: PostUserRoleDto,
+    body: PostUserRoleModel,
   ): Promise<void> {
     const user = await this.userRepo.retrieve(ctx, user_id);
     if (!user) throw new NotFoundException(`User id: ${user_id} not found`);
 
     const roles = await this.roleRepo.findByIds(ctx, body.roles);
-    const userRoles: Partial<UserRoleDto>[] = roles.map((it) => ({
+    const userRoles: Partial<UserRoleModel>[] = roles.map((it) => ({
       role_id: it.id,
       user_id,
     }));
@@ -394,12 +386,12 @@ export class UserService implements IUserService {
   async removeRolesToUser(
     ctx: IContext,
     user_id: string,
-    body: PostUserRoleDto,
+    body: PostUserRoleModel,
   ): Promise<void> {
     const user = await this.userRepo.retrieve(ctx, user_id);
     if (!user) throw new NotFoundException(`User id: ${user_id} not found`);
 
-    const userRoles: Partial<UserRoleDto>[] = body.roles?.map((it) => ({
+    const userRoles: Partial<UserRoleModel>[] = body.roles?.map((it) => ({
       role_id: it,
       user_id,
     }));
@@ -410,8 +402,8 @@ export class UserService implements IUserService {
   async paginatePermissions(
     ctx: IContext,
     user_id: string,
-    query: PageQueryDto,
-  ): Promise<PageDto<PermissionDto>> {
+    query: PageQuery,
+  ): Promise<Page<PermissionModel>> {
     return await this.userRepo.paginatePermissions(ctx, user_id, query);
   }
 
@@ -428,7 +420,7 @@ export class UserService implements IUserService {
     ctx: IContext,
     primaryUserId: string,
     linkIdentityReq: LinkIdentityReq,
-  ): Promise<IdentityDto[]> {
+  ): Promise<IdentityModel[]> {
     return await this.userRepo.linkIdentity(
       ctx,
       primaryUserId,
@@ -441,7 +433,7 @@ export class UserService implements IUserService {
     primaryUserId: string,
     connection: string,
     secondaryUserId: string,
-  ): Promise<IdentityDto[]> {
+  ): Promise<IdentityModel[]> {
     return await this.userRepo.unlinkIdentity(
       ctx,
       primaryUserId,
@@ -453,16 +445,16 @@ export class UserService implements IUserService {
   async listOrganizations(
     ctx: IContext,
     user_id: string,
-    query: PageQueryDto,
-  ): Promise<PageDto<OrganizationDto>> {
+    query: PageQuery,
+  ): Promise<Page<OrganizationModel>> {
     return await this.userRepo.listOrganizations(ctx, user_id, query);
   }
 
   async listRoles(
     ctx: IContext,
     user_id: string,
-    query: PageQueryDto,
-  ): Promise<PageDto<UserRoleDto>> {
+    query: PageQuery,
+  ): Promise<Page<UserRoleModel>> {
     return await this.userRoleRepo.paginate(ctx, { ...query, user_id });
   }
 

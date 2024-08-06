@@ -1,17 +1,17 @@
-import { UserDto } from 'libs/api/infra-api/src/user/user.dto';
 import { UserEntity } from './user.entity';
 import { plainToClass } from 'class-transformer';
 import { IdentityEntity } from '../identity/identity.entity';
-import { IdentityDto } from 'libs/api/infra-api/src/identity/identity.dto';
 import { UserRoleEntity } from '../role/role.entity';
-import { RoleDto } from 'libs/api/infra-api/src/role/role.dto';
-import { IRequestContext } from '@libs/nest-core';
+import { IContext } from '@libs/nest-core';
 import * as _ from 'lodash';
+import { UserModel } from 'libs/api/infra-api/src/user/user.model';
+import { IdentityModel } from 'libs/api/infra-api/src/identity/identity.model';
+import { RoleModel } from 'libs/api/infra-api/src/role/role.model';
 
 export class UserMapper {
   toEntity(
-    ctx: IRequestContext,
-    model?: Partial<UserDto>,
+    ctx: IContext,
+    model?: Partial<UserModel>,
   ): UserEntity | undefined {
     if (!model) return undefined;
 
@@ -36,11 +36,12 @@ export class UserMapper {
       );
     }
 
+    // TODO 要单独建立一个 create user. 或者直接忽略 role 子对象
     if (roles) {
       entity.roles = roles.map((role) =>
         plainToClass(UserRoleEntity, {
           role: {
-            id: role.id,
+            id: role.role.id,
           },
         }),
       );
@@ -49,36 +50,24 @@ export class UserMapper {
     return entity;
   }
 
-  toDTO(entity?: UserEntity): UserDto | undefined {
+  toDTO(entity?: UserEntity): UserModel | undefined {
     if (!entity) return undefined;
 
     const { roles, identities, ...rest } = entity;
 
-    const model = plainToClass(UserDto, rest, { exposeUnsetFields: false });
+    const model = plainToClass(UserModel, rest, { exposeUnsetFields: false });
 
     if (identities) {
       model.identities = identities?.map(
         // 能过滤 undefined, 不能过滤 null
         (it) =>
-          plainToClass(IdentityDto, _.omit(it, 'tenant', 'fk_user_id'), {
+          plainToClass(IdentityModel, _.omit(it, 'tenant', 'fk_user_id'), {
             exposeUnsetFields: false,
           }),
       );
     }
 
-    if (roles) {
-      model.roles = roles.map((it) =>
-        plainToClass(
-          RoleDto,
-          {
-            id: it.role.id,
-            name: it.role.name,
-            description: it.role.description,
-          },
-          { exposeUnsetFields: false },
-        ),
-      );
-    }
+    model.roles = roles;
 
     return model;
   }

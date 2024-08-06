@@ -10,7 +10,7 @@ import {
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { Request } from 'express';
 import { IConnectionService } from 'libs/api/infra-api/src/connection/connection.service';
-import { CreateUserDto } from 'libs/api/infra-api/src/user/user.dto';
+import { CreateUserDto } from 'libs/dto/src/user/user.dto';
 import { IUserService } from 'libs/api/infra-api/src/user/user.service';
 import { IRequestContext, ReqCtx } from '@libs/nest-core';
 import {
@@ -21,7 +21,7 @@ import {
 import { nanoid } from 'nanoid';
 import { APIException } from 'libs/common/src/exception/api.exception';
 import { IPasswordlessTokenRepository } from 'libs/support/passwordless/src/passwordless-token.repository';
-import { IdentityDto } from 'libs/api/infra-api/src/identity/identity.dto';
+import { IdentityDto } from 'libs/dto/src';
 import { ITriggerService } from 'libs/api/infra-api/src/action/trigger/trigger.service';
 import { TriggerContextBuilder } from 'libs/api/infra-api/src/action/trigger/trigger.context';
 

@@ -4,52 +4,43 @@ import {
   Inject,
   InternalServerErrorException,
 } from '@nestjs/common';
-import {
-  PostPermissionsDto,
-  UserDto,
-  UserPageQueryDto,
-} from 'libs/api/infra-api/src/user/user.dto';
 import { IUserRepository } from 'libs/api/infra-api/src/user/user.repository';
 import {
   FindManyOptions,
   In,
-  SelectQueryBuilder,
   EntityManager,
   Equal,
 } from 'typeorm';
 import { UserEntity } from './user.entity';
 import {
-  IdentityDto,
+  IdentityModel,
   LinkIdentityReq,
-} from 'libs/api/infra-api/src/identity/identity.dto';
+} from 'libs/api/infra-api/src/identity/identity.model';
 import {
   IPaginationMeta,
   IPaginationOptions,
   paginate,
 } from 'nestjs-typeorm-paginate';
-import { IRequestContext, IContext } from '@libs/nest-core';
-import {
-  PageDto,
-  PageMeta,
-  PageQueryDto,
-} from 'libs/common/src/pagination/pagination.dto';
+import { IContext } from '@libs/nest-core';
 import { PermissionEntity } from '../permission/permission.entity';
 import { RoleEntity } from '../role/role.entity';
 import {
-  PermissionDto,
-  PermissionSourceDto,
-} from 'libs/api/infra-api/src/permission/permission.dto';
+  PermissionModel,
+  PermissionSourceModel,
+} from 'libs/api/infra-api/src/permission/permission.model';
 import * as _ from 'lodash';
 import { TenantAwareRepository } from '../../../../tenant-support-typeorm/src/modules/tenant/tenant-aware.repository';
 import { IdentityEntity } from '../identity/identity.entity';
 import { PhoneParser } from 'libs/shared/src/services/phone.parser';
 import { UserGroupEntity } from '../group/user-group.entity';
 import { UserMapper } from './user.mapper';
-import { OrganizationDto } from 'libs/api/infra-api/src/organization/organization.dto';
+import { OrganizationModel } from 'libs/api/infra-api/src/organization/organization.model';
 import { OrganizationMemberEntity } from '../organization/organization.entity';
 import { OrganizationMapper } from '../organization/organization.mapper';
 import { APIException } from 'libs/common/src/exception/api.exception';
 import { FindOptions } from 'libs/common/src/types';
+import { PostPermissions, UserModel } from 'libs/api/infra-api/src/user/user.model';
+import { Page, PageMeta, PageQuery } from 'libs/common/src/pagination/pagination.model';
 
 @Injectable()
 export class TypeOrmUserRepository
@@ -63,9 +54,9 @@ export class TypeOrmUserRepository
   private readonly phoneParser: PhoneParser;
 
   async create(
-    ctx: IRequestContext,
-    _user: UserDto,
-  ): Promise<UserDto | undefined> {
+    ctx: IContext,
+    _user: UserModel,
+  ): Promise<UserModel | undefined> {
     const userRepo = await this.repo(ctx, UserEntity);
 
     const user = this.userMapper.toEntity(ctx, _user);
@@ -84,10 +75,10 @@ export class TypeOrmUserRepository
   }
 
   async getUserWithPasswordByEmail(
-    ctx: IRequestContext,
+    ctx: IContext,
     connection: string,
     email: string,
-  ): Promise<UserDto | undefined> {
+  ): Promise<UserModel | undefined> {
     const userRepo = await this.repo(ctx, UserEntity);
 
     const user = await userRepo
@@ -108,10 +99,10 @@ export class TypeOrmUserRepository
   }
 
   async getUserWithPasswordByUsername(
-    ctx: IRequestContext,
+    ctx: IContext,
     connection: string,
     username: string,
-  ): Promise<UserDto | undefined> {
+  ): Promise<UserModel | undefined> {
     const userRepo = await this.repo(ctx, UserEntity);
 
     const user = await userRepo
@@ -132,9 +123,9 @@ export class TypeOrmUserRepository
   }
 
   async retrieve(
-    ctx: IRequestContext,
+    ctx: IContext,
     user_id: string,
-  ): Promise<UserDto | undefined> {
+  ): Promise<UserModel | undefined> {
     const userRepo = await this.repo(ctx, UserEntity);
     const user = await userRepo.findOne({
       where: {
@@ -146,9 +137,9 @@ export class TypeOrmUserRepository
   }
 
   async findByGuid(
-    ctx: IRequestContext,
+    ctx: IContext,
     guid: string,
-  ): Promise<UserDto | undefined> {
+  ): Promise<UserModel | undefined> {
     const userRepo = await this.repo(ctx, UserEntity);
     const user = await userRepo.findOne({
       where: {
@@ -159,9 +150,9 @@ export class TypeOrmUserRepository
   }
 
   async findByUserIds(
-    ctx: IRequestContext,
+    ctx: IContext,
     user_ids: string[],
-  ): Promise<Partial<UserDto>[]> {
+  ): Promise<Partial<UserModel>[]> {
     const userRepo = await this.repo(ctx, UserEntity);
     const users = await userRepo.find({
       where: {
@@ -174,11 +165,11 @@ export class TypeOrmUserRepository
   }
 
   async findByEmail(
-    ctx: IRequestContext,
+    ctx: IContext,
     connection: string,
     email: string,
     options?: FindOptions,
-  ): Promise<UserDto | undefined> {
+  ): Promise<UserModel | undefined> {
     const userRepo = await this.repo(ctx, UserEntity);
 
     const qb = userRepo
@@ -205,11 +196,11 @@ export class TypeOrmUserRepository
   }
 
   async findByPhoneNumber(
-    ctx: IRequestContext,
+    ctx: IContext,
     connection: string,
     _phone_number: string,
     options?: FindOptions,
-  ): Promise<UserDto | undefined> {
+  ): Promise<UserModel | undefined> {
     const userRepo = await this.repo(ctx, UserEntity);
     const { phone_number, phone_country_code } =
       this.phoneParser.parse(_phone_number);
@@ -240,11 +231,11 @@ export class TypeOrmUserRepository
   }
 
   async findByUsername(
-    ctx: IRequestContext,
+    ctx: IContext,
     connection: string,
     username: string,
     options?: FindOptions,
-  ): Promise<UserDto | undefined> {
+  ): Promise<UserModel | undefined> {
     const userRepo = await this.repo(ctx, UserEntity);
 
     const qb = userRepo
@@ -271,10 +262,10 @@ export class TypeOrmUserRepository
   }
 
   async update(
-    ctx: IRequestContext,
+    ctx: IContext,
     user_id: string,
-    _data: UserDto,
-  ): Promise<UserDto> {
+    _data: UserModel,
+  ): Promise<UserModel> {
     const userRepo = await this.repo(ctx, UserEntity);
     const existingUser = await userRepo.findOneOrFail({
       select: ['id', 'created_at'],
@@ -310,9 +301,9 @@ export class TypeOrmUserRepository
   }
 
   async delete(
-    ctx: IRequestContext,
+    ctx: IContext,
     user_id: string,
-  ): Promise<UserDto | undefined> {
+  ): Promise<UserModel | undefined> {
     const userRepo = await this.repo(ctx, UserEntity);
     const _user = await userRepo.findOne({
       where: {
@@ -329,9 +320,9 @@ export class TypeOrmUserRepository
   }
 
   async paginate(
-    ctx: IRequestContext,
-    query: UserPageQueryDto,
-  ): Promise<PageDto<UserDto>> {
+    ctx: IContext,
+    query: PageQuery,
+  ): Promise<Page<UserModel>> {
     const userRepo = await this.repo(ctx, UserEntity);
 
     const options: IPaginationOptions<PageMeta> = {
@@ -464,7 +455,7 @@ export class TypeOrmUserRepository
     ctx: IContext,
     provider: string,
     user_id: string,
-  ): Promise<UserDto | undefined> {
+  ): Promise<UserModel | undefined> {
     const userRepo = await this.repo(ctx, UserEntity);
     const user = await userRepo
       .createQueryBuilder('user')
@@ -486,7 +477,7 @@ export class TypeOrmUserRepository
     ctx: IContext,
     connection: string,
     user_id: string,
-  ): Promise<UserDto | undefined> {
+  ): Promise<UserModel | undefined> {
     const userRepo = await this.repo(ctx, UserEntity);
     const user = await userRepo
       .createQueryBuilder('user')
@@ -505,17 +496,17 @@ export class TypeOrmUserRepository
   }
 
   async updateFederatedIdentity(
-    ctx: IRequestContext,
-    identity: Partial<IdentityDto>,
+    ctx: IContext,
+    identity: Partial<IdentityModel>,
   ): Promise<{ affected?: number }> {
     return null;
   }
 
   async addFederatedIdentity(
-    ctx: IRequestContext,
+    ctx: IContext,
     user_id: string,
-    identity: IdentityDto,
-  ): Promise<IdentityDto> {
+    identity: IdentityModel,
+  ): Promise<IdentityModel> {
     const identityRepo = await this.repo(ctx, IdentityEntity);
 
     const entity = await identityRepo.save({
@@ -528,7 +519,7 @@ export class TypeOrmUserRepository
   }
 
   async removeFederatedIdentity(
-    ctx: IRequestContext,
+    ctx: IContext,
     connection: string,
     user_id: string,
   ): Promise<void> {
@@ -550,9 +541,9 @@ export class TypeOrmUserRepository
   }
 
   async assignPermissions(
-    ctx: IRequestContext,
+    ctx: IContext,
     user_id: string,
-    body: PostPermissionsDto,
+    body: PostPermissions,
   ): Promise<void> {
     const userRepo = await this.repo(ctx, UserEntity);
     const permissionRepo = await this.repo(ctx, PermissionEntity);
@@ -594,9 +585,9 @@ export class TypeOrmUserRepository
   }
 
   async removePermissions(
-    ctx: IRequestContext,
+    ctx: IContext,
     user_id: string,
-    body: PostPermissionsDto,
+    body: PostPermissions,
   ): Promise<void> {
     const userRepo = await this.repo(ctx, UserEntity);
     const permissionRepo = await this.repo(ctx, PermissionEntity);
@@ -640,10 +631,10 @@ export class TypeOrmUserRepository
   }
 
   async paginatePermissions(
-    ctx: IRequestContext,
+    ctx: IContext,
     user_id: string,
-    query: PageQueryDto,
-  ): Promise<PageDto<PermissionDto>> {
+    query: PageQuery,
+  ): Promise<Page<PermissionModel>> {
     const permissionRepo = await this.repo(ctx, PermissionEntity);
     const roleRepo = await this.repo(ctx, RoleEntity);
 
@@ -746,7 +737,7 @@ export class TypeOrmUserRepository
 
     return {
       items: page.items?.map((it) => {
-        const sources: PermissionSourceDto[] = [];
+        const sources: PermissionSourceModel[] = [];
         const direct = directId2Permission[it.id];
         if (direct) {
           sources.push({
@@ -778,7 +769,7 @@ export class TypeOrmUserRepository
   }
 
   async updateGroupsToUser(
-    ctx: IRequestContext,
+    ctx: IContext,
     user_id: string,
     group_ids: string[],
     overwrite = false, // 是否覆盖
@@ -817,10 +808,10 @@ export class TypeOrmUserRepository
   }
 
   async linkIdentity(
-    ctx: IRequestContext,
+    ctx: IContext,
     primaryUserId: string,
     linkIdentityReq: LinkIdentityReq,
-  ): Promise<IdentityDto[]> {
+  ): Promise<IdentityModel[]> {
     if (primaryUserId === linkIdentityReq.user_id)
       throw new APIException('invalid_request', '账户不能关联自身');
 
@@ -927,11 +918,11 @@ export class TypeOrmUserRepository
   }
 
   async unlinkIdentity(
-    ctx: IRequestContext,
+    ctx: IContext,
     primaryUserId: string,
     connection: string,
     secondaryUserId: string,
-  ): Promise<IdentityDto[]> {
+  ): Promise<IdentityModel[]> {
     if (primaryUserId === secondaryUserId)
       throw new APIException('invalid_request', '账户不能解除关联自身');
 
@@ -1011,10 +1002,10 @@ export class TypeOrmUserRepository
   private readonly organizationMapper: OrganizationMapper;
 
   async listOrganizations(
-    ctx: IRequestContext,
+    ctx: IContext,
     user_id: string,
-    query: PageQueryDto,
-  ): Promise<PageDto<OrganizationDto>> {
+    query: PageQuery,
+  ): Promise<Page<OrganizationModel>> {
     const orgMemberRepo = await this.repo(ctx, OrganizationMemberEntity);
 
     const options = {

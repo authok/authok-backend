@@ -1,39 +1,39 @@
-import { IRequestContext } from '@libs/nest-core';
-import { UserRoleDto } from './user-role.dto';
-import { PageQueryDto, PageDto } from 'libs/common/src/pagination/pagination.dto';
+import { IContext } from '@libs/nest-core';
+import { UserRoleModel } from './user-role.model';
+import { Page, PageQuery } from 'libs/common/src/pagination/pagination.model';
 
 export interface IUserRoleRepository {
-  retrieve(ctx: IRequestContext, id: string): Promise<UserRoleDto | undefined>;
+  retrieve(ctx: IContext, id: string): Promise<UserRoleModel | undefined>;
 
-  create(ctx: IRequestContext, userRole: UserRoleDto): Promise<UserRoleDto>;
+  create(ctx: IContext, userRole: UserRoleModel): Promise<UserRoleModel>;
 
   batchCreate(
-    ctx: IRequestContext,
-    userRoles: Partial<UserRoleDto>[],
-  ): Promise<Partial<UserRoleDto>[]>;
+    ctx: IContext,
+    userRoles: Partial<UserRoleModel>[],
+  ): Promise<Partial<UserRoleModel>[]>;
 
   batchDelete(
-    ctx: IRequestContext,
-    userRoles: Partial<UserRoleDto>[],  
+    ctx: IContext,
+    userRoles: Partial<UserRoleModel>[],  
   ): Promise<void>;
 
   update(
-    ctx: IRequestContext,
-    userRole: UserRoleDto,
+    ctx: IContext,
+    userRole: UserRoleModel,
   ): Promise<{ affected?: number }>;
 
   findBy(
-    ctx: IRequestContext,
-    userRole: UserRoleDto,
-  ): Promise<UserRoleDto | undefined>;
+    ctx: IContext,
+    userRole: UserRoleModel,
+  ): Promise<UserRoleModel | undefined>;
 
   deleteBy(
-    ctx: IRequestContext,
-    userRole: UserRoleDto,
+    ctx: IContext,
+    userRole: UserRoleModel,
   ): Promise<{ affected?: number }>;
 
   paginate(
-    ctx: IRequestContext,
-    query: PageQueryDto,
-  ): Promise<PageDto<UserRoleDto>>;
+    ctx: IContext,
+    query: PageQuery,
+  ): Promise<Page<UserRoleModel>>;
 }

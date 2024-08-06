@@ -2,7 +2,7 @@ import { Controller, Inject, Post, Param, Query, Get, Body, Delete, UseGuards } 
 import { IOrganizationMemberService } from "libs/api/infra-api/src/organization/organization-member.service";
 import { IOrganizationService } from "libs/api/infra-api/src/organization/organization.service";
 import { PageDto } from "libs/common/src/pagination/pagination.dto";
-import { AddOrganizationMembersDto, RemoveOrganizationMembersDto, OrganizationMemberPageQueryDto } from "libs/api/infra-api/src/organization/organization.dto";
+import { AddOrganizationMembersDto, RemoveOrganizationMembersDto, OrganizationMemberPageQueryDto } from "libs/api/infra-api/src/organization/organization.model";
 import { OrganizationMemberDto } from "libs/api/infra-api/src/organization/organization-member.dto";
 import { Scopes } from "libs/oidc/client/src/lib/guards/scopes.decorator";
 import { TenantGuard } from "../../middleware/tenant.guard";

@@ -1,169 +1,165 @@
-import { IdentityDto, LinkIdentityReq } from '../identity/identity.dto';
-import {
-  PostPermissionsDto,
-  UserDto,
-  UserPageQueryDto,
-  CreateUserDto,
-} from './user.dto';
-import { IRequestContext, IContext } from '@libs/nest-core';
+import { IContext } from '@libs/nest-core';
 import {
   PageDto,
   PageQueryDto,
 } from 'libs/common/src/pagination/pagination.dto';
-import { PostUserRoleDto } from '../role/role.dto';
-import { PermissionDto } from '../permission/permission.dto';
-import { OrganizationDto } from '../organization/organization.dto';
-import { UserRoleDto } from './user-role.dto';
+import { PostUserRoleModel } from '../role/role.model';
+import { PermissionModel } from '../permission/permission.model';
+import { OrganizationModel } from '../organization/organization.model';
+import { UserRoleModel } from './user-role.model';
 import { FindOptions } from 'libs/common/src/types';
+import { CreateUserModel, PostPermissions, UserModel } from './user.model';
+import { IdentityModel, LinkIdentityReq } from '../identity/identity.model';
+import { Page, PageQuery } from 'libs/common/src/pagination/pagination.model';
 
 export interface IUserService {
   create(
-    ctx: IRequestContext,
-    user: Partial<CreateUserDto>,
-  ): Promise<UserDto | null>;
+    ctx: IContext,
+    user: Partial<CreateUserModel>,
+  ): Promise<UserModel | null>;
 
   update(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-    data: Partial<UserDto>,
-  ): Promise<UserDto>;
+    data: Partial<UserModel>,
+  ): Promise<UserModel>;
 
-  delete(ctx: IRequestContext, id: string);
+  delete(ctx: IContext, id: string);
 
   paginate(
-    ctx: IRequestContext,
-    query: UserPageQueryDto,
-  ): Promise<PageDto<UserDto>>;
+    ctx: IContext,
+    query: PageQuery,
+  ): Promise<PageDto<UserModel>>;
 
-  retrieve(ctx: IRequestContext, id: string): Promise<UserDto | undefined>;
+  retrieve(ctx: IContext, id: string): Promise<UserModel | undefined>;
 
   linkIdentity(
-    ctx: IRequestContext,
+    ctx: IContext,
     primaryUserId: string,
     linkIdentityReq: LinkIdentityReq,
-  ): Promise<IdentityDto[]>;
+  ): Promise<IdentityModel[]>;
 
   unlinkIdentity(
-    ctx: IRequestContext,
+    ctx: IContext,
     primaryUserId: string,
     connection: string,
     secondaryUserId: string,
-  ): Promise<IdentityDto[]>;
+  ): Promise<IdentityModel[]>;
 
-  findByGuid(ctx: IRequestContext, guid: string): Promise<UserDto | undefined>;
+  findByGuid(ctx: IContext, guid: string): Promise<UserModel | undefined>;
 
-  userVerifiedEmail(ctx: IRequestContext, id: string);
+  userVerifiedEmail(ctx: IContext, id: string);
 
-  validateUser(ctx: IRequestContext, user: UserDto, passowrd: string);
+  validateUser(ctx: IContext, user: UserModel, passowrd: string);
 
-  enable2fa(ctx: IRequestContext, user_id: string);
+  enable2fa(ctx: IContext, user_id: string);
 
-  disable2fa(ctx: IRequestContext, user_id: string);
+  disable2fa(ctx: IContext, user_id: string);
 
   findByEmail(
-    ctx: IRequestContext,
+    ctx: IContext,
     connection: string,
     email: string,
     options?: FindOptions,
-  ): Promise<UserDto | undefined>;
+  ): Promise<UserModel | undefined>;
 
   findByPhoneNumber(
-    ctx: IRequestContext,
+    ctx: IContext,
     connection: string,
     phone_number: string,
     options?: FindOptions,
-  ): Promise<UserDto | undefined>;
+  ): Promise<UserModel | undefined>;
 
   findByUsername(
-    ctx: IRequestContext,
+    ctx: IContext,
     connection: string,
     username: string,
     options?: FindOptions,
-  ): Promise<UserDto | undefined>;
+  ): Promise<UserModel | undefined>;
 
   findByConnection(
-    ctx: IRequestContext,
+    ctx: IContext,
     connection: string,
     user_id: string,
-  ): Promise<UserDto | undefined>;
+  ): Promise<UserModel | undefined>;
 
   findByIdentityProvider(
-    ctx: IRequestContext,
+    ctx: IContext,
     provider: string,
     user_id: string,
-  ): Promise<UserDto | undefined>;
+  ): Promise<UserModel | undefined>;
 
   updateFederatedIdentity(
-    ctx: IRequestContext,
-    identity: IdentityDto,
-  ): Promise<IdentityDto>;
+    ctx: IContext,
+    identity: IdentityModel,
+  ): Promise<IdentityModel>;
 
   addFederatedIdentity(
     ctx: IContext,
     user_id: string,
-    identity: IdentityDto,
-  ): Promise<IdentityDto>;
+    identity: IdentityModel,
+  ): Promise<IdentityModel>;
 
   removeFederatedIdentity(
-    ctx: IRequestContext,
+    ctx: IContext,
     user_id: string,
     provider: string,
   ): Promise<void>;
 
   assignPermissions(
-    ctx: IRequestContext,
+    ctx: IContext,
     user_id: string,
-    body: PostPermissionsDto,
+    body: PostPermissions,
   ): Promise<void>;
 
   removePermissions(
-    ctx: IRequestContext,
+    ctx: IContext,
     user_id: string,
-    body: PostPermissionsDto,
+    body: PostPermissions,
   ): Promise<void>;
 
   paginatePermissions(
-    ctx: IRequestContext,
+    ctx: IContext,
     user_id: string,
     query: PageQueryDto,
-  ): Promise<PageDto<PermissionDto>>;
+  ): Promise<PageDto<PermissionModel>>;
 
   addRolesToUser(
-    ctx: IRequestContext,
+    ctx: IContext,
     user_id: string,
-    body: PostUserRoleDto,
+    body: PostUserRoleModel,
   ): Promise<void>;
 
   removeRolesToUser(
-    ctx: IRequestContext,
+    ctx: IContext,
     user_id: string,
-    body: PostUserRoleDto,
+    body: PostUserRoleModel,
   ): Promise<void>;
 
   listRoles(
-    ctx: IRequestContext,
+    ctx: IContext,
     user_id: string,
     query: PageQueryDto,
-  ): Promise<PageDto<UserRoleDto>>;
+  ): Promise<PageDto<UserRoleModel>>;
 
   /**
    * 更新，删除之前的
    */
   updateGroupsToUser(
-    ctx: IRequestContext,
+    ctx: IContext,
     user_id: string,
     group_ids: string[],
     overwrite: boolean,
   ): Promise<void>;
 
   listOrganizations(
-    ctx: IRequestContext,
+    ctx: IContext,
     user_id: string,
-    query: PageQueryDto,
-  ): Promise<PageDto<OrganizationDto>>;
+    query: PageQuery,
+  ): Promise<Page<OrganizationModel>>;
 
   startResetPasswordByEmail(
-    ctx: IRequestContext,
+    ctx: IContext,
     connection: string,
     email: string,
     ip: string,

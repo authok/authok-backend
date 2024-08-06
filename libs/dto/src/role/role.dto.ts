@@ -3,6 +3,7 @@ import { JoiSchema, JoiSchemaOptions } from 'nestjs-joi';
 import * as Joi from 'joi';
 import { CREATE, UPDATE } from 'nestjs-joi';
 import { PageQueryDto } from 'libs/common/src/pagination/pagination.dto';
+
 @JoiSchemaOptions({})
 export class RoleDto {
   @ApiProperty()

@@ -1,13 +1,13 @@
 import { plainToClass } from 'class-transformer';
-import { OrganizationMemberDto } from 'libs/api/infra-api/src/organization/organization-member.dto';
 import { OrganizationMemberRoleModel } from 'libs/api/infra-api/src/organization/organization-member-role.model';
 import {
   OrganizationMemberRoleEntity,
   OrganizationMemberEntity,
 } from './organization.entity';
 import { RoleEntity } from '../role/role.entity';
-import { UserDto } from 'libs/api/infra-api/src/user/user.dto';
-import { RoleDto } from 'libs/api/infra-api/src/role/role.dto';
+import { UserModel } from 'libs/api/infra-api/src/user/user.model';
+import { OrganizationMemberModel } from 'libs/api/infra-api/src/organization/organization-member.model';
+import { RoleDto } from 'libs/dto/src';
 
 export class OrganizationMemberRoleMapper {
   toEntity(
@@ -45,12 +45,12 @@ export class OrganizationMemberRoleMapper {
     if (member) {
       const { user } = member;
       model.member_id = member.id;
-      model.member = plainToClass(OrganizationMemberDto, {
+      model.member = plainToClass(OrganizationMemberModel, {
         id: member.id,
       });
 
       if (user) {
-        model.user = plainToClass(UserDto, {
+        model.user = plainToClass(UserModel, {
           user_id: user.user_id,
           ...(user.nickname && { nickname: user.nickname }),
           ...(user.username && { username: user.username }),

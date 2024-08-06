@@ -8,7 +8,7 @@ import {
   Query,
 } from '@libs/nest-core';
 import { IInvitationRepository } from 'libs/api/infra-api/src/invitation/invitation.repository';
-import { InvitationDto } from 'libs/api/infra-api/src/invitation/invitation.dto';
+import { InvitationModel } from 'libs/api/infra-api/src/invitation/invitation.model';
 import { InvitationMapper } from './invitation.mapper';
 import { TenantAwareTypeOrmQueryRepository } from '@libs/nest-core-typeorm';
 import {
@@ -19,7 +19,7 @@ import { UserEntity } from '../user/user.entity';
 
 @Injectable()
 export class TypeOrmInvitationRepository
-  extends MapperQueryRepository<InvitationDto, InvitationEntity>
+  extends MapperQueryRepository<InvitationModel, InvitationEntity>
   implements IInvitationRepository
 {
   constructor(
@@ -33,7 +33,7 @@ export class TypeOrmInvitationRepository
   async findByTicket(
     ctx: IContext,
     ticket: string,
-  ): Promise<InvitationDto | undefined> {
+  ): Promise<InvitationModel | undefined> {
     return this.queryOne(ctx, {
       and: [
         {
@@ -53,7 +53,7 @@ export class TypeOrmInvitationRepository
   async paginate(
     ctx: IContext,
     query: PageQueryDto,
-  ): Promise<PageDto<InvitationDto>> {
+  ): Promise<PageDto<InvitationModel>> {
     const {
       page,
       page_size,

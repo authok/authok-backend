@@ -1,15 +1,12 @@
-import { IRequestContext } from '@libs/nest-core';
+import { IContext } from '@libs/nest-core';
 import { TenantAwareRepository } from 'libs/support/tenant-support-typeorm/src/modules/tenant/tenant-aware.repository';
 import { Inject } from '@nestjs/common';
 import { ActionEntity } from '../action/action.entity';
 import { ActionMapper } from './action.mapper';
-import {
-  PageDto,
-  PageQueryDto,
-} from 'libs/common/src/pagination/pagination.dto';
 import { paginate } from 'libs/common/src/pagination/typeorm-paginate';
-import { ActionDto } from 'libs/api/infra-api/src/action/action/action.dto';
+import { ActionModel } from 'libs/api/infra-api/src/action/action/action.model';
 import { IActionRepository } from 'libs/api/infra-api/src/action/action/action.repository';
+import { Page, PageQuery } from 'libs/common/src/pagination/pagination.model';
 
 export class TypeOrmActionRepository
   extends TenantAwareRepository
@@ -18,7 +15,7 @@ export class TypeOrmActionRepository
   @Inject()
   private actionMapper: ActionMapper;
 
-  async create(ctx: IRequestContext, action: ActionDto): Promise<ActionDto> {
+  async create(ctx: IContext, action: ActionModel): Promise<ActionModel> {
     const actionRepo = await this.repo(ctx, ActionEntity);
 
     const entity = this.actionMapper.toEntity(ctx, action);
@@ -29,9 +26,9 @@ export class TypeOrmActionRepository
   }
 
   async retrieve(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-  ): Promise<ActionDto | undefined> {
+  ): Promise<ActionModel | undefined> {
     const actionRepo = await this.repo(ctx, ActionEntity);
     const entity = await actionRepo.findOne({
       where: { id },
@@ -41,9 +38,9 @@ export class TypeOrmActionRepository
   }
 
   async update(
-    ctx: IRequestContext,
-    action: Partial<ActionDto>,
-  ): Promise<ActionDto> {
+    ctx: IContext,
+    action: Partial<ActionModel>,
+  ): Promise<ActionModel> {
     const actionRepo = await this.repo(ctx, ActionEntity);
 
     await actionRepo.findOneOrFail({
@@ -59,7 +56,7 @@ export class TypeOrmActionRepository
     return this.actionMapper.toDTO(saved);
   }
 
-  async delete(ctx: IRequestContext, id: string): Promise<void> {
+  async delete(ctx: IContext, id: string): Promise<void> {
     const actionRepo = await this.repo(ctx, ActionEntity);
     const entity = await actionRepo.findOneOrFail({
       where: {
@@ -72,9 +69,9 @@ export class TypeOrmActionRepository
   }
 
   async paginate(
-    ctx: IRequestContext,
-    query: PageQueryDto,
-  ): Promise<PageDto<ActionDto>> {
+    ctx: IContext,
+    query: PageQuery,
+  ): Promise<Page<ActionModel>> {
     const triggerBindingRepo = await this.repo(ctx, ActionEntity);
 
     query.tenant = ctx.tenant;

@@ -34,7 +34,7 @@ import {
   LogCursorQueryDto,
 } from 'libs/api/logstream-api/src/log.dto';
 import { CursorResult } from 'libs/common/src/pagination/cursor/cursor.dto';
-import { PermissionDto } from 'libs/api/infra-api/src/permission/permission.dto';
+import { PermissionDto } from 'libs/api/infra-api/src/permission/permission.model';
 import { ApiOperation } from '@nestjs/swagger';
 import { PostUserRoleDto } from 'libs/api/infra-api/src/role/role.dto';
 import {
@@ -46,7 +46,7 @@ import {
   IdentityDto,
   LinkIdentityReq,
 } from 'libs/api/infra-api/src/identity/identity.dto';
-import { OrganizationDto } from 'libs/api/infra-api/src/organization/organization.dto';
+import { OrganizationDto } from 'libs/api/infra-api/src/organization/organization.model';
 import { TenantGuard } from '../../middleware/tenant.guard';
 import { Scopes } from 'libs/oidc/client/src/lib/guards/scopes.decorator';
 import { IRequestContext, ReqCtx } from '@libs/nest-core';

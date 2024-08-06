@@ -1,15 +1,15 @@
-import { IRequestContext, QueryRepository } from '@libs/nest-core';
-import { InvitationDto } from './invitation.dto';
+import { IContext, QueryRepository } from '@libs/nest-core';
+import { InvitationModel } from './invitation.model';
 import { PageQueryDto, PageDto } from 'libs/common/src/pagination/pagination.dto';
 
-export interface IInvitationRepository extends QueryRepository<InvitationDto> {
+export interface IInvitationRepository extends QueryRepository<InvitationModel> {
   findByTicket(
-    ctx: IRequestContext,
+    ctx: IContext,
     ticket: string,
-  ): Promise<InvitationDto | undefined>;
+  ): Promise<InvitationModel | undefined>;
 
   paginate(
-    ctx: IRequestContext,
+    ctx: IContext,
     query: PageQueryDto,
-  ): Promise<PageDto<InvitationDto>>;
+  ): Promise<PageDto<InvitationModel>>;
 }

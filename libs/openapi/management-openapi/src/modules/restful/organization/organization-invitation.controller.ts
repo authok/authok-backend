@@ -20,7 +20,7 @@ import { Scopes } from 'libs/oidc/client/src/lib/guards/scopes.decorator';
 import { ScopesGuard } from 'libs/oidc/client/src/lib/guards/scopes.guard';
 import dayjs from 'dayjs';
 import { IInvitationService } from "libs/api/infra-api/src/invitation/invitation.service";
-import { InvitationDto, InvitationPageQueryDto } from "libs/api/infra-api/src/invitation/invitation.dto";
+import { InvitationDto, InvitationPageQueryDto } from "libs/dto/src/invitation/invitation.dto";
 
 @Controller('/api/v1/organizations/:org_id/invitations')
 @ApiTags('组织')
@@ -53,7 +53,14 @@ export class OrganizationInvitationController {
     @Query() _query: InvitationPageQueryDto,
   ): Promise<PageDto<InvitationDto>> {
     const query = {..._query, org_id };
-    return await this.invitationService.paginate(ctx, query);
+    const { meta, items: _items } = await this.invitationService.paginate(ctx, query);
+
+    const items = _items.map(it => it as unknown as InvitationDto);
+  
+    return {
+      meta,
+      items,
+    }
   }
 
   @ApiOperation({
@@ -96,7 +103,7 @@ export class OrganizationInvitationController {
     
     const invitation = await this.organizationService.getInvitation(ctx, org_id, invitation_id);
     if (!invitation) throw new NotFoundException(`invitation ${invitation_id} not found`);
-    return invitation;
+    return invitation as unknown as InvitationDto;
   }
 
   @ApiOperation({

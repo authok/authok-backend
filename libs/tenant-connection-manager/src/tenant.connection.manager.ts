@@ -60,10 +60,8 @@ export class TenantConnectionManager {
   }
 
   addEntities(...items: EntityClassOrSchema[]) {
-    items.forEach((it) => Logger.log(`加载 Entity: ${it.constructor.name}`));
+    items.forEach((it) => Logger.log(`加载 Entity: ${it}`));
     this.entities.push(...items);
-    Logger.log(`after addEntities:`)
-    Logger.log(items)
   }
 
   async get(ctx: IRequestContext): Promise<Connection> {
