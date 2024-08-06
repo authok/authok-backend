@@ -1,15 +1,15 @@
-import { TenantDto } from 'libs/api/infra-api/src/tenant/tenant.dto';
+import { TenantModel } from 'libs/api/infra-api/src/tenant/tenant.model';
 import { TenantEntity } from './tenant.entity';
 import { plainToClass } from 'class-transformer';
 
 export class TenantMapper {
-  toDTO(entity?: TenantEntity): TenantDto | undefined {
+  toDTO(entity?: TenantEntity): TenantModel | undefined {
     if (!entity) return undefined;
 
-    return plainToClass(TenantDto, entity);
+    return plainToClass(TenantModel, entity);
   }
 
-  toEntity(model?: TenantDto): TenantEntity | undefined {
+  toEntity(model?: TenantModel): TenantEntity | undefined {
     if (!model) return undefined;
 
     return plainToClass(TenantEntity, model);

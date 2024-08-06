@@ -1,7 +1,6 @@
 import { Inject, Injectable, NotImplementedException } from '@nestjs/common';
 import { IClientService } from 'libs/api/infra-api/src/client/client.service';
 import { IModelAdapter } from './model.adapter';
-import { ClientDto } from 'libs/api/infra-api/src/client/client.dto';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -82,7 +81,7 @@ export class ClientAdaptor implements IModelAdapter {
   }
 
   async find(ctx: Record<string, any>, id: string) {
-    const client: ClientDto = await this.clientService.retrieve(
+    const client = await this.clientService.retrieve(
       ctx.req.customRequestContext,
       id,
     );

@@ -18,7 +18,7 @@ import { IRequestContext, ReqCtx } from '@libs/nest-core';
 import { AuthGuard } from '@nestjs/passport';
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { PageDto, pageDtoFactory } from 'libs/common/src/pagination/pagination.dto';
-import { ResourceServerDto, ResourceServerPageQueryDto, CreateResourceServerDto, UpdateResourceServerDto } from 'libs/api/infra-api/src/resource-server/resource-server.dto';
+import { ResourceServerDto, ResourceServerPageQueryDto, CreateResourceServerDto, UpdateResourceServerDto } from 'libs/dto/src';
 import { Scopes } from 'libs/oidc/client/src/lib/guards/scopes.decorator';
 import { ScopesGuard } from 'libs/oidc/client/src/lib/guards/scopes.guard';
 

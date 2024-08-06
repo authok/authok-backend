@@ -1,25 +1,25 @@
-import { KeyDto, UpdateKeyDto, CreateKeyDto } from './key.dto';
+import { KeyModel, UpdateKeyModel, CreateKeyModel } from './key.model';
 import { UpdateResult, DeleteResult } from 'typeorm';
-import { IRequestContext } from '@libs/nest-core';
+import { IContext } from '@libs/nest-core';
 
 export interface IKeyRepository {
-  retrieve(ctx: IRequestContext, id: string): Promise<KeyDto | undefined>;
+  retrieve(ctx: IContext, id: string): Promise<KeyModel | undefined>;
 
-  findActiveKey(ctx: IRequestContext): Promise<KeyDto | undefined>;
+  findActiveKey(ctx: IContext): Promise<KeyModel | undefined>;
 
-  findByIds(ctx: IRequestContext, ids: string[]): Promise<KeyDto[]>;
+  findByIds(ctx: IContext, ids: string[]): Promise<KeyModel[]>;
 
   update(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-    data: UpdateKeyDto,
+    data: UpdateKeyModel,
   ): Promise<UpdateResult>;
 
-  delete(ctx: IRequestContext, id: string): Promise<DeleteResult>;
+  delete(ctx: IContext, id: string): Promise<DeleteResult>;
 
-  create(ctx: IRequestContext, key: CreateKeyDto): Promise<KeyDto>;
+  create(ctx: IContext, key: CreateKeyModel): Promise<KeyModel>;
 
-  findAll(ctx: IRequestContext): Promise<KeyDto[]>;
+  findAll(ctx: IContext): Promise<KeyModel[]>;
 
-  rotate(ctx: IRequestContext): Promise<KeyDto>;
+  rotate(ctx: IContext): Promise<KeyModel>;
 }

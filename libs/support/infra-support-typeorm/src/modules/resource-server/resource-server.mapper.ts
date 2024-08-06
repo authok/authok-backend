@@ -2,14 +2,14 @@ import { ResourceServerEntity } from './resource-server.entity';
 import { Injectable } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
 import { PermissionEntity } from '../permission/permission.entity';
-import { ResourceServerDto } from 'libs/api/infra-api/src/resource-server/resource-server.dto';
+import { ResourceServerModel } from 'libs/api/infra-api/src/resource-server/resource-server.model';
 import { IContext } from '@libs/nest-core';
 
 @Injectable()
 export class ResourceServerMapper {
   toEntity(
     ctx: IContext,
-    model?: Partial<ResourceServerDto>,
+    model?: Partial<ResourceServerModel>,
   ): ResourceServerEntity | undefined {
     if (!model) return undefined;
 
@@ -29,12 +29,12 @@ export class ResourceServerMapper {
     return entity;
   }
 
-  toDTO(entity?: ResourceServerEntity): ResourceServerDto | undefined {
+  toDTO(entity?: ResourceServerEntity): ResourceServerModel | undefined {
     if (!entity) return undefined;
 
     const { permissions, ..._rest } = entity;
 
-    const model = plainToClass(ResourceServerDto, { ..._rest });
+    const model = plainToClass(ResourceServerModel, { ..._rest });
     if (permissions) {
       model.scopes = permissions?.map((it) => ({
         value: it.name,

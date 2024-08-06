@@ -11,7 +11,7 @@ import {
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiUnauthorizedResponse, ApiForbiddenResponse } from '@nestjs/swagger';
 import { ScopesGuard } from 'libs/oidc/client/src/lib/guards/scopes.guard';
 import { Scopes } from 'libs/oidc/client/src/lib/guards/scopes.decorator';
-import { KeyDto } from 'libs/api/infra-api/src/key/key.dto';
+import { KeyDto } from 'libs/dto/src';
 import { IKeyService } from 'libs/api/infra-api/src/key/key.service';
 import { ReqCtx, IRequestContext } from '@libs/nest-core';
 import { AuthGuard } from '@nestjs/passport';

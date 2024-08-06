@@ -25,7 +25,7 @@ import {
   CreateClientDto,
   UpdateClientDto,
   ClientPageQueryDto,
-} from 'libs/api/infra-api/src/client/client.dto';
+} from 'libs/dto/src';
 import { IClientService } from 'libs/api/infra-api/src/client/client.service';
 import { IRequestContext, ReqCtx } from '@libs/nest-core';
 import { AuthGuard } from '@nestjs/passport';

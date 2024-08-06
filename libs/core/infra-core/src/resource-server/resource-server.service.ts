@@ -5,16 +5,17 @@ import {
 } from '@nestjs/common';
 
 import {
-  CreateResourceServerDto,
-  ResourceServerDto,
-  UpdateResourceServerDto,
-  ResourceServerPageQueryDto,
-} from 'libs/api/infra-api/src/resource-server/resource-server.dto';
+  CreateResourceServerModel,
+  ResourceServerModel,
+  UpdateResourceServerModel,
+  ResourceServerPageQuery,
+} from 'libs/api/infra-api/src/resource-server/resource-server.model';
 import { IResourceServerRepository } from 'libs/api/infra-api/src/resource-server/resource-server.repository';
 import { IResourceServerService } from 'libs/api/infra-api/src/resource-server/resource-server.service';
 import { APIException } from 'libs/common/src/exception/api.exception';
 import { PageDto } from 'libs/common/src/pagination/pagination.dto';
-import { IRequestContext } from '@libs/nest-core';
+import { IContext, IRequestContext } from '@libs/nest-core';
+import { Page } from 'libs/common/src/pagination/pagination.model';
 
 @Injectable()
 export class ResourceServerService implements IResourceServerService {
@@ -22,21 +23,21 @@ export class ResourceServerService implements IResourceServerService {
     @Inject('IResourceServerRepository') private resourceServerRepo: IResourceServerRepository,
   ) {}
 
-  retrieve(ctx: IRequestContext, id: string): Promise<ResourceServerDto | undefined> {
+  retrieve(ctx: IRequestContext, id: string): Promise<ResourceServerModel | undefined> {
     return this.resourceServerRepo.retrieve(ctx, id);
   }
 
   findByIdentifier(
-    ctx: IRequestContext,
+    ctx: IContext,
     identifier: string,
-  ): Promise<ResourceServerDto | null> {
+  ): Promise<ResourceServerModel | null> {
     return this.resourceServerRepo.findByIdentifier(ctx, identifier);
   }
 
   async create(
-    ctx: IRequestContext,
-    body: Partial<CreateResourceServerDto>,
-  ): Promise<ResourceServerDto> {
+    ctx: IContext,
+    body: Partial<CreateResourceServerModel>,
+  ): Promise<ResourceServerModel> {
     const existingApi = await this.resourceServerRepo.findByIdentifier(
       ctx,
       body.identifier,
@@ -51,22 +52,22 @@ export class ResourceServerService implements IResourceServerService {
     return await this.resourceServerRepo.create(ctx, body);
   }
 
-  async delete(ctx: IRequestContext, id: string): Promise<void> {
+  async delete(ctx: IContext, id: string): Promise<void> {
     this.resourceServerRepo.delete(ctx, id);
   }
 
   async update(
     ctx: IRequestContext,
     id: string,
-    data: UpdateResourceServerDto,
-  ): Promise<ResourceServerDto> {
+    data: UpdateResourceServerModel,
+  ): Promise<ResourceServerModel> {
     return await this.resourceServerRepo.update(ctx, id, data);
   }
 
   async paginate(
-    ctx: IRequestContext,
-    query: ResourceServerPageQueryDto,
-  ): Promise<PageDto<ResourceServerDto>> {
+    ctx: IContext,
+    query: ResourceServerPageQuery,
+  ): Promise<Page<ResourceServerModel>> {
     return await this.resourceServerRepo.paginate(ctx, query);
   }
 }

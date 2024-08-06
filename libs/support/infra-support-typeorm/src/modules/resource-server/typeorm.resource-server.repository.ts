@@ -2,20 +2,17 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { ResourceServerEntity } from './resource-server.entity';
 import { IResourceServerRepository } from 'libs/api/infra-api/src/resource-server/resource-server.repository';
-import {
-  PageDto,
-  PageQueryDto,
-} from 'libs/common/src/pagination/pagination.dto';
 import { TenantAwareRepository } from '../../../../tenant-support-typeorm/src/modules/tenant/tenant-aware.repository';
 import { paginate } from 'libs/common/src/pagination/typeorm-paginate';
 import { ResourceServerMapper } from './resource-server.mapper';
 import * as _ from 'lodash';
 import {
-  ResourceServerDto,
-  CreateResourceServerDto,
-  UpdateResourceServerDto,
-} from 'libs/api/infra-api/src/resource-server/resource-server.dto';
+  ResourceServerModel,
+  CreateResourceServerModel,
+  UpdateResourceServerModel,
+} from 'libs/api/infra-api/src/resource-server/resource-server.model';
 import { IContext } from '@libs/nest-core';
+import { Page, PageQuery } from 'libs/common/src/pagination/pagination.model';
 
 @Injectable()
 export class TypeOrmResourceServerRepository
@@ -28,7 +25,7 @@ export class TypeOrmResourceServerRepository
   async retrieve(
     ctx: IContext,
     id: string,
-  ): Promise<ResourceServerDto | undefined> {
+  ): Promise<ResourceServerModel | undefined> {
     const resourceServerRepo = await this.repo(ctx, ResourceServerEntity);
 
     const resourceServer = await resourceServerRepo
@@ -47,7 +44,7 @@ export class TypeOrmResourceServerRepository
   async findByIdentifier(
     ctx: IContext,
     identifier: string,
-  ): Promise<ResourceServerDto | undefined> {
+  ): Promise<ResourceServerModel | undefined> {
     const resourceServerRepo = await this.repo(ctx, ResourceServerEntity);
 
     const resourceServer = await resourceServerRepo.findOne({
@@ -62,8 +59,8 @@ export class TypeOrmResourceServerRepository
 
   async create(
     ctx: IContext,
-    _resourceServer: Partial<CreateResourceServerDto>,
-  ): Promise<ResourceServerDto> {
+    _resourceServer: Partial<CreateResourceServerModel>,
+  ): Promise<ResourceServerModel> {
     const resourceServerRepo = await this.repo(ctx, ResourceServerEntity);
 
     const resourceServer = this.resourceServerMapper.toEntity(
@@ -91,8 +88,8 @@ export class TypeOrmResourceServerRepository
   async update(
     ctx: IContext,
     id: string,
-    _data: UpdateResourceServerDto,
-  ): Promise<ResourceServerDto> {
+    _data: UpdateResourceServerModel,
+  ): Promise<ResourceServerModel> {
     const resourceServerRepo = await this.repo(ctx, ResourceServerEntity);
 
     const existingResourceServer = await resourceServerRepo.findOneOrFail({
@@ -125,8 +122,8 @@ export class TypeOrmResourceServerRepository
 
   async paginate(
     ctx: IContext,
-    query: PageQueryDto,
-  ): Promise<PageDto<ResourceServerDto>> {
+    query: PageQuery,
+  ): Promise<Page<ResourceServerModel>> {
     const resourceServerRepo = await this.repo(ctx, ResourceServerEntity);
 
     query.tenant = ctx.tenant;

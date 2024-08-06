@@ -1,6 +1,6 @@
 import { IContext, QueryRepository } from '@libs/nest-core';
 import { InvitationModel } from './invitation.model';
-import { PageQueryDto, PageDto } from 'libs/common/src/pagination/pagination.dto';
+import { Page, PageQuery } from 'libs/common/src/pagination/pagination.model';
 
 export interface IInvitationRepository extends QueryRepository<InvitationModel> {
   findByTicket(
@@ -10,6 +10,6 @@ export interface IInvitationRepository extends QueryRepository<InvitationModel> 
 
   paginate(
     ctx: IContext,
-    query: PageQueryDto,
-  ): Promise<PageDto<InvitationModel>>;
+    query: PageQuery,
+  ): Promise<Page<InvitationModel>>;
 }

@@ -1,13 +1,12 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { ClientGrantDto } from 'libs/api/infra-api/src/client-grant/client-grant.dto';
 import { IClientGrantRepository } from 'libs/api/infra-api/src/client-grant/client-grant.repository';
-import { IRequestContext, ReqCtx } from '@libs/nest-core';
+import { IContext, IRequestContext, ReqCtx } from '@libs/nest-core';
 import { In } from 'typeorm';
 import { TenantAwareRepository } from '../../../../tenant-support-typeorm/src/modules/tenant/tenant-aware.repository';
 import { PermissionEntity } from '../permission/permission.entity';
 import { ClientGrantEntity } from './client-grant.entity';
 import { paginate } from 'libs/common/src/pagination/typeorm-paginate';
-import { ClientGrantPageQuery } from 'libs/api/infra-api/src/client-grant/client-grant.model';
+import { ClientGrantModel, ClientGrantPageQuery } from 'libs/api/infra-api/src/client-grant/client-grant.model';
 import { Page } from 'libs/common/src/pagination/pagination.model';
 import { ClientGrantMapper } from './client-grant.mapper';
 import * as _ from 'lodash';
@@ -22,7 +21,7 @@ export class TypeOrmClientGrantRepository
   async retrieve(
     ctx: IRequestContext,
     id: string,
-  ): Promise<ClientGrantDto | undefined> {
+  ): Promise<ClientGrantModel | undefined> {
     const repo = await this.repo(ctx, ClientGrantEntity);
     const clientGrant = await repo.findOne({
       where: {
@@ -38,7 +37,7 @@ export class TypeOrmClientGrantRepository
     ctx: IRequestContext,
     client_id: string,
     audience: string,
-  ): Promise<ClientGrantDto | undefined> {
+  ): Promise<ClientGrantModel | undefined> {
     const repo = await this.repo(ctx, ClientGrantEntity);
     const clientGrant = await repo.findOne({
       where: {
@@ -54,8 +53,8 @@ export class TypeOrmClientGrantRepository
   async update(
     ctx: IRequestContext,
     id: string,
-    _data: Partial<ClientGrantDto>,
-  ): Promise<ClientGrantDto> {
+    _data: Partial<ClientGrantModel>,
+  ): Promise<ClientGrantModel> {
     const repo = await this.repo(ctx, ClientGrantEntity);
     const permissionRepo = await this.repo(ctx, PermissionEntity);
     const existingClientGrant = await repo.findOneOrFail({
@@ -103,7 +102,7 @@ export class TypeOrmClientGrantRepository
     return this.clientGrantMapper.toDTO(r);
   }
 
-  async delete(ctx: IRequestContext, id: string): Promise<void> {
+  async delete(ctx: IContext, id: string): Promise<void> {
     const repo = await this.repo(ctx, ClientGrantEntity);
     await repo.delete({
       id,
@@ -112,9 +111,9 @@ export class TypeOrmClientGrantRepository
   }
 
   async create(
-    ctx: IRequestContext,
-    _clientGrant: ClientGrantDto,
-  ): Promise<ClientGrantDto> {
+    ctx: IContext,
+    _clientGrant: ClientGrantModel,
+  ): Promise<ClientGrantModel> {
     const repo = await this.repo(ctx, ClientGrantEntity);
     const permissionRepo = await this.repo(ctx, PermissionEntity);
 
@@ -157,9 +156,9 @@ export class TypeOrmClientGrantRepository
   }
 
   async paginate(
-    @ReqCtx() ctx: IRequestContext,
+    @ReqCtx() ctx: IContext,
     query: ClientGrantPageQuery,
-  ): Promise<Page<ClientGrantDto>> {
+  ): Promise<Page<ClientGrantModel>> {
     const repo = await this.repo(ctx, ClientGrantEntity);
 
     query.tenant = ctx.tenant;

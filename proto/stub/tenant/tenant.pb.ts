@@ -10,6 +10,14 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "tenant";
 
+export interface DeleteTenantRequest {
+  id: string;
+}
+
+export interface DeleteTenantReply {
+  success: boolean;
+}
+
 export interface FindTenantByNameRequest {
   name: string;
 }
@@ -27,6 +35,57 @@ export interface CreateTenantRequest {
   jwtConfiguration: string;
 }
 
+export interface UpdateTenantRequest {
+  id: string;
+  name?: string | undefined;
+  displayName?: string | undefined;
+  domain?: string | undefined;
+  description?: string | undefined;
+  region?: string | undefined;
+  environment?:
+    | string
+    | undefined;
+  /** Record<string, any>; */
+  changePassword?:
+    | string
+    | undefined;
+  /** Record<string, any>; */
+  deviceFlow?:
+    | string
+    | undefined;
+  /** Record<string, any>; */
+  guardianMfaPage?: string | undefined;
+  defaultAudience?: string | undefined;
+  defaultConnection?:
+    | string
+    | undefined;
+  /** Record<string, any>; */
+  errorPage?:
+    | string
+    | undefined;
+  /** Record<string, boolean>; */
+  flags?: string | undefined;
+  picture?: string | undefined;
+  supportEmail?: string | undefined;
+  supportUrl?: string | undefined;
+  allowedLogoutUrls: string[];
+  sessionLifetime: number[];
+  idleSessionLifetime: number[];
+  sandboxVersion?: string | undefined;
+  defaultRedirectionUri?: string | undefined;
+  enabledLocales: string[];
+  /** Record<string, any>; */
+  sessionCookie?:
+    | string
+    | undefined;
+  /** JwtConfiguration; */
+  jwtConfiguration?:
+    | string
+    | undefined;
+  /** Record<string, any>; */
+  config?: string | undefined;
+}
+
 export interface Tenant {
   id: string;
   name: string;
@@ -37,6 +96,26 @@ export interface Tenant {
   jwtConfiguration: string;
 }
 
+export interface ListTenantRequest {
+  q: string;
+  page: number;
+  pageSize: number;
+  sort: string;
+  includeTotals: boolean;
+  includeFields: boolean;
+}
+
+export interface PageMeta {
+  page: number;
+  pageSize: number;
+  total: number;
+}
+
+export interface ListTenantReply {
+  items: Tenant[];
+  meta: PageMeta | undefined;
+}
+
 export const TENANT_PACKAGE_NAME = "tenant";
 
 export interface TenantServiceClient {
@@ -44,7 +123,13 @@ export interface TenantServiceClient {
 
   retrieve(request: RetrieveTenantRequest): Observable<Tenant>;
 
+  update(request: UpdateTenantRequest): Observable<Tenant>;
+
+  delete(request: DeleteTenantRequest): Observable<DeleteTenantReply>;
+
   findByName(request: FindTenantByNameRequest): Observable<Tenant>;
+
+  list(request: ListTenantRequest): Observable<ListTenantReply>;
 }
 
 export interface TenantServiceController {
@@ -52,12 +137,18 @@ export interface TenantServiceController {
 
   retrieve(request: RetrieveTenantRequest): Promise<Tenant> | Observable<Tenant> | Tenant;
 
+  update(request: UpdateTenantRequest): Promise<Tenant> | Observable<Tenant> | Tenant;
+
+  delete(request: DeleteTenantRequest): Promise<DeleteTenantReply> | Observable<DeleteTenantReply> | DeleteTenantReply;
+
   findByName(request: FindTenantByNameRequest): Promise<Tenant> | Observable<Tenant> | Tenant;
+
+  list(request: ListTenantRequest): Promise<ListTenantReply> | Observable<ListTenantReply> | ListTenantReply;
 }
 
 export function TenantServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["create", "retrieve", "findByName"];
+    const grpcMethods: string[] = ["create", "retrieve", "update", "delete", "findByName", "list"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("TenantService", method)(constructor.prototype[method], method, descriptor);

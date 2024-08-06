@@ -1,25 +1,25 @@
-import { IRequestContext } from '@libs/nest-core';
-import { PageDto, PageQueryDto } from 'libs/common/src/pagination/pagination.dto';
-import { DBConnectionDto } from './db-connection.dto';
+import { IContext } from '@libs/nest-core';
+import { DBConnectionModel } from './db-connection.model';
+import { Page, PageQuery } from 'libs/common/src/pagination/pagination.model';
 
 export interface IDBConnectionService {
   retrieve(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-  ): Promise<DBConnectionDto | undefined>;
+  ): Promise<DBConnectionModel | undefined>;
 
   update(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-    body: Partial<DBConnectionDto>,
+    body: Partial<DBConnectionModel>,
   ): Promise<{ affected?: number }>;
 
-  delete(ctx: IRequestContext, id: string): Promise<{ affected?: number }>;
+  delete(ctx: IContext, id: string): Promise<{ affected?: number }>;
 
-  create(ctx: IRequestContext, conn: DBConnectionDto): Promise<DBConnectionDto>;
+  create(ctx: IContext, conn: DBConnectionModel): Promise<DBConnectionModel>;
 
   paginate(
-    ctx: IRequestContext,
-    query: PageQueryDto,
-  ): Promise<PageDto<DBConnectionDto>>;
+    ctx: IContext,
+    query: PageQuery,
+  ): Promise<Page<DBConnectionModel>>;
 }

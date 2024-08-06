@@ -1,16 +1,16 @@
-import { ClientGrantDto } from 'libs/api/infra-api/src/client-grant/client-grant.dto';
+import { ClientGrantModel } from 'libs/api/infra-api/src/client-grant/client-grant.model';
 import { ClientGrantEntity } from './client-grant.entity';
 import { plainToClass } from 'class-transformer';
 import { PermissionEntity } from '../permission/permission.entity';
 import { ResourceServerEntity } from '../resource-server/resource-server.entity';
 
 export class ClientGrantMapper {
-  toDTO(entity?: ClientGrantEntity): ClientGrantDto | undefined {
+  toDTO(entity?: ClientGrantEntity): ClientGrantModel | undefined {
     if (!entity) return undefined;
 
     const { resource_server, permissions, ...rest } = entity;
 
-    const model = plainToClass(ClientGrantDto, rest);
+    const model = plainToClass(ClientGrantModel, rest);
 
     if (permissions) {
       model.scope = permissions.map((it) => it.name);
@@ -23,7 +23,7 @@ export class ClientGrantMapper {
     return model;
   }
 
-  toEntity(model?: Partial<ClientGrantDto>): ClientGrantEntity | undefined {
+  toEntity(model?: Partial<ClientGrantModel>): ClientGrantEntity | undefined {
     if (!model) return undefined;
 
     const { scope, audience, ...rest } = model;

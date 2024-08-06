@@ -19,7 +19,7 @@ import { ITenantService } from 'libs/api/infra-api/src/tenant/tenant.service';
 import {
   TenantDto,
   UpdateTenantDto,
-} from 'libs/api/infra-api/src/tenant/tenant.dto';
+} from 'libs/dto/src';
 import { IRequestContext, ReqCtx } from '@libs/nest-core';
 import { IKeyService } from 'libs/api/infra-api/src/key/key.service';
 import { IOrganizationService } from 'libs/api/infra-api/src/organization/organization.service';
@@ -57,7 +57,7 @@ export class TenantController {
   async settingsGet(@ReqCtx() ctx: IRequestContext): Promise<TenantDto | undefined> {
     const tenant =  await this.tenantService.retrieve({}, ctx.tenant);
     if (!tenant) throw new NotFoundException();
-    return tenant;
+    return tenant as any;
   }
 
   @Patch('settings')
@@ -81,6 +81,6 @@ export class TenantController {
 
     const signingKeys = await this.keyService.findAll({ tenant: tenant.name });
     tenant.signing_keys = signingKeys;
-    return tenant;
+    return tenant as any;
   }
 }

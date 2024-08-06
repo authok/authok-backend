@@ -2,12 +2,12 @@ import { Injectable, NotFoundException, Inject } from '@nestjs/common';
 
 import { IKeyService } from 'libs/api/infra-api/src/key/key.service';
 import {
-  CreateKeyDto,
-  KeyDto,
-  UpdateKeyDto,
-} from 'libs/api/infra-api/src/key/key.dto';
+  CreateKeyModel,
+  KeyModel,
+  UpdateKeyModel,
+} from 'libs/api/infra-api/src/key/key.model';
 import { IKeyRepository } from 'libs/api/infra-api/src/key/key.repository';
-import { IRequestContext } from '@libs/nest-core';
+import { IContext } from '@libs/nest-core';
 
 @Injectable()
 export class KeyService implements IKeyService {
@@ -16,35 +16,35 @@ export class KeyService implements IKeyService {
     private readonly keyRepository: IKeyRepository,
   ) {}
 
-  async retrieve(ctx: IRequestContext, id: string): Promise<KeyDto | null> {
+  async retrieve(ctx: IContext, id: string): Promise<KeyModel | null> {
     return await this.keyRepository.retrieve(ctx, id);
   }
 
-  async findActiveKey(ctx: IRequestContext): Promise<KeyDto> {
+  async findActiveKey(ctx: IContext): Promise<KeyModel> {
     return this.keyRepository.findActiveKey(ctx);
   }
 
-  findByIds(ctx: IRequestContext, ids: string[]): Promise<KeyDto[]> {
+  findByIds(ctx: IContext, ids: string[]): Promise<KeyModel[]> {
     return this.keyRepository.findByIds(ctx, ids);
   }
 
-  async delete(ctx: IRequestContext, id: string) {
+  async delete(ctx: IContext, id: string) {
     this.keyRepository.delete(ctx, id);
   }
 
-  async create(ctx: IRequestContext, key: CreateKeyDto): Promise<KeyDto> {
+  async create(ctx: IContext, key: CreateKeyModel): Promise<KeyModel> {
     return await this.keyRepository.create(ctx, key);
   }
 
-  async findAll(ctx: IRequestContext): Promise<KeyDto[]> {
+  async findAll(ctx: IContext): Promise<KeyModel[]> {
     return await this.keyRepository.findAll(ctx);
   }
 
   async update(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-    data: UpdateKeyDto,
-  ): Promise<KeyDto> {
+    data: UpdateKeyModel,
+  ): Promise<KeyModel> {
     const update = await this.keyRepository.update(ctx, id, data);
 
     if (update.affected) {
@@ -54,7 +54,7 @@ export class KeyService implements IKeyService {
     }
   }
 
-  async rotate(ctx: IRequestContext): Promise<KeyDto> {
+  async rotate(ctx: IContext): Promise<KeyModel> {
     return await this.keyRepository.rotate(ctx);
   }
 }

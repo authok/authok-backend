@@ -1,20 +1,17 @@
 import { Injectable, Inject, ConflictException } from '@nestjs/common';
 
 import {
-  ClientDto,
-  CreateClientDto,
-  UpdateClientDto,
-} from 'libs/api/infra-api/src/client/client.dto';
+  ClientModel,
+  CreateClientModel,
+  UpdateClientModel,
+} from 'libs/api/infra-api/src/client/client.model';
 import { IClientRepository } from 'libs/api/infra-api/src/client/client.repository';
 import { IClientService } from 'libs/api/infra-api/src/client/client.service';
 import { IContext } from '@libs/nest-core';
-import {
-  PageDto,
-  PageQueryDto,
-} from 'libs/common/src/pagination/pagination.dto';
 import { nanoid } from 'nanoid';
 import { DEFAULT_GRANT_TYPES } from '@libs/oidc/common';
 import { ConnectionModel } from 'libs/api/infra-api/src/connection/connection.model';
+import { Page, PageQuery } from 'libs/common/src/pagination/pagination.model';
 
 @Injectable()
 export class ClientService implements IClientService {
@@ -23,15 +20,15 @@ export class ClientService implements IClientService {
     private clientRepository: IClientRepository,
   ) {}
 
-  retrieve(ctx: IContext, id: string): Promise<ClientDto | null> {
+  retrieve(ctx: IContext, id: string): Promise<ClientModel | null> {
     return this.clientRepository.retrieve(ctx, id);
   }
 
-  findByName(ctx: IContext, name: string): Promise<ClientDto | null> {
+  findByName(ctx: IContext, name: string): Promise<ClientModel | null> {
     return this.clientRepository.findByName(ctx, name);
   }
 
-  async create(ctx: IContext, _client: CreateClientDto): Promise<ClientDto> {
+  async create(ctx: IContext, _client: CreateClientModel): Promise<ClientModel> {
     const existing = await this.clientRepository.findByName(ctx, _client.name);
     if (existing) {
       throw new ConflictException('client already exists');
@@ -50,7 +47,7 @@ export class ClientService implements IClientService {
         'token',
       ],
       token_endpoint_auth_method: _client.token_endpoint_auth_method || 'none',
-    } as ClientDto;
+    } as ClientModel;
 
     return await this.clientRepository.create(ctx, client);
   }
@@ -62,12 +59,12 @@ export class ClientService implements IClientService {
   async update(
     ctx: IContext,
     id: string,
-    body: UpdateClientDto,
-  ): Promise<ClientDto> {
+    body: UpdateClientModel,
+  ): Promise<ClientModel> {
     return await this.clientRepository.update(ctx, id, body);
   }
 
-  async rotate(ctx: IContext, id: string): Promise<ClientDto> {
+  async rotate(ctx: IContext, id: string): Promise<ClientModel> {
     const newSecret = nanoid(64);
     return await this.clientRepository.update(ctx, id, {
       client_secret: newSecret,
@@ -76,8 +73,8 @@ export class ClientService implements IClientService {
 
   async paginate(
     ctx: IContext,
-    query: PageQueryDto,
-  ): Promise<PageDto<ClientDto>> {
+    query: PageQuery,
+  ): Promise<Page<ClientModel>> {
     return await this.clientRepository.paginate(ctx, query);
   }
 

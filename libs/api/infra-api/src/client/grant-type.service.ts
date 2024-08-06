@@ -1,15 +1,15 @@
-import { GrantTypeDto } from './grant-type.dto';
+import { GrantTypeModel } from './grant-type.model';
 
 export interface IGrantTypeService {
-  findByTypes(types: string[]): Promise<GrantTypeDto[]>;
+  findByTypes(types: string[]): Promise<GrantTypeModel[]>;
 
-  findAll(): Promise<GrantTypeDto[]>;
+  findAll(): Promise<GrantTypeModel[]>;
 
-  retrieve(id: string): Promise<GrantTypeDto | undefined>;
+  retrieve(id: string): Promise<GrantTypeModel | undefined>;
 
-  update(id: string, body: Partial<GrantTypeDto>);
+  update(id: string, body: Partial<GrantTypeModel>);
 
   delete(id: string): Promise<void>;
 
-  create(body: Partial<GrantTypeDto>): Promise<GrantTypeDto>;
+  create(body: Partial<GrantTypeModel>): Promise<GrantTypeModel>;
 }

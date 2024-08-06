@@ -1,36 +1,34 @@
-import { PageDto } from 'libs/common/src/pagination/pagination.dto';
-import { IRequestContext } from '@libs/nest-core';
-import { ClientGrantDto, ClientGrantPageQueryDto } from './client-grant.dto';
-import { ClientGrantPageQuery } from './client-grant.model';
+import { IContext } from '@libs/nest-core';
+import { ClientGrantModel, ClientGrantPageQuery } from './client-grant.model';
 import { Page } from 'libs/common/src/pagination/pagination.model';
 
 export interface IClientGrantRepository {
   retrieve(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-  ): Promise<ClientGrantDto | undefined>;
+  ): Promise<ClientGrantModel | undefined>;
 
   findByClientAndAudience(
-    ctx: IRequestContext,
+    ctx: IContext,
     client_id: string,
     audience: string,
-  ): Promise<ClientGrantDto | undefined>;
+  ): Promise<ClientGrantModel | undefined>;
 
   update(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-    data: Partial<ClientGrantDto>,
-  ): Promise<ClientGrantDto>;
+    data: Partial<ClientGrantModel>,
+  ): Promise<ClientGrantModel>;
 
-  delete(ctx: IRequestContext, id: string): Promise<void>;
+  delete(ctx: IContext, id: string): Promise<void>;
 
   create(
-    ctx: IRequestContext,
-    clientGrant: ClientGrantDto,
-  ): Promise<ClientGrantDto>;
+    ctx: IContext,
+    clientGrant: ClientGrantModel,
+  ): Promise<ClientGrantModel>;
 
   paginate(
-    ctx: IRequestContext,
+    ctx: IContext,
     query: ClientGrantPageQuery,
-  ): Promise<Page<ClientGrantDto>>;
+  ): Promise<Page<ClientGrantModel>>;
 }

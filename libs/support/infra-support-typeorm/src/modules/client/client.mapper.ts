@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
-import { ClientDto } from 'libs/api/infra-api/src/client/client.dto';
+import { ClientModel } from 'libs/api/infra-api/src/client/client.model';
 import { ClientEntity } from './client.entity';
 import { ClientGrantMapper } from '../client-grant/client-grant.mapper';
 
@@ -8,7 +8,7 @@ import { ClientGrantMapper } from '../client-grant/client-grant.mapper';
 export class ClientMapper {
   constructor(private readonly clientGrantMapper: ClientGrantMapper) {}
 
-  toDTO(entity?: ClientEntity): ClientDto | undefined {
+  toDTO(entity?: ClientEntity): ClientModel | undefined {
     if (!entity) return undefined;
 
     const { grants: _grants, ...rest } = entity;
@@ -18,7 +18,7 @@ export class ClientMapper {
     return dto;
   }
 
-  toEntity(dto?: Partial<ClientDto>): ClientEntity | undefined {
+  toEntity(dto?: Partial<ClientModel>): ClientEntity | undefined {
     if (!dto) return undefined;
 
     const { grants, ...rest } = dto;

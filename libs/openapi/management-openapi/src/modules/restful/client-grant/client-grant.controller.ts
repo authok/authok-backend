@@ -15,7 +15,7 @@ import {
   ClientGrantDto,
   ClientGrantPageQueryDto,
   PatchClientGrantDto,
-} from 'libs/api/infra-api/src/client-grant/client-grant.dto';
+} from 'libs/dto/src';
 import { IClientGrantService } from 'libs/api/infra-api/src/client-grant/client-grant.service';
 import { PageDto } from 'libs/common/src/pagination/pagination.dto';
 import { IRequestContext, ReqCtx } from '@libs/nest-core';

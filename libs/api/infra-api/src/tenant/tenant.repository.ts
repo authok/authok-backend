@@ -1,24 +1,21 @@
-import { TenantDto, UpdateTenantDto, CreateTenantDto } from './tenant.dto';
+import { TenantModel, UpdateTenantModel, CreateTenantModel } from './tenant.model';
 import { IContext } from '@libs/nest-core';
-import {
-  PageDto,
-  PageQueryDto,
-} from 'libs/common/src/pagination/pagination.dto';
+import { Page, PageQuery } from 'libs/common/src/pagination/pagination.model';
 
 export interface ITenantRepository {
-  retrieve(ctx: IContext, id: string): Promise<TenantDto | undefined>;
+  retrieve(ctx: IContext, id: string): Promise<TenantModel | undefined>;
 
   update(
     ctx: IContext,
     id: string,
-    body: Partial<UpdateTenantDto>,
-  ): Promise<TenantDto>;
+    body: Partial<UpdateTenantModel>,
+  ): Promise<TenantModel>;
 
   delete(ctx: IContext, id: string): Promise<{ affected?: number }>;
 
-  findByName(ctx: IContext, name: string): Promise<TenantDto | undefined>;
+  findByName(ctx: IContext, name: string): Promise<TenantModel | undefined>;
 
-  create(ctx: IContext, tenant: CreateTenantDto): Promise<TenantDto>;
+  create(ctx: IContext, tenant: CreateTenantModel): Promise<TenantModel>;
 
-  paginate(ctx: IContext, query: PageQueryDto): Promise<PageDto<TenantDto>>;
+  paginate(ctx: IContext, query: PageQuery): Promise<Page<TenantModel>>;
 }

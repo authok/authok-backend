@@ -2,21 +2,18 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { ClientEntity } from './client.entity';
 import {
-  ClientDto,
-  UpdateClientDto,
-} from 'libs/api/infra-api/src/client/client.dto';
+  ClientModel,
+  UpdateClientModel,
+} from 'libs/api/infra-api/src/client/client.model';
 import { IClientRepository } from 'libs/api/infra-api/src/client/client.repository';
 import { plainToClass } from 'class-transformer';
 import { IContext } from '@libs/nest-core';
-import {
-  PageDto,
-  PageQueryDto,
-} from 'libs/common/src/pagination/pagination.dto';
 import { TenantAwareRepository } from 'libs/support/tenant-support-typeorm/src/modules/tenant/tenant-aware.repository';
 import { ConnectionModel } from 'libs/api/infra-api/src/connection/connection.model';
 import { ConnectionEntity } from '../connection/connection.entity';
 import { paginate } from 'libs/common/src/pagination/typeorm-paginate';
 import { ClientMapper } from './client.mapper';
+import { Page, PageQuery } from 'libs/common/src/pagination/pagination.model';
 
 @Injectable()
 export class TypeOrmClientRepository
@@ -29,7 +26,7 @@ export class TypeOrmClientRepository
   async retrieve(
     ctx: IContext,
     client_id: string,
-  ): Promise<ClientDto | undefined> {
+  ): Promise<ClientModel | undefined> {
     const repo = await this.repo(ctx, ClientEntity);
     const entity = await repo.findOne({
       where: {
@@ -42,7 +39,7 @@ export class TypeOrmClientRepository
     return this.clientMapper.toDTO(entity);
   }
 
-  async findByName(ctx: IContext, name: string): Promise<ClientDto | null> {
+  async findByName(ctx: IContext, name: string): Promise<ClientModel | null> {
     const repo = await this.repo(ctx, ClientEntity);
     const entity = await repo.findOne({
       where: {
@@ -56,7 +53,7 @@ export class TypeOrmClientRepository
     return this.clientMapper.toDTO(entity);
   }
 
-  async create(ctx: IContext, _client: ClientDto): Promise<ClientDto> {
+  async create(ctx: IContext, _client: ClientModel): Promise<ClientModel> {
     const repo = await this.repo(ctx, ClientEntity);
     const entity = await repo.save(
       plainToClass(ClientEntity, { ..._client, tenant: ctx.tenant }),
@@ -82,8 +79,8 @@ export class TypeOrmClientRepository
   async update(
     ctx: IContext,
     id: string,
-    body: Partial<UpdateClientDto>,
-  ): Promise<ClientDto> {
+    body: Partial<UpdateClientModel>,
+  ): Promise<ClientModel> {
     const repo = await this.repo(ctx, ClientEntity);
 
     const client = plainToClass(ClientEntity, body);
@@ -99,8 +96,8 @@ export class TypeOrmClientRepository
 
   async paginate(
     ctx: IContext,
-    query: PageQueryDto,
-  ): Promise<PageDto<ClientDto>> {
+    query: PageQuery,
+  ): Promise<Page<ClientModel>> {
     const repo = await this.repo(ctx, ClientEntity);
     const connection = await this.connection(ctx);
     const fields = await connection

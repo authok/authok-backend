@@ -5,11 +5,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { CreateResourceServerDto } from 'libs/api/infra-api/src/resource-server/resource-server.dto';
 import { IResourceServerService } from 'libs/api/infra-api/src/resource-server/resource-server.service';
 import { SigningKeyGenerator } from 'libs/shared/src/key-generator/key.generator';
 import { IKeyService } from 'libs/api/infra-api/src/key/key.service';
-import { TenantDto } from 'libs/api/infra-api/src/tenant/tenant.dto';
 import { TenantCreatedEvent } from 'libs/api/infra-api/src/tenant/tenant.events';
 import { ITenantService } from 'libs/api/infra-api/src/tenant/tenant.service';
 import { IConnectionService } from 'libs/api/infra-api/src/connection/connection.service';
@@ -18,6 +16,8 @@ import { IClientGrantService } from 'libs/api/infra-api/src/client-grant/client-
 import { ITriggerService } from 'libs/api/infra-api/src/action/trigger/trigger.service';
 import { managementApiScopes } from '@libs/core/infra-core/resource-server/management.api.scopes';
 import { ConfigService } from '@nestjs/config';
+import { TenantModel } from 'libs/api/infra-api/src/tenant/tenant.model';
+import { CreateResourceServerModel } from 'libs/api/infra-api/src/resource-server/resource-server.model';
 
 @Injectable()
 export class TenantEventHandler {
@@ -59,7 +59,7 @@ export class TenantEventHandler {
     }
   }
 
-  async createTriggers(tenant: TenantDto) {
+  async createTriggers(tenant: TenantModel) {
     const triggers = [
       {
         id: 'post-login',
@@ -84,7 +84,7 @@ export class TenantEventHandler {
     }
   }
 
-  async initTenant(tenant: TenantDto) {
+  async initTenant(tenant: TenantModel) {
     const region = tenant.region || 'cn';
 
     const domain = this.configService.get('DOMAIN', 'authok.cn')
@@ -98,7 +98,7 @@ export class TenantEventHandler {
       token_lifetime: 86400,
       token_lifetime_for_web: 7200,
       scopes: managementApiScopes,
-    } as CreateResourceServerDto;
+    } as CreateResourceServerModel;
 
     const createdResourceServer = await this.resourceServerService.create(
       { tenant: tenant.id },
@@ -135,7 +135,7 @@ export class TenantEventHandler {
     this.createConnections(tenant);
   }
 
-  async createConnections(tenant: TenantDto) {
+  async createConnections(tenant: TenantModel) {
     Logger.debug('创建默认身份源');
 
     await this.connectionService.create(
@@ -157,7 +157,7 @@ export class TenantEventHandler {
     );
   }
 
-  async createSigningKeys(tenant: TenantDto) {
+  async createSigningKeys(tenant: TenantModel) {
     const attrs = [
       { name: 'commonName', value: tenant.name },
       { name: 'countryName', value: 'zh' },

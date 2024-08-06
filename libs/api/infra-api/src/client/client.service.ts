@@ -1,4 +1,4 @@
-import { ClientDto, CreateClientDto, UpdateClientDto } from './client.dto';
+import { ClientModel, CreateClientModel, UpdateClientModel } from './client.model';
 import { IContext } from '@libs/nest-core';
 import {
   PageDto,
@@ -7,26 +7,26 @@ import {
 import { ConnectionModel } from '../connection/connection.model';
 
 export interface IClientService {
-  findByName(ctx: IContext, name: string): Promise<ClientDto | null>;
+  findByName(ctx: IContext, name: string): Promise<ClientModel | null>;
 
-  retrieve(ctx: IContext, id: string): Promise<ClientDto | null>;
+  retrieve(ctx: IContext, id: string): Promise<ClientModel | null>;
 
   create(
     ctx: IContext,
-    input: Partial<CreateClientDto>,
-  ): Promise<ClientDto | null>;
+    input: Partial<CreateClientModel>,
+  ): Promise<ClientModel | null>;
 
   update(
     ctx: IContext,
     id: string,
-    input: Partial<UpdateClientDto>,
-  ): Promise<ClientDto | null>;
+    input: Partial<UpdateClientModel>,
+  ): Promise<ClientModel | null>;
 
   delete(ctx: IContext, id: string): Promise<void>;
 
-  rotate(ctx: IContext, id: string): Promise<ClientDto>;
+  rotate(ctx: IContext, id: string): Promise<ClientModel>;
 
-  paginate(ctx: IContext, query: PageQueryDto): Promise<PageDto<ClientDto>>;
+  paginate(ctx: IContext, query: PageQueryDto): Promise<PageDto<ClientModel>>;
 
   findEnabledConnections(
     ctx: IContext,

@@ -2,12 +2,12 @@ import { KeyEntity } from './key.entity';
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { DeleteResult, UpdateResult, EntityManager, In } from 'typeorm';
 import {
-  KeyDto,
-  UpdateKeyDto,
-  CreateKeyDto,
-} from 'libs/api/infra-api/src/key/key.dto';
+  KeyModel,
+  UpdateKeyModel,
+  CreateKeyModel,
+} from 'libs/api/infra-api/src/key/key.model';
 import { IKeyRepository } from 'libs/api/infra-api/src/key/key.repository';
-import { IRequestContext } from '@libs/nest-core';
+import { IContext, IRequestContext } from '@libs/nest-core';
 import { TenantAwareRepository } from 'libs/support/tenant-support-typeorm/src/modules/tenant/tenant-aware.repository';
 import { SigningKeyGenerator } from 'libs/shared/src/key-generator/key.generator';
 import * as _ from 'lodash';
@@ -22,9 +22,9 @@ export class TypeOrmKeyRepository
   private readonly signingKeyGenerator: SigningKeyGenerator;
 
   async retrieve(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-  ): Promise<KeyDto | undefined> {
+  ): Promise<KeyModel | undefined> {
     const repo = await this.repo(ctx, KeyEntity);
     return await repo.findOne({
       where: {
@@ -33,7 +33,7 @@ export class TypeOrmKeyRepository
     });
   }
 
-  async findActiveKey(ctx: IRequestContext): Promise<KeyDto | undefined> {
+  async findActiveKey(ctx: IContext): Promise<KeyModel | undefined> {
     const repo = await this.repo(ctx, KeyEntity);
     return await repo.findOne({
       where: {
@@ -43,7 +43,7 @@ export class TypeOrmKeyRepository
     });
   }
 
-  async findByIds(ctx: IRequestContext, ids: string[]): Promise<KeyDto[]> {
+  async findByIds(ctx: IContext, ids: string[]): Promise<KeyModel[]> {
     const repo = await this.repo(ctx, KeyEntity);
 
     return repo.findBy({
@@ -53,29 +53,29 @@ export class TypeOrmKeyRepository
   }
 
   async update(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-    data: UpdateKeyDto,
+    data: UpdateKeyModel,
   ): Promise<UpdateResult> {
     const repo = await this.repo(ctx, KeyEntity);
 
     return repo.update({ kid: id, tenant: ctx.tenant }, data);
   }
 
-  async delete(ctx: IRequestContext, id: string): Promise<DeleteResult> {
+  async delete(ctx: IContext, id: string): Promise<DeleteResult> {
     const repo = await this.repo(ctx, KeyEntity);
 
     return repo.softDelete(id);
   }
 
-  async create(ctx: IRequestContext, _key: CreateKeyDto): Promise<KeyDto> {
+  async create(ctx: IContext, _key: CreateKeyModel): Promise<KeyModel> {
     const repo = await this.repo(ctx, KeyEntity);
 
     const key = repo.create({ ..._key, tenant: ctx.tenant });
     return repo.save(key);
   }
 
-  async findAll(ctx: IRequestContext): Promise<KeyDto[]> {
+  async findAll(ctx: IContext): Promise<KeyModel[]> {
     const repo = await this.repo(ctx, KeyEntity);
 
     return repo.find({
@@ -89,7 +89,7 @@ export class TypeOrmKeyRepository
     });
   }
 
-  async rotate(ctx: IRequestContext): Promise<KeyDto> {
+  async rotate(ctx: IContext): Promise<KeyModel> {
     const manager = await this.getManager(ctx);
 
     const attrs = [

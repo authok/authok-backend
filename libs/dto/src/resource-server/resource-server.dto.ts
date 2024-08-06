@@ -1,8 +1,8 @@
-import { ApiProperty, PickType, OmitType, PartialType } from '@nestjs/swagger';
+import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger';
 import { PageQueryDto } from 'libs/common/src/pagination/pagination.dto';
 import { JoiSchemaOptions, JoiSchema, CREATE, UPDATE } from 'nestjs-joi';
 import * as Joi from 'joi';
-import { ClientDto } from 'libs/api/infra-api/src/client/client.dto';
+import { ClientDto } from '../client';
 
 @JoiSchemaOptions({
   allowUnknown: false,

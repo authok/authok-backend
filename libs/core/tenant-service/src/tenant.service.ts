@@ -3,16 +3,13 @@ import { Injectable, Inject, ConflictException } from '@nestjs/common';
 import { ITenantService } from 'libs/api/infra-api/src/tenant/tenant.service';
 import { ITenantRepository } from 'libs/api/infra-api/src/tenant/tenant.repository';
 import {
-  TenantDto,
-  UpdateTenantDto,
-  CreateTenantDto,
-} from 'libs/api/infra-api/src/tenant/tenant.dto';
+  TenantModel,
+  UpdateTenantModel,
+  CreateTenantModel,
+} from 'libs/api/infra-api/src/tenant/tenant.model';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import {
-  PageDto,
-  PageQueryDto,
-} from 'libs/common/src/pagination/pagination.dto';
-import { IRequestContext } from '@libs/nest-core';
+import { IContext } from '@libs/nest-core';
+import { Page, PageQuery } from 'libs/common/src/pagination/pagination.model';
 
 const defaultJwtConfiguration = {
   alg: 'HS256',
@@ -29,25 +26,25 @@ export class TenantService implements ITenantService {
     private readonly tenantRepository: ITenantRepository,
   ) {}
 
-  async retrieve(ctx: IRequestContext, id: string): Promise<TenantDto | null> {
+  async retrieve(ctx: IContext, id: string): Promise<TenantModel | null> {
     return await this.tenantRepository.retrieve(ctx, id);
   }
 
   async findByName(
-    ctx: IRequestContext,
+    ctx: IContext,
     name: string,
-  ): Promise<TenantDto | null> {
+  ): Promise<TenantModel | null> {
     return await this.tenantRepository.findByName(ctx, name);
   }
 
-  async delete(ctx: IRequestContext, id: string) {
+  async delete(ctx: IContext, id: string) {
     this.tenantRepository.delete(ctx, id);
   }
 
   async create(
-    ctx: IRequestContext,
-    _tenant: CreateTenantDto,
-  ): Promise<TenantDto> {
+    ctx: IContext,
+    _tenant: CreateTenantModel,
+  ): Promise<TenantModel> {
     const existingTenant = await this.tenantRepository.findByName(
       ctx,
       _tenant.name,
@@ -72,17 +69,17 @@ export class TenantService implements ITenantService {
   }
 
   async update(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-    data: Partial<UpdateTenantDto>,
-  ): Promise<TenantDto> {
+    data: Partial<UpdateTenantModel>,
+  ): Promise<TenantModel> {
     return await this.tenantRepository.update(ctx, id, data);
   }
 
   async paginate(
-    ctx: IRequestContext,
-    query: PageQueryDto,
-  ): Promise<PageDto<TenantDto>> {
+    ctx: IContext,
+    query: PageQuery,
+  ): Promise<Page<TenantModel>> {
     return await this.tenantRepository.paginate(ctx, query);
   }
 }

@@ -1,27 +1,28 @@
 import { PageDto, PageQueryDto } from 'libs/common/src/pagination/pagination.dto';
-import { IRequestContext } from '@libs/nest-core';
-import { TenantDto, CreateTenantDto, UpdateTenantDto } from './tenant.dto';
+import { IContext } from '@libs/nest-core';
+import { TenantModel, CreateTenantModel, UpdateTenantModel } from './tenant.model';
+import { Page, PageQuery } from 'libs/common/src/pagination/pagination.model';
 
 export interface ITenantService {
-  findByName(ctx: IRequestContext, name: string): Promise<TenantDto | null>;
+  findByName(ctx: IContext, name: string): Promise<TenantModel | null>;
 
-  retrieve(ctx: IRequestContext, id: string): Promise<TenantDto | null>;
+  retrieve(ctx: IContext, id: string): Promise<TenantModel | null>;
 
   create(
-    ctx: IRequestContext,
-    tenant: CreateTenantDto,
-  ): Promise<TenantDto | null>;
+    ctx: IContext,
+    tenant: CreateTenantModel,
+  ): Promise<TenantModel | null>;
 
   update(
-    ctx: IRequestContext,
-    tenant: string,
-    data: UpdateTenantDto,
-  ): Promise<TenantDto | null>;
+    ctx: IContext,
+    id: string,
+    data: UpdateTenantModel,
+  ): Promise<TenantModel | null>;
 
-  delete(ctx: IRequestContext, id: string);
+  delete(ctx: IContext, id: string);
 
   paginate(
-    ctx: IRequestContext,
-    query: PageQueryDto,
-  ): Promise<PageDto<TenantDto>>;
+    ctx: IContext,
+    query: PageQuery,
+  ): Promise<Page<TenantModel>>;
 }

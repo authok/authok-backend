@@ -1,23 +1,23 @@
-import { CreateResourceServerDto, ResourceServerDto, UpdateResourceServerDto, ResourceServerPageQueryDto } from './resource-server.dto';
-import { PageDto } from 'libs/common/src/pagination/pagination.dto';
+import { CreateResourceServerModel, ResourceServerModel, UpdateResourceServerModel, ResourceServerPageQuery } from './resource-server.model';
 import { IContext } from '@libs/nest-core';
+import { Page } from 'libs/common/src/pagination/pagination.model';
 
 export interface IResourceServerRepository {
   create(
     ctx: IContext,
-    resourceServer: CreateResourceServerDto,
-  ): Promise<ResourceServerDto>;
+    resourceServer: CreateResourceServerModel,
+  ): Promise<ResourceServerModel>;
 
   retrieve(
     ctx: IContext, 
     id: string,
-  ): Promise<ResourceServerDto | undefined>;
+  ): Promise<ResourceServerModel | undefined>;
 
   update(
     ctx: IContext,
     id: string,
-    data: UpdateResourceServerDto,
-  ): Promise<ResourceServerDto>;
+    data: UpdateResourceServerModel,
+  ): Promise<ResourceServerModel>;
 
   delete(
     ctx: IContext, 
@@ -26,11 +26,11 @@ export interface IResourceServerRepository {
 
   paginate(
     ctx: IContext,
-    query: ResourceServerPageQueryDto,
-  ): Promise<PageDto<ResourceServerDto>>;
+    query: ResourceServerPageQuery,
+  ): Promise<Page<ResourceServerModel>>;
 
   findByIdentifier(
     ctx: IContext,
     identifier: string,
-  ): Promise<ResourceServerDto | undefined>;
+  ): Promise<ResourceServerModel | undefined>;
 }

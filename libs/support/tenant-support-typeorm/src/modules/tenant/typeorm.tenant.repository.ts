@@ -3,18 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { TenantEntity } from './tenant.entity';
 import { ITenantRepository } from 'libs/api/infra-api/src/tenant/tenant.repository';
 import {
-  TenantDto,
-  UpdateTenantDto,
-  CreateTenantDto,
-} from 'libs/api/infra-api/src/tenant/tenant.dto';
+  TenantModel,
+  UpdateTenantModel,
+  CreateTenantModel,
+} from 'libs/api/infra-api/src/tenant/tenant.model';
 import { Repository } from 'typeorm';
-import {
-  PageDto,
-  PageQueryDto,
-} from 'libs/common/src/pagination/pagination.dto';
 import { IContext } from '@libs/nest-core';
 import { TenantMapper } from './tenant.mapper';
 import { paginate } from 'libs/common/src/pagination/typeorm-paginate';
+import { Page, PageQuery } from 'libs/common/src/pagination/pagination.model';
 
 @Injectable()
 export class TypeOrmTenantRepository implements ITenantRepository {
@@ -26,7 +23,7 @@ export class TypeOrmTenantRepository implements ITenantRepository {
     private readonly repository: Repository<TenantEntity>,
   ) {}
 
-  async retrieve(ctx: IContext, id: string): Promise<TenantDto | undefined> {
+  async retrieve(ctx: IContext, id: string): Promise<TenantModel | undefined> {
     const entity = await this.repository.findOne({ where: { id } });
     return this.tenantMapper.toDTO(entity);
   }
@@ -34,7 +31,7 @@ export class TypeOrmTenantRepository implements ITenantRepository {
   async findByName(
     ctx: IContext,
     name: string,
-  ): Promise<TenantDto | undefined> {
+  ): Promise<TenantModel | undefined> {
     const entity = await this.repository.findOne({
       where: {
         name,
@@ -47,8 +44,8 @@ export class TypeOrmTenantRepository implements ITenantRepository {
   async update(
     ctx: IContext,
     id: string,
-    data: UpdateTenantDto,
-  ): Promise<TenantDto> {
+    data: UpdateTenantModel,
+  ): Promise<TenantModel> {
     await this.repository.update(id, data);
     const entity = await this.repository.findOneOrFail({
       where: { id },
@@ -56,7 +53,7 @@ export class TypeOrmTenantRepository implements ITenantRepository {
     return this.tenantMapper.toDTO(entity);
   }
 
-  async create(ctx: IContext, body: CreateTenantDto): Promise<TenantDto> {
+  async create(ctx: IContext, body: CreateTenantModel): Promise<TenantModel> {
     const entity = await this.repository.save(this.repository.create(body));
     return this.tenantMapper.toDTO(entity);
   }
@@ -67,8 +64,8 @@ export class TypeOrmTenantRepository implements ITenantRepository {
 
   async paginate(
     ctx: IContext,
-    query: PageQueryDto,
-  ): Promise<PageDto<TenantDto>> {
+    query: PageQuery,
+  ): Promise<Page<TenantModel>> {
     const page = await paginate<TenantEntity>(this.repository, query, [
       'tenant',
     ]);

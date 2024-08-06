@@ -5,14 +5,14 @@ import {
   ConflictException,
 } from '@nestjs/common';
 import {
-  ClientGrantDto,
-} from 'libs/api/infra-api/src/client-grant/client-grant.dto';
+  ClientGrantModel,
+  ClientGrantPageQuery,
+} from 'libs/api/infra-api/src/client-grant/client-grant.model';
 import { IClientGrantRepository } from 'libs/api/infra-api/src/client-grant/client-grant.repository';
 import { IClientGrantService } from 'libs/api/infra-api/src/client-grant/client-grant.service';
-import { IRequestContext, ReqCtx } from '@libs/nest-core';
+import { IContext, ReqCtx } from '@libs/nest-core';
 import { IResourceServerRepository } from 'libs/api/infra-api/src/resource-server/resource-server.repository';
 import { IClientRepository } from 'libs/api/infra-api/src/client/client.repository';
-import { ClientGrantPageQuery } from 'libs/api/infra-api/src/client-grant/client-grant.model';
 import { Page } from 'libs/common/src/pagination/pagination.model';
 
 @Injectable()
@@ -27,17 +27,17 @@ export class ClientGrantService implements IClientGrantService {
   ) {}
 
   async retrieve(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-  ): Promise<ClientGrantDto | undefined> {
+  ): Promise<ClientGrantModel | undefined> {
     return await this.clientGrantRepository.retrieve(ctx, id);
   }
 
   async findByClientAndAudience(
-    ctx: IRequestContext,
+    ctx: IContext,
     client_id: string,
     audience: string,
-  ): Promise<ClientGrantDto | undefined> {
+  ): Promise<ClientGrantModel | undefined> {
     return await this.clientGrantRepository.findByClientAndAudience(
       ctx,
       client_id,
@@ -46,21 +46,21 @@ export class ClientGrantService implements IClientGrantService {
   }
 
   async update(
-    ctx: IRequestContext,
+    ctx: IContext,
     id: string,
-    data: Partial<ClientGrantDto>,
-  ): Promise<ClientGrantDto> {
+    data: Partial<ClientGrantModel>,
+  ): Promise<ClientGrantModel> {
     return await this.clientGrantRepository.update(ctx, id, data);
   }
 
-  async delete(ctx: IRequestContext, id: string): Promise<void> {
+  async delete(ctx: IContext, id: string): Promise<void> {
     return await this.clientGrantRepository.delete(ctx, id);
   }
 
   async create(
-    ctx: IRequestContext,
-    clientGrant: ClientGrantDto,
-  ): Promise<ClientGrantDto> {
+    ctx: IContext,
+    clientGrant: ClientGrantModel,
+  ): Promise<ClientGrantModel> {
     const existingClientGrant = await this.clientGrantRepository.findByClientAndAudience(
       ctx,
       clientGrant.client_id,
@@ -80,9 +80,9 @@ export class ClientGrantService implements IClientGrantService {
   }
 
   async paginate(
-    @ReqCtx() ctx: IRequestContext,
+    @ReqCtx() ctx: IContext,
     query: ClientGrantPageQuery,
-  ): Promise<Page<ClientGrantDto>> {
+  ): Promise<Page<ClientGrantModel>> {
     return await this.clientGrantRepository.paginate(ctx, query);
   }
 }

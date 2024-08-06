@@ -1,36 +1,109 @@
 import { Controller, Inject } from "@nestjs/common";
-import { GrpcMethod } from "@nestjs/microservices";
 import { ITenantService } from "libs/api/infra-api/src/tenant/tenant.service";
-import { CreateTenantRequest, FindTenantByNameRequest, RetrieveTenantRequest, TENANT_SERVICE_NAME, Tenant } from "proto/stub/tenant/tenant.pb";
-
-
+import { CreateTenantRequest, DeleteTenantRequest, DeleteTenantReply, FindTenantByNameRequest, RetrieveTenantRequest, TENANT_SERVICE_NAME, Tenant, TenantServiceController, TenantServiceControllerMethods, UpdateTenantRequest, ListTenantReply, ListTenantRequest } from "proto/stub/tenant/tenant.pb";
 
 
 @Controller()
-export class TenantController {
+@TenantServiceControllerMethods()
+export class TenantController implements TenantServiceController {
   constructor(
     @Inject('ITenantService') private readonly tenantService: ITenantService,
   ) {}
 
-  @GrpcMethod(TENANT_SERVICE_NAME, 'create')
   async create(req: CreateTenantRequest) {
-    console.log('hello')
-    const tenant = await this.tenantService.create({}, req)
-    
-    return tenant as unknown as Tenant; 
+    const tenant = await this.tenantService.create({
+      name: req.name,
+      display_name: req.displayName,
+      description: req.description,
+      region: req.region,
+      environment: req.environment,
+      jwt_configuration: JSON.parse(req.jwtConfiguration ?? '{}'),
+    }, req)
+
+    return {
+      id: tenant.id,
+      name: tenant.name,
+      displayName: tenant.display_name,
+      description: tenant.description,
+      region: tenant.region,
+      environment: tenant.environment,
+      jwtConfiguration: JSON.stringify(tenant.jwt_configuration ?? {}),
+    }
   }
 
-  @GrpcMethod(TENANT_SERVICE_NAME, 'retrieve')
   async retrieve(req: RetrieveTenantRequest): Promise<Tenant> {
     const tenant = await this.tenantService.retrieve({}, req.id)
-    
-    return tenant as unknown as Tenant;
+    if (!tenant) return undefined
+
+    return {
+      id: tenant.id,
+      name: tenant.name,
+      displayName: tenant.display_name,
+      description: tenant.description,
+      region: tenant.region,
+      environment: tenant.environment,
+      jwtConfiguration: JSON.stringify(tenant.jwt_configuration ?? {}),
+    }
   }
 
-  @GrpcMethod(TENANT_SERVICE_NAME, 'findByName')
   async findByName(req: FindTenantByNameRequest): Promise<Tenant> {
     const tenant = await this.tenantService.findByName({}, req.name)
-    
-    return tenant as unknown as Tenant;
+    if (!tenant) return undefined
+ 
+    return {
+      id: tenant.id,
+      name: tenant.name,
+      displayName: tenant.display_name,
+      description: tenant.description,
+      region: tenant.region,
+      environment: tenant.environment,
+      jwtConfiguration: JSON.stringify(tenant.jwt_configuration ?? {}),
+    }
+  }
+
+  async delete(request: DeleteTenantRequest): Promise<DeleteTenantReply> {
+      await this.tenantService.delete({}, request.id)
+      return {
+        success: true,
+      };
+  }
+
+  async update(request: UpdateTenantRequest): Promise<Tenant> {
+    const { id, jwtConfiguration, flags, changePassword, config, ...data } = request
+    const tenant = await this.tenantService.update({}, id, data)
+    return {
+      id: tenant.id,
+      name: tenant.name,
+      displayName: tenant.display_name,
+      description: tenant.description,
+      region: tenant.region,
+      environment: tenant.environment,
+      jwtConfiguration: JSON.stringify(tenant.jwt_configuration ?? {}),
+    }
+  }
+
+  async list(request: ListTenantRequest): Promise<ListTenantReply> {
+    const { items: _items, meta } = await this.tenantService.paginate({}, {
+      ...request,
+    })
+
+    const items = _items.map(it => ({
+      id: it.id,
+      name: it.name,
+      displayName: it.display_name,
+      description: it.description,
+      region: it.region,
+      environment: it.environment,
+      jwtConfiguration: JSON.stringify(it.jwt_configuration ?? {}),
+    }))
+
+    return {
+      meta: {
+        pageSize: meta.page_size,
+        page: meta.page,
+        total: meta.total,
+      },
+      items: items,
+    }
   }
 }

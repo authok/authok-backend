@@ -11,16 +11,15 @@ export * from './job/job.dto';
 export * from './role/role.dto';
 
 export * from './authn/authn.dto';
-export * from './connection/connection.dto';
 export * from './identity/identity.dto';
-export * from './permission/permission.dto';
 
-export * from './organization/organization.dto';
-export * from './organization/organization-member.dto';
-export * from './organization/organization-member-role.dto';
-
+export * from './tenant';
+export * from './key';
+export * from './resource-server';
+export * from './permission';
+export * from './connection';
+export * from './organization';
 export * from './action';
-
-export * from './user/user.dto';
-export * from './user/user-role.dto';
-export * from './user/user-type.dto';
+export * from './client';
+export * from './client-grant';
+export * from './user';
