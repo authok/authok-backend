@@ -1,5 +1,5 @@
-import { Logger, ValidationPipe, INestApplication } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import { Logger, ValidationPipe, INestApplication, ClassSerializerInterceptor } from '@nestjs/common';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import {
@@ -110,6 +110,9 @@ async function createApp(server): Promise<INestApplication> {
   app.useStaticAssets(join(process.cwd(), 'public'), {
     prefix: '/static/',
   });
+
+  const reflector = app.get(Reflector);
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector));
 
   if (process.env.PROXY) {
     Logger.log('enabling express trust proxy setting');

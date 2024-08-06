@@ -9,6 +9,8 @@ import {
   Delete,
   UseGuards,
   NotFoundException,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { IOrganizationMemberService } from 'libs/api/infra-api/src/organization/organization-member.service';
 import { IOrganizationService } from 'libs/api/infra-api/src/organization/organization.service';
@@ -31,6 +33,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { ScopesGuard } from 'libs/oidc/client/src/lib/guards/scopes.guard';
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
+import { plainToClass } from 'class-transformer';
 
 @Controller('/api/v1/organizations')
 @ApiTags('组织')
@@ -68,13 +71,13 @@ export class OrganizationMemberController {
 
     const { user, roles, ...rest } = member;
 
-    return {
+    return plainToClass(OrganizationMemberDto, {
       ...rest,
       roles: roles?.map(it => ({
         id: it.role?.id,
         name: it.role?.name,
       })),
-    };
+    });
   }
 
   @ApiOperation({
@@ -91,12 +94,12 @@ export class OrganizationMemberController {
     const query = { ..._query, org_id };
 
     const { meta, items: _items } = await this.organizationMemberService.paginate(ctx, query);
-    const items = _items.map(it => it as unknown as OrganizationMemberDto);
+    const items = _items.map(it => plainToClass(OrganizationMemberDto, it));
 
-    return {
+    return plainToClass(PageDto<OrganizationMemberDto>, {
       meta,
       items,
-    }
+    })
   }
 
   @ApiOperation({

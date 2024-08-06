@@ -70,7 +70,13 @@ import { TenantManager } from './modules/tenant/tenant.manager';
     EventEmitterModule.forRoot({
       global: true,
     }),
-    JoiPipeModule,
+    JoiPipeModule.forRoot({
+      pipeOpts: {
+        defaultValidationOptions: {
+          allowUnknown: false,
+        }
+      }
+    }),
     SharedModule,
     CloudNativeSmsModule,
     NodeMailerMailModule,

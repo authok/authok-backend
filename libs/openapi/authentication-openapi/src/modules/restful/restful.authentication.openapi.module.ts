@@ -41,7 +41,13 @@ import { ContinueController } from './authn/continue.controller';
     ContinueController
   ],
   providers: [OAuthService],
-  imports: [JoiPipeModule],
+  imports: [JoiPipeModule.forRoot({
+    pipeOpts: {
+      defaultValidationOptions: {
+        allowUnknown: false,
+      }
+    }
+  })],
 })
 export class RestfulAuthenticationOpenApiModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {

@@ -54,7 +54,13 @@ import { OrganizationMemberRoleController } from './organization/organization-me
   ],
   imports: [
     PassportModule,
-    JoiPipeModule,
+    JoiPipeModule.forRoot({
+      pipeOpts: {
+        defaultValidationOptions: {
+          allowUnknown: false,
+        }
+      }
+    }),
     CacheModule.registerAsync({
       useFactory: async (redisService: RedisService) => {
         return {
