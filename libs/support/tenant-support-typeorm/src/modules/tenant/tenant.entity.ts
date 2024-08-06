@@ -1,9 +1,9 @@
 import {
   Column,
   Entity,
-} from 'typeorm/index';
+} from 'typeorm';
 
-import { GuidIdentity } from 'libs/support/infra-support-typeorm/src/common/guid.entity';
+import { GuidIdentity } from '@libs/support/infra-support-typeorm/common/guid.entity';
 
 class JwtConfiguration {
   alg: string;

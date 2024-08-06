@@ -33,9 +33,11 @@ export class TypeOrmTriggerBindingRepository
     const triggerBindingRepo = await this.repo(ctx, TriggerBindingEntity);
 
     const existBindings = await triggerBindingRepo.find({
-      trigger: {
-        tenant: ctx.tenant,
-        id: trigger_id,
+      where: {
+        trigger: {
+          tenant: ctx.tenant,
+          id: trigger_id,
+        },
       },
     });
 

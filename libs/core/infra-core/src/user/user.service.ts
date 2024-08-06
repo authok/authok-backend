@@ -39,7 +39,7 @@ import { IPasswordCryptor } from 'libs/api/infra-api/src/user/password-cryptor/p
 import { IPasswordResetRepository } from 'libs/api/infra-api/src/password-reset/password-reset.repository';
 import { IMailer } from 'libs/api/infra-api/src/email-template/mailer.service';
 import { IPService } from 'libs/support/ipservice-support/src/ip.service';
-import * as moment from 'moment';
+import dayjs from 'dayjs';
 import { v4 as guid } from 'uuid';
 import { IEmailTemplateRepository } from 'libs/api/infra-api/src/email-template/email-template.repository';
 
@@ -483,7 +483,7 @@ export class UserService implements IUserService {
       initializer_ip: ip,
       token: guid(),
       created_at: now,
-      expires_at: moment(now).add(30, 'minute').toDate(),
+      expires_at: dayjs(now).add(30, 'minute').toDate(),
     });
 
     const result = await this.ipService.fetch(ip);

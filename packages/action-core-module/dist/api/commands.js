@@ -9,7 +9,7 @@ var CommandTypes;
     CommandTypes["RequireMultifactorAuth"] = "RequireMultifactorAuth";
     CommandTypes["AccessDenied"] = "AccessDenied";
     CommandTypes["SetCustomClaim"] = "SetCustomClaim";
-})(CommandTypes = exports.CommandTypes || (exports.CommandTypes = {}));
+})(CommandTypes || (exports.CommandTypes = CommandTypes = {}));
 class SetMetadataCommand extends command_1.BaseCommand {
     constructor(target, key, value) {
         super(CommandTypes.SetMetadata, {

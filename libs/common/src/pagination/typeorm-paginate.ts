@@ -2,8 +2,6 @@ import { PageQueryDto, PageMeta } from './pagination.dto';
 import {
   Repository,
   ObjectLiteral,
-  FindManyOptions,
-  SelectQueryBuilder,
 } from 'typeorm';
 import {
   IPaginationMeta,
@@ -60,12 +58,12 @@ export async function paginate<Entity extends ObjectLiteral>(
     }
   }
 
-  const searchOptions: FindManyOptions<Entity> = {
-    relations: [],
-    ...(select && select.length > 0 && { select }),
-  };
+  let qb = repository.createQueryBuilder();
+  if (select && select.length > 0) {
+    qb = qb.select(select as string[])
+  }
 
-  searchOptions.where = (qb: SelectQueryBuilder<Entity>) => {
+  {
     applyPaginationQuery(qb, queryFields);
 
     if (query.sort) {
@@ -86,7 +84,7 @@ export async function paginate<Entity extends ObjectLiteral>(
       }
       qb.orderBy(_order_by);
     }
-  };
+  }
 
-  return await _paginate<Entity, PageMeta>(repository, options, searchOptions);
+  return await _paginate<Entity, PageMeta>(qb, options);
 }

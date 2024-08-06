@@ -1,4 +1,5 @@
-import { CacheModule, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
+import { CacheModule } from '@nestjs/cache-manager';
 import { TenantController } from './tenant/tenant.controller';
 import { MappingsController } from './mappings/mappings.controller';
 import { DeviceController } from './device/device.controller';
@@ -13,7 +14,7 @@ import { EmailTemplateController } from './email-template/email-tempalte.control
 import { RoleController } from './role/role.controller';
 import { LogController } from './log/log.controller';
 import { RedisService } from '@authok/nestjs-redis';
-import * as redis from 'cache-manager-ioredis';
+import { redisInsStore } from 'cache-manager-ioredis-yet';
 import { ClientGrantController } from './client-grant/client-grant.controller';
 import { PassportModule } from 'libs/passport/src/passport.module';
 import { GrantController } from './grant/grant.controller';
@@ -53,12 +54,11 @@ import { UserFilterController } from './user/user-filter.controller';
     PassportModule,
     JoiPipeModule,
     CacheModule.registerAsync({
-      useFactory: (redisService: RedisService) => {
+      useFactory: async (redisService: RedisService) => {
         return {
           ttl: 30, // seconds
           max: 10000, // maximum number of items in cache
-          store: redis,
-          redisInstance: redisService.getClient(),
+          store: redisInsStore(redisService.getClient()),
         };
       },
       inject: [RedisService],

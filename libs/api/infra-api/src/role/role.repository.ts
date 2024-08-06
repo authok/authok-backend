@@ -19,7 +19,7 @@ export interface IRoleRepository {
     query: RolePageQueryDto,
   ): Promise<PageDto<RoleDto>>;
 
-  retrieve(ctx: IRequestContext, id: string): Promise<RoleDto | undefined>;
+  retrieve(ctx: IRequestContext, id: string): Promise<RoleDto | null>;
 
   findByIds(ctx: IRequestContext, ids: string[]): Promise<RoleDto[]>;
 
@@ -29,7 +29,7 @@ export interface IRoleRepository {
     data: Partial<RoleDto>,
   ): Promise<{ affected?: number }>;
 
-  delete(ctx: IRequestContext, id: string): Promise<{ affected?: number }>;
+  delete(ctx: IRequestContext, id: string): Promise<{ raw: any; affected?: number | null }>;
 
   addPermissions(
     ctx: IRequestContext,

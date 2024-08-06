@@ -59,8 +59,10 @@ export class TypeOrmClientGrantRepository
     const repo = await this.repo(ctx, ClientGrantEntity);
     const permissionRepo = await this.repo(ctx, PermissionEntity);
     const existingClientGrant = await repo.findOneOrFail({
-      tenant: ctx.tenant,
-      id,
+      where: {
+        tenant: ctx.tenant,
+        id,
+      }
     });
 
     const data = this.clientGrantMapper.toEntity(_data);

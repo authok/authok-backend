@@ -25,7 +25,11 @@ export class TypeOrmIdentityRepository
     id: string,
   ): Promise<IdentityDto | undefined> {
     const identityRepo = await this.repo(ctx, IdentityEntity);
-    return await identityRepo.findOne(id);
+    return await identityRepo.findOne({
+      where: {
+        id,
+      }
+    });
   }
 
   async findByConnection(

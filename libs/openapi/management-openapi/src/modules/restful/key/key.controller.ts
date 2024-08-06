@@ -19,7 +19,12 @@ import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 
 @Controller('/api/v1/keys')
 @ApiTags('密钥 - API')
-@Throttle(3, 1)
+@Throttle({
+  default: {
+    limit: 3,
+    ttl: 1000,
+  }
+})
 @UseGuards(ThrottlerGuard, AuthGuard('jwt'), ScopesGuard)
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: '未授权' })

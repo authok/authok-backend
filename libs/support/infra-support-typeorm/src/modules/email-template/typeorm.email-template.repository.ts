@@ -18,8 +18,10 @@ export class TypeOrmEmailTemplateRepository
   ): Promise<EmailTemplateDto | undefined> {
     const repo = await this.repo(ctx, EmailTemplateEntity);
     return repo.findOne({
-      tenant: ctx.tenant,
-      template,
+      where: {
+        tenant: ctx.tenant,
+        template,
+      }
     });
   }
 

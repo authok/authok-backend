@@ -68,8 +68,10 @@ export class TypeOrmGroupRepository
   async delete(ctx: IRequestContext, id: string): Promise<void> {
     const repo = await this.repo(ctx, GroupEntity);
     const group = await repo.findOne({
-      tenant: ctx.tenant,
-      id,
+      where: {
+        tenant: ctx.tenant,
+        id,
+      }
     });
 
     if (group) {

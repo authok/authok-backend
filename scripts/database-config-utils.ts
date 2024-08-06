@@ -6,22 +6,22 @@ import { isEmpty } from 'lodash';
 const url = require('url');
 const querystring = require('querystring');
 
-export function filePathForEnvVars(env: string | undefined): string {
+export function filePathForEnvVars(dbname: string,env: string | undefined): string {
   if (env === 'test') {
-    return path.resolve(process.cwd(), '../.env.test');
+    return path.resolve(process.cwd(), `.env.test.${dbname}`);
   } else {
-    return path.resolve(process.cwd(), '../.env');
+    return path.resolve(process.cwd(), `.env.${dbname}`);
   }
 }
 
-export function getEnvVars() {
+export function getEnvVars(dbname: string) {
   let data: any = process.env;
-  const envVarsFilePath = filePathForEnvVars(process.env.NODE_ENV);
 
+  const envVarsFilePath = filePathForEnvVars(dbname, process.env.NODE_ENV)
   if (fs.existsSync(envVarsFilePath)) {
     data = { ...data, ...dotenv.parse(fs.readFileSync(envVarsFilePath)) };
   }
-
+console.log('data: ', dotenv.parse(fs.readFileSync(envVarsFilePath)))
   data = {
     ...data,
     ...(data.DATABASE_URL && buildDbConfigFromDatabaseURL(data)),
@@ -94,8 +94,8 @@ function validateDatabaseConfig(dbConfig: any): Joi.ValidationResult {
   return envVarsSchema.validate(dbConfig);
 }
 
-export function buildAndValidateDatabaseConfig(): Joi.ValidationResult {
-  const config: any = getEnvVars();
+export function buildAndValidateDatabaseConfig(dbname: string): Joi.ValidationResult {
+  const config: any = getEnvVars(dbname);
   const dbConfig = {
     type: config.DRIVER,
     name: config.DB_NAME,

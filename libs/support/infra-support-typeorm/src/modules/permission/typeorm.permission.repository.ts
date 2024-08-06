@@ -36,11 +36,9 @@ export class TypeOrmPermissionRepository
       }),
     };
 
-    const searchOptions: FindManyOptions<PermissionEntity> = {
-      relations: [],
-    };
-
-    searchOptions.where = (qb: SelectQueryBuilder<PermissionEntity>) => {
+    const qb = repo.createQueryBuilder('permissions')
+    
+    {
       qb.leftJoin(`${qb.alias}.resource_server`, 'resource_server')
         .addSelect(['resource_server.identifier', 'resource_server.name']);
 
@@ -67,9 +65,8 @@ export class TypeOrmPermissionRepository
     };
 
     const result = await paginate<PermissionEntity, PageMeta>(
-      repo,
+      qb,
       options,
-      searchOptions,
     );
 
     return {
@@ -77,8 +74,8 @@ export class TypeOrmPermissionRepository
         id: it.id,
         description: it.description,
         permission_name: it.name,
-        resource_server_identifier: it.resource_server.identifier,
-        resource_server_name: it.resource_server.name,
+        resource_server_identifier: it.resource_server!.identifier,
+        resource_server_name: it.resource_server!.name,
       })),
       meta: result.meta,
     };

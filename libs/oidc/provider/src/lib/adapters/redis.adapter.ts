@@ -1,7 +1,7 @@
 // npm i ioredis@^4.0.0
-import * as isEmpty from 'lodash/isEmpty';
+import isEmpty from 'lodash/isEmpty';
 import { RedisService } from '@authok/nestjs-redis';
-import IORedis = require('ioredis');
+import Redis from 'ioredis';
 import { IModelAdapter } from './model.adapter';
 import { Logger } from '@nestjs/common';
 
@@ -28,7 +28,7 @@ const grantable = new Set([
 ]);
 
 export class RedisAdapter implements IModelAdapter {
-  private client: IORedis.Redis;
+  private client: Redis;
 
   constructor(
     private readonly name: string,
@@ -43,15 +43,11 @@ export class RedisAdapter implements IModelAdapter {
 
     const key = this.key(id);
 
-    const store = consumable.has(this.name)
-      ? [{ payload: JSON.stringify(payload) }]
-      : JSON.stringify(payload);
-
     const multi = this.client.multi();
     if (consumable.has(this.name)) {
-      multi.hmset(key, store);
+      multi.hmset(key, { payload: JSON.stringify(payload) });
     } else {
-      multi.set(key, store);
+      multi.set(key, JSON.stringify(payload));
     }
 
     if (expiresIn) {

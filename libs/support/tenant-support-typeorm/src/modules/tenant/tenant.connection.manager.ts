@@ -16,7 +16,7 @@ import {
   getConnection,
   getConnectionManager,
 } from 'typeorm';
-import * as LRU from 'lru-cache';
+import { LRUCache } from 'lru-cache';
 import { Interval } from '@nestjs/schedule';
 
 ConnectionManager.prototype['close'] = async function (name: string) {
@@ -31,7 +31,7 @@ ConnectionManager.prototype['close'] = async function (name: string) {
 @Injectable()
 export class TenantConnectionManager {
   private entities = new Array<EntityClassOrSchema>();
-  private cache: LRU<string, Connection>;
+  private cache: LRUCache<string, Connection>;
 
   constructor(
     @Inject('ITenantService')
@@ -39,13 +39,10 @@ export class TenantConnectionManager {
     @Inject('IDBConnectionService')
     private readonly dbConnectionService: IDBConnectionService,
   ) {
-    const options = {
+    const options: LRUCache.Options<string, Connection, any> = {
       max: 1000,
-      length: function (n, key) {
-        return n * 2 + key.length;
-      },
       noDisposeOnSet: true,
-      dispose: async function (key: string, n: Connection) {
+      dispose: async function (n: Connection, key: string, r: LRUCache.DisposeReason) {
         const cm = getConnectionManager();
         Logger.log(
           '准备清理连接, conn: ' + key + ', size: ' + cm.connections.length,
@@ -56,10 +53,10 @@ export class TenantConnectionManager {
           '清理连接后, conn: ' + key + ', size: ' + cm.connections.length,
         );
       },
-      maxAge: 1000 * 60 * 60,
+      ttl: 1000 * 60 * 60,
     };
 
-    this.cache = new LRU(options);
+    this.cache = new LRUCache<string, Connection>(options);
   }
 
   addEntities(...items: EntityClassOrSchema[]) {
@@ -106,8 +103,8 @@ export class TenantConnectionManager {
       }
       return conn;
     } catch (e) {
-      if (this.cache.itemCount >= 1000) {
-        Logger.error('3.1. 连接池满了 count: ' + this.cache.itemCount);
+      if (this.cache.size >= 1000) {
+        Logger.error('3.1. 连接池满了 count: ' + this.cache.size);
         throw new BadRequestException('连接池已满', '连接池已满');
       }
 

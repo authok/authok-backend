@@ -1,5 +1,6 @@
-import { HttpService, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { AxiosRequestConfig } from 'axios';
+import { HttpService } from '@nestjs/axios';
 
 /**
  * Turn HttpService <Observable<Response<data>> into Promise<data>

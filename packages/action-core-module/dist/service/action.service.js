@@ -25,10 +25,10 @@ let ActionService = class ActionService {
         return await runner.run(funcName, event);
     }
 };
-ActionService = __decorate([
+exports.ActionService = ActionService;
+exports.ActionService = ActionService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, common_1.Inject)('action_runners')),
     __metadata("design:paramtypes", [Object])
 ], ActionService);
-exports.ActionService = ActionService;
 //# sourceMappingURL=action.service.js.map

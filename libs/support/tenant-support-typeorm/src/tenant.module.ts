@@ -6,24 +6,35 @@ import { TenantConnectionManager } from './modules/tenant/tenant.connection.mana
 import { TenantEntity } from './modules/tenant/tenant.entity';
 import { TypeOrmTenantRepository } from './modules/tenant/typeorm.tenant.repository';
 import { TenantMapper } from './modules/tenant/tenant.mapper';
+import { ConfigService } from '@nestjs/config';
 
 @Global()
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
-      useFactory: () => {
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const type = configService.get('DRIVER', 'postgres')
+        const host = configService.get('DB_HOST', 'localhost')
+        const port = configService.get('DB_PORT', 5432)
+        const username = configService.get('DB_USER', 'postgres')
+        const password = configService.get('DB_PASSWORD', 'postgres')
+        const database = configService.get('DB_DATABASE', 'authok_tenant')
+        const timezone = configService.get('TIMEZONE', 'Z')
+        const logging = configService.get('DB_LOGGING', false)
+
         return {
-          type: process.env.DRIVER || 'postgres',
-          host: process.env.DB_HOST || 'localhost',
-          port: +process.env.DB_PORT || 5432,
-          username: process.env.DB_USER || 'root',
-          password: process.env.DB_PASSWORD || 'root',
-          database: process.env.DB_DATABASE || 'authok_mgmt',
+          type,
+          host,
+          port,
+          username,
+          password,
+          database,
           // entities: ['**/*.entity{.ts,.js}'],
           autoLoadEntities: true,
-          synchronize: !!process.env.DB_SYNCHRONIZE,
-          timezone: process.env.TIMEZONE || 'Z',
-          logging: process.env.DB_LOGGING !== 'false',
+          synchronize: false,
+          timezone,
+          logging,
           // cli: {
           //  migrationsDir: 'src/migrations',
           // },

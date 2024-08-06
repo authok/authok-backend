@@ -68,7 +68,9 @@ export class TypeOrmUserRoleRepository
     id: string,
   ): Promise<UserRoleDto | undefined> {
     const repo = await this.repo(ctx, UserRoleEntity);
-    const userRole = await repo.findOne(id);
+    const userRole = await repo.findOne({
+      where: { id },
+    });
     if (!userRole) return undefined;
 
     return {

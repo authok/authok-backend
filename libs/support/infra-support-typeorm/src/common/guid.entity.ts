@@ -8,7 +8,6 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 import { nanoid } from 'nanoid';
-
 // eslint-disable-next-line @typescript-eslint/ban-types
 type ClassDecorator = <TFunction extends Function>(
   target: TFunction,

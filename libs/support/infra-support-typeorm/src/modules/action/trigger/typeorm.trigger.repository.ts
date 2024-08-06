@@ -38,8 +38,10 @@ export class TypeOrmTriggerRepository
   ): Promise<TriggerDto | undefined> {
     const triggerRepo = await this.repo(ctx, TriggerEntity);
     const entity = await triggerRepo.findOne({
-      tenant: ctx.tenant,
-      id,
+      where: {
+        tenant: ctx.tenant,
+        id,
+      }
     });
 
     return this.triggerMapper.toDTO(entity);
@@ -49,8 +51,10 @@ export class TypeOrmTriggerRepository
     const triggerRepo = await this.repo(ctx, TriggerEntity);
 
     await triggerRepo.findOneOrFail({
-      tenant: ctx.tenant,
-      id: trigger.id,
+      where: {
+        tenant: ctx.tenant,
+        id: trigger.id,
+      }
     });
 
     const entity = this.triggerMapper.toEntity(trigger);
@@ -62,8 +66,10 @@ export class TypeOrmTriggerRepository
   async delete(ctx: IRequestContext, id: string): Promise<void> {
     const triggerRepo = await this.repo(ctx, TriggerEntity);
     const entity = await triggerRepo.findOneOrFail({
-      tenant: ctx.tenant,
-      id: id,
+      where: {
+        tenant: ctx.tenant,
+        id: id,
+      }
     });
 
     await entity.remove();

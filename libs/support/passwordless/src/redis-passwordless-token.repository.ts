@@ -2,7 +2,7 @@ import { Logger, Injectable } from '@nestjs/common';
 import { IPasswordlessTokenRepository } from './passwordless-token.repository';
 import { RedisService } from '@authok/nestjs-redis';
 import { Redis } from 'ioredis';
-import * as moment from 'moment';
+import dayjs from 'dayjs';
 import {
   RandomStringGenerator,
   DefaultRandomStringGenerator,
@@ -62,7 +62,7 @@ export class RedisPasswordlessTokenRepository
     ctx: IRequestContext,
     token: Token,
   ): Promise<void> {
-    const seconds = moment(token.expired_at).diff(moment(), 'seconds');
+    const seconds = dayjs(token.expired_at).diff(dayjs(), 'second');
     console.log(`token: ${token.value} ${seconds} 秒后过期`, token);
 
     await this.client.set(

@@ -26,8 +26,10 @@ export class TypeOrmGrantRepository
     const repo = await this.repo(ctx, GrantEntity);
 
     await repo.findOneOrFail({
-      tenant: ctx.tenant,
-      id: grant.id,
+      where: {
+        tenant: ctx.tenant,
+        id: grant.id,
+      }
     });
 
     const entity = this.grantMapper.toEntity(ctx, grant);
@@ -55,8 +57,10 @@ export class TypeOrmGrantRepository
     const repo = await this.repo(ctx, GrantEntity);
 
     const entity = await repo.findOne({
-      tenant: ctx.tenant,
-      id,
+      where: {
+        tenant: ctx.tenant,
+        id,
+      }
     });
 
     return this.grantMapper.toDTO(entity);
@@ -66,8 +70,10 @@ export class TypeOrmGrantRepository
     const repo = await this.repo(ctx, GrantEntity);
 
     const entity = await repo.findOne({
-      tenant: ctx.tenant,
-      id,
+      where: {
+        tenant: ctx.tenant,
+        id,
+      }
     });
     if (!entity) return;
 
@@ -92,10 +98,12 @@ export class TypeOrmGrantRepository
   async deleteByUserId(ctx: IRequestContext, user_id: string): Promise<void> {
     const repo = await this.repo(ctx, GrantEntity);
     const entity = await repo.findOne({
-      user: {
-        tenant: ctx.tenant,
-        user_id,
-      },
+      where: {
+        user: {
+          tenant: ctx.tenant,
+          user_id,
+        },
+      }
     });
     if (!entity) return;
 

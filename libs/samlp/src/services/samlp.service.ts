@@ -1,7 +1,7 @@
 import { ISAMLPService } from '../interface';
 import { Injectable, Logger, Inject, NotFoundException } from '@nestjs/common';
 import * as samlify from 'samlify';
-import * as LRU from 'lru-cache';
+import { LRUCache } from 'lru-cache';
 import { ConfigService } from '@nestjs/config';
 import { ITenantService } from 'libs/api/infra-api/src/tenant/tenant.service';
 import * as consolidate from 'consolidate';
@@ -12,7 +12,7 @@ import { IContext } from '@libs/nest-core';
 
 @Injectable()
 export class SAMLPService implements ISAMLPService {
-  private cache: LRU<string, samlify.IdentityProviderInstance>;
+  private cache: LRUCache<string, samlify.IdentityProviderInstance>;
 
   constructor(
     private readonly configService: ConfigService,
@@ -23,11 +23,11 @@ export class SAMLPService implements ISAMLPService {
     @Inject('IClientService')
     private clientService: IClientService,
   ) {
-    const cacheOptions: LRU.Options<any, any> = {
+    const cacheOptions: LRUCache.Options<any, any, any> = {
       max: this.configService.get('provider.cache.max') || 500,
-      maxAge: this.configService.get('provider.cache.maxAge') || 1000 * 86400,
+      ttl: this.configService.get('provider.cache.maxAge') || 1000 * 86400,
     };
-    this.cache = new LRU(cacheOptions);
+    this.cache = new LRUCache(cacheOptions);
   }
    
   async findIdp(ctx: IContext, client_id: string): Promise<samlify.IdentityProviderInstance> {

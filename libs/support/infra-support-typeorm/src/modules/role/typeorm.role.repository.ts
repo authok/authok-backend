@@ -4,7 +4,7 @@ import {
   RolePermissionAssignmentDto,
 } from 'libs/api/infra-api/src/role/role.dto';
 import { IRoleRepository } from 'libs/api/infra-api/src/role/role.repository';
-import { FindManyOptions, SelectQueryBuilder } from 'typeorm';
+import { FindManyOptions, In, SelectQueryBuilder } from 'typeorm';
 import { RoleEntity } from './role.entity';
 import { IRequestContext } from '@libs/nest-core';
 import { PageDto, PageMeta } from 'libs/common/src/pagination/pagination.dto';
@@ -76,11 +76,9 @@ export class TypeOrmRoleRepository
       }),
     };
 
-    const searchOptions: FindManyOptions<RoleEntity> = {
-      relations: [],
-    };
+    const qb = repo.createQueryBuilder('roles')
 
-    searchOptions.where = (qb: SelectQueryBuilder<RoleEntity>) => {
+    {
       qb.where(`${qb.alias}.tenant = :tenant`, {
         tenant: ctx.tenant,
       });
@@ -95,9 +93,9 @@ export class TypeOrmRoleRepository
           tenant: ctx.tenant,
         });
       }
-    };
+    }
 
-    const page = await paginate<RoleEntity, PageMeta>(repo, options, searchOptions);
+    const page = await paginate<RoleEntity, PageMeta>(qb, options);
 
     return {
       items: page.items,
@@ -108,7 +106,7 @@ export class TypeOrmRoleRepository
   async retrieve(
     ctx: IRequestContext,
     id: string,
-  ): Promise<RoleDto | undefined> {
+  ): Promise<RoleDto | null> {
     const repo = await this.repo(ctx, RoleEntity);
     return await repo.findOne({
       where: {
@@ -120,10 +118,9 @@ export class TypeOrmRoleRepository
 
   async findByIds(ctx: IRequestContext, ids: string[]): Promise<RoleDto[]> {
     const repo = await this.repo(ctx, RoleEntity);
-    return await repo.findByIds(ids, {
-      where: {
-        tenant: ctx.tenant,
-      },
+    return await repo.findBy({
+      id: In(ids),
+      tenant: ctx.tenant,
     });
   }
 
@@ -139,7 +136,7 @@ export class TypeOrmRoleRepository
   async delete(
     ctx: IRequestContext,
     id: string,
-  ): Promise<{ affected?: number }> {
+  ): Promise<{ raw: any; affected?: number | null; }> {
     const repo = await this.repo(ctx, RoleEntity);
     return await repo.delete({
       tenant: ctx.tenant,

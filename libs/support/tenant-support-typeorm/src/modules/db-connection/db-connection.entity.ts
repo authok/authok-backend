@@ -1,7 +1,7 @@
 import {
   GUID,
   GuidIdentity,
-} from 'libs/support/infra-support-typeorm/src/common/guid.entity';
+} from '@libs/support/infra-support-typeorm/common/guid.entity';
 import { Column, Entity } from 'typeorm';
 
 @Entity({

@@ -21,9 +21,11 @@ export class TypeOrmConfigRepository
     const repo = await this.repo(ctx, ConfigEntity);
 
     return await repo.findOne({
-      tenant: ctx.tenant,
-      namespace,
-      name,
+      where: {
+        tenant: ctx.tenant,
+        namespace,
+        name,
+      }
     });
   }
 
@@ -44,9 +46,11 @@ export class TypeOrmConfigRepository
     const repo = await this.repo(ctx, ConfigEntity);
 
     const config = await repo.findOneOrFail({
-      tenant: ctx.tenant,
-      namespace,
-      name,
+      where: {
+        tenant: ctx.tenant,
+        namespace,
+        name,
+      }
     })
   
     await repo.remove(config);

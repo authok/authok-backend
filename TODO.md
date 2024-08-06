@@ -222,3 +222,18 @@ COS + CDN 配置 参考: https://blog.csdn.net/huzhanfei/article/details/1151904
 - 完成 phone 短信验证码找回密码功能
 - 发布 node-oidc-provider 自定义版本到 npm 仓库
 - client 局部更新的问题, 可能要先查找出来，然后把修改对象和 存在对象进行一次 deepmerge, 有 metadata 字段局部更新需求的地方，都需要在业务层面做一次 deepmerge, 否则 update 局部信息会覆盖其它信息
+
+
+
+
+### 很多模块的新版本都设置 type 为 module 了.
+比如 node-oidc-provider, got, nanoid
+但是 nestjs 对 es支持不是很好，所以现在都还是用老的一些库.
+
+###
+Tenant 独立 微服务
+Tenant 改为 prisma db 访问方式
+
+
+###
+logstream 服务独立成微服务.

@@ -57,7 +57,7 @@ export class TypeOrmResourceServerRepository
       },
     });
 
-    return this.resourceServerMapper.toDTO(resourceServer);
+    return this.resourceServerMapper.toDTO(resourceServer ?? undefined);
   }
 
   async create(
@@ -70,17 +70,19 @@ export class TypeOrmResourceServerRepository
       ctx,
       _resourceServer,
     );
-    const savedResourceServer = await resourceServerRepo.save(resourceServer);
+    const savedResourceServer = await resourceServerRepo.save(resourceServer!);
 
-    return this.resourceServerMapper.toDTO(savedResourceServer);
+    return this.resourceServerMapper.toDTO(savedResourceServer)!;
   }
 
   async delete(ctx: IContext, id: string): Promise<void> {
     const apiRepository = await this.repo(ctx, ResourceServerEntity);
 
     const api = await apiRepository.findOneOrFail({
-      tenant: ctx.tenant,
-      id,
+      where: {
+        tenant: ctx.tenant,
+        id,
+      }
     });
 
     await apiRepository.remove(api);
@@ -94,8 +96,10 @@ export class TypeOrmResourceServerRepository
     const resourceServerRepo = await this.repo(ctx, ResourceServerEntity);
 
     const existingResourceServer = await resourceServerRepo.findOneOrFail({
-      tenant: ctx.tenant,
-      id,
+      where: {
+        tenant: ctx.tenant,
+        id,
+      }
     });
 
     const data = this.resourceServerMapper.toEntity(ctx, _data);

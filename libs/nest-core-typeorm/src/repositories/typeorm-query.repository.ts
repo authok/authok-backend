@@ -19,6 +19,7 @@ import {
   Repository,
   DeleteResult,
   DeepPartial as TypeOrmDeepPartial,
+  FindOptionsWhere,
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { MethodNotAllowedException, NotFoundException } from '@nestjs/common';
@@ -357,9 +358,9 @@ export class TypeOrmQueryRepository<Entity>
 
   private async ensureEntityDoesNotExist(e: Entity): Promise<Entity> {
     if (this.repo.hasId(e)) {
-      const found = await this.repo.findOne(
-        this.repo.getId(e) as string | number,
-      );
+      const found = await this.repo.findOneBy({
+          id: this.repo.getId(e) as string | number,
+      } as unknown as FindOptionsWhere<Entity>);
       if (found) {
         throw new Error('Entity already exists');
       }

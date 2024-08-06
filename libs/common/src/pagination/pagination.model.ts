@@ -10,7 +10,7 @@ export interface PageQuery {
 
 export interface PageMeta {
   page: number;
-  total: number;
+  total?: number;
   page_size: number;
 }
 

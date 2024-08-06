@@ -15,7 +15,12 @@ import { SortDirection } from '@libs/nest-core';
 import { Period, MetricDto } from 'libs/api/infra-api/src/metric/metric.dto';
 
 @Controller('/api/v1/stats')
-@Throttle(3, 1)
+@Throttle({
+  default: {
+    limit: 3,
+    ttl: 1000,
+  }
+})
 @UseGuards(TenantGuard)
 export class StatsController {
   constructor(

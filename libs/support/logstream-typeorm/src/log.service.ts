@@ -24,7 +24,9 @@ export class LogService implements ILogService {
   }
 
   async retrieve(ctx: IContext, id: string): Promise<LogEventDto | undefined> {
-    return await this.logRepo.findOne(id);
+    return await this.logRepo.findOne({
+      where: { id },
+    });
   }
 
   async log(ctx: IContext, input: Partial<LogEventDto>) {

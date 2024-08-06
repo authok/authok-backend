@@ -1,5 +1,4 @@
 import { IUserService } from 'libs/api/infra-api/src/user/user.service';
-import { InvalidRequest } from '@authok/oidc-provider/lib/helpers/errors';
 import { Logger } from '@nestjs/common';
 
 export function accountAdaptor(userService: IUserService): any {
@@ -41,6 +40,8 @@ export function accountAdaptor(userService: IUserService): any {
     }
 
     static async findAccount(ctx, user_id, token) {
+      const { InvalidRequest } = await import('@authok/oidc-provider/lib/helpers/errors');
+
       const user: Record<string, any> = await userService.retrieve(
         ctx.req.customRequestContext,
         user_id,

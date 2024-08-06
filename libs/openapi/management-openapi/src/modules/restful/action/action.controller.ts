@@ -14,7 +14,12 @@ import { ITriggerClient } from "libs/support/trigger-client/src/interface";
 
 @Controller('/api/v1/actions')
 @UseGuards(ThrottlerGuard)
-@Throttle(3, 1)
+@Throttle({
+  default: {
+    limit: 3,
+    ttl: 1000,
+  }
+})
 @UseGuards(AuthGuard('jwt'), ScopesGuard) // Scopes必须放在 AuthGuard之后
 @ApiTags('动作')
 @ApiBearerAuth()

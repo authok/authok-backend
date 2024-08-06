@@ -28,9 +28,11 @@ export class TypeOrmOrganizationMemberRoleRepository
     const repo = await this.repo(ctx, OrganizationMemberRoleEntity);
 
     const entity = await repo.findOne({
-      tenant: ctx.tenant,
-      member_id,
-      role_id,
+      where: {
+        tenant: ctx.tenant,
+        member_id,
+        role_id,
+      }
     });
 
     return this.organizationMemberRoleMapper.toDTO(entity);
@@ -44,7 +46,13 @@ export class TypeOrmOrganizationMemberRoleRepository
 
     const toUpdate = this.organizationMemberRoleMapper.toEntity(data);
 
-    await repo.findOneOrFail(toUpdate);
+    await repo.findOneOrFail({
+      where: {
+        tenant: ctx.tenant,
+        member_id: toUpdate.member_id,
+        role_id: toUpdate.role_id,
+      }
+    });
 
     const entity = await repo.save(toUpdate);
 
@@ -59,9 +67,11 @@ export class TypeOrmOrganizationMemberRoleRepository
     const repo = await this.repo(ctx, OrganizationMemberRoleEntity);
 
     const entity = await repo.findOneOrFail({
-      tenant: ctx.tenant,
-      member_id,
-      role_id,
+      where: {
+        tenant: ctx.tenant,
+        member_id,
+        role_id,
+      }
     });
 
     await repo.remove(entity);

@@ -18,13 +18,18 @@ import { IRequestContext, ReqCtx } from '@libs/nest-core';
 import { AuthGuard } from '@nestjs/passport';
 import { Scopes } from 'libs/oidc/client/src/lib/guards/scopes.decorator';
 import { ScopesGuard } from 'libs/oidc/client/src/lib/guards/scopes.guard';
-import * as moment from 'moment';
+import dayjs from 'dayjs';
 import { IInvitationService } from "libs/api/infra-api/src/invitation/invitation.service";
 import { InvitationDto, InvitationPageQueryDto } from "libs/api/infra-api/src/invitation/invitation.dto";
 
 @Controller('/api/v1/organizations/:org_id/invitations')
 @ApiTags('组织')
-@Throttle(3, 1)
+@Throttle({
+  default: {
+    limit: 3,
+    ttl: 1000,
+  }
+})
 @UseGuards(ThrottlerGuard, AuthGuard('jwt'), ScopesGuard)
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: '未授权' })
@@ -70,7 +75,7 @@ export class OrganizationInvitationController {
     const org = await this.organizationService.retrieve(ctx, org_id);
     if (!org) throw new NotFoundException(`organization ${org_id} not found`);
 
-    const expires_at = moment(new Date()).add(7, 'd').toDate();
+    const expires_at = dayjs(new Date()).add(7, 'd').toDate();
 
     const invitation = {..._invitation, inviter, org_id, expires_at };
 

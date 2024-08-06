@@ -25,7 +25,9 @@ export class TypeOrmDBConnectionRepository implements IDBConnectionRepository {
     ctx: IRequestContext,
     id: string,
   ): Promise<DBConnectionDto | undefined> {
-    return await this.repo.findOne(id);
+    return await this.repo.findOne({
+      where: { id },
+    });
   }
 
   async update(

@@ -25,7 +25,7 @@ export class TypeOrmPasswordResetRepository
   async findByToken(
     ctx: IRequestContext,
     token: string,
-  ): Promise<PasswordResetDto> {
+  ): Promise<PasswordResetDto | undefined> {
     return await this.queryOne(ctx, {
       and: [
         {

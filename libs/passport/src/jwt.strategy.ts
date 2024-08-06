@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import * as jwt from 'jsonwebtoken';
 import { IClientService } from 'libs/api/infra-api/src/client/client.service';
-import * as createJwksClient from 'jwks-rsa';
+import createJwksClient from 'jwks-rsa';
 import * as https from 'https';
 
 @Injectable()

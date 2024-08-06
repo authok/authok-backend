@@ -1,4 +1,4 @@
-import { IRequestContext, IContext } from '@libs/nest-core';
+import { IContext } from '@libs/nest-core';
 import { PageQuery, Page } from 'libs/common/src/pagination/pagination.model';
 import { InvitationDto } from './invitation.dto';
 

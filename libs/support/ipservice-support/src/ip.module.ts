@@ -1,7 +1,8 @@
-import { Module, HttpModule, Global } from '@nestjs/common';
+import { Module, Global } from '@nestjs/common';
 import { TaobaoIPService } from './providers/taobao/taobao.ip.service';
 import { IPStackIPService } from './providers/ipstack/ipstack.ip.service';
 import { MixIPService } from './mix.ip.service';
+import { HttpModule } from '@nestjs/axios';
 
 @Global()
 @Module({

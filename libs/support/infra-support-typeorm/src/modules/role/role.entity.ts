@@ -5,8 +5,6 @@ import {
   Unique,
   ManyToMany,
   JoinColumn,
-  UpdateDateColumn,
-  CreateDateColumn,
   PrimaryColumn,
 } from 'typeorm';
 import { GUID, GuidIdentity } from '../../common/guid.entity';
@@ -45,12 +43,6 @@ export class RoleEntity extends GuidIdentity {
     onDelete: 'CASCADE',
   })
   permissions?: PermissionEntity[];
-
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
 }
 
 @Entity({

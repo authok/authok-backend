@@ -1,5 +1,7 @@
-import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { getEnvVars } from './scripts/database-config-utils';
+/* eslint-disable import/no-extraneous-dependencies */
+
+import { getEnvVars } from 'scripts/database-config-utils';
+import { DataSource } from 'typeorm';
 
 function dbSslConfig(envVars) {
   let config = {};
@@ -19,7 +21,7 @@ function dbSslConfig(envVars) {
   return config;
 }
 
-function buildConnectionOptions(data): TypeOrmModuleOptions {
+function buildDataSource(data): DataSource {
   const connectionParams = {
     database: data.DB_NAME,
     port: +data.DB_PORT || 5432,
@@ -33,12 +35,9 @@ function buildConnectionOptions(data): TypeOrmModuleOptions {
     ...dbSslConfig(data),
   };
 
-  const entitiesDir =
-    data?.NODE_ENV === 'test'
-      ? [__dirname + '/**/*.entity.ts']
-      : [__dirname + '/**/*.entity{.js,.ts}'];
+  const entitiesDir = [__dirname + '/**/*.entity.ts'];
 
-  return {
+  return new DataSource({
     type: 'postgres',
     ...connectionParams,
     entities: entitiesDir,
@@ -47,16 +46,11 @@ function buildConnectionOptions(data): TypeOrmModuleOptions {
     migrationsRun: false,
     migrationsTransactionMode: 'all',
     logging: data.DB_LOGGING || false,
-    migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
-    keepConnectionAlive: true,
-    cli: {
-      migrationsDir: 'migrations',
-    },
-  };
+    migrations: [__dirname + `/../migrations/**/*{.ts,.js}`],
+  });
 }
 
-const data = getEnvVars();
-const ormconfig: TypeOrmModuleOptions = buildConnectionOptions(data);
+const data = getEnvVars("tenant");
+const datasource = buildDataSource(data);
 
-export { ormconfig };
-export default ormconfig;
+export default datasource;

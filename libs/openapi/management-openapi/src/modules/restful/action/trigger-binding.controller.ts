@@ -11,7 +11,12 @@ import { PageDto } from "libs/common/src/pagination/pagination.dto";
 
 @Controller('/api/v1/actions/triggers')
 @UseGuards(ThrottlerGuard, AuthGuard('jwt'), ScopesGuard)
-@Throttle(3, 1)
+@Throttle({
+  default: {
+    limit: 3,
+    ttl: 1000,
+  }
+})
 @ApiTags('触发器/动作 - 绑定')
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: '未授权' })

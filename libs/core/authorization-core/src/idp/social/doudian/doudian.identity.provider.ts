@@ -8,7 +8,7 @@ import { ProfileDataDto } from 'libs/api/infra-api/src/identity/identity.dto';
 import { plainToClass } from 'class-transformer';
 import { APIException } from 'libs/common/src/exception/api.exception';
 import * as crypto from 'crypto';
-import * as moment from 'moment';
+import dayjs from 'dayjs';
 import { AccessTokenResult } from '../../interface';
 
 const AUTHORIZE_URL = 'https://fuwu.jinritemai.com/authorize';
@@ -57,7 +57,7 @@ export class DoudianIdentityProvider extends OAuth2IdentityProvider {
     const app_secret = options.app_secret;
 
     const method = 'token.create';
-    const timestamp = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
+    const timestamp = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss');
     const params = { code, grant_type: 'authorization_code' };
     const sign = this.create_sign(
       app_secret,
@@ -126,7 +126,7 @@ export class DoudianIdentityProvider extends OAuth2IdentityProvider {
     const app_key = options.app_key;
 
     const method = 'token.refresh';
-    const timestamp = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
+    const timestamp = dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss');
     const param_json = JSON.stringify({
       grant_type: 'refresh_token',
       refresh_token,

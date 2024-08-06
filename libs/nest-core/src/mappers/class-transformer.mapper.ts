@@ -44,11 +44,11 @@ export abstract class ClassTransformerMapper<
   }
 
   convertToCreateEntity(create: DeepPartial<DTO>): DeepPartial<Entity> {
-    return this.convert(this.EntityClass, create);
+    return this.convert(this.EntityClass, create) as DeepPartial<Entity>;
   }
 
   convertToUpdateEntity(create: DeepPartial<DTO>): DeepPartial<Entity> {
-    return this.convert(this.EntityClass, create);
+    return this.convert(this.EntityClass, create) as DeepPartial<Entity>;
   }
 
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -72,7 +72,7 @@ export abstract class ClassTransformerMapper<
       if (serializer) {
         return serializer(entityOrDto);
       }
-    } else if ('constructor' in entityOrDto) {
+    } else if ('constructor' in (entityOrDto as object)) {
       // eslint-disable-next-line @typescript-eslint/ban-types
       const serializer = getMapperSerializer(
         (entityOrDto as unknown as object).constructor as Class<unknown>,

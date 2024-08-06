@@ -12,7 +12,9 @@ export class TypeOrmSecretAnswerRepository
 
   async retrieve(ctx: IRequestContext, id: string): Promise<SecretAnswerDto> {
     const repo = await this.repo(ctx, SecretAnswerEntity);
-    const answer = await repo.findOne(id);
+    const answer = await repo.findOne({
+      where: { id },
+    });
     return {
       ...answer,
       user_id: answer.user.user_id,

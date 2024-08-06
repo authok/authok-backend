@@ -1,6 +1,6 @@
 import { KeyEntity } from './key.entity';
 import { Injectable, Inject, Logger } from '@nestjs/common';
-import { DeleteResult, UpdateResult, EntityManager } from 'typeorm';
+import { DeleteResult, UpdateResult, EntityManager, In } from 'typeorm';
 import {
   KeyDto,
   UpdateKeyDto,
@@ -26,7 +26,11 @@ export class TypeOrmKeyRepository
     id: string,
   ): Promise<KeyDto | undefined> {
     const repo = await this.repo(ctx, KeyEntity);
-    return await repo.findOne(id);
+    return await repo.findOne({
+      where: {
+        kid: id,
+      }
+    });
   }
 
   async findActiveKey(ctx: IRequestContext): Promise<KeyDto | undefined> {
@@ -42,10 +46,9 @@ export class TypeOrmKeyRepository
   async findByIds(ctx: IRequestContext, ids: string[]): Promise<KeyDto[]> {
     const repo = await this.repo(ctx, KeyEntity);
 
-    return repo.findByIds(ids, {
-      where: {
-        tenant: ctx.tenant,
-      },
+    return repo.findBy({
+      kid: In(ids),
+      tenant: ctx.tenant,
     });
   }
 

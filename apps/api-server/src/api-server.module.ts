@@ -6,7 +6,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 
-import { ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerModule, seconds } from '@nestjs/throttler';
 import { ThrottlerStorageRedisService } from 'nestjs-throttler-storage-redis';
 import { TicketModule } from 'libs/core/ticket-core/src/ticket.module';
 import { SupportModule } from './support.module';
@@ -26,10 +26,9 @@ import { RequestContextInterceptor } from 'libs/core/infra-core/src/request-cont
 import { HttpExceptionFilter } from 'libs/common/src/filters/http-exception.filter';
 import { NestSessionOptions, SessionModule } from 'nestjs-session';
 import * as session from 'express-session';
-import * as ConnectRedis from 'connect-redis';
+import RedisStore from 'connect-redis';
 import { TriggerModule } from 'libs/support/trigger-client/src/trigger.module';
 import { SAMLPModule } from 'libs/samlp/src/samlp.module';
-const RedisStore = ConnectRedis(session);
 
 @Global()
 @Module({
@@ -49,6 +48,13 @@ const RedisStore = ConnectRedis(session);
         ttl: 60,
         limit: 5,
         storage: new ThrottlerStorageRedisService(configService.get('redis')),
+        throttlers: [
+          {
+            name: 'default',
+            ttl: seconds(3),
+            limit: 2,
+          },
+        ],
       }),
     }),
     EventEmitterModule.forRoot({

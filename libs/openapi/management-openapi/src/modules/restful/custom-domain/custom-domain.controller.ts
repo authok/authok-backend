@@ -30,7 +30,12 @@ import { ICustomDomainService } from 'libs/api/infra-api/src/custom-domain/custo
 import { CustomDomainDto, CreateCustomDomainDto, UpdateCustomDomainDto, CustomDomainPageQueryDto } from 'libs/api/infra-api/src/custom-domain/custom-domain.dto';
 
 @Controller('/api/v1/custom-domains')
-@Throttle(3, 1)
+@Throttle({
+  default: {
+    limit: 3,
+    ttl: 1000,
+  }
+})
 @UseGuards(ThrottlerGuard, AuthGuard('jwt'), ScopesGuard)
 @ApiTags('自定义域名')
 @ApiBearerAuth()

@@ -32,8 +32,10 @@ export class TypeOrmClientRepository
   ): Promise<ClientDto | undefined> {
     const repo = await this.repo(ctx, ClientEntity);
     const entity = await repo.findOne({
-      tenant: ctx.tenant,
-      client_id,
+      where: {
+        tenant: ctx.tenant,
+        client_id,
+      }
     });
     if (!entity) return undefined;
 
@@ -68,8 +70,10 @@ export class TypeOrmClientRepository
     // await repo.softDelete(id);
 
     const client = await repo.findOneOrFail({
-      tenant: ctx.tenant,
-      client_id,
+      where: {
+        tenant: ctx.tenant,
+        client_id,
+      }
     });
 
     await repo.remove(client);
@@ -85,9 +89,11 @@ export class TypeOrmClientRepository
     const client = plainToClass(ClientEntity, body);
     const { affected } = await repo.update(id, client);
 
-    console.log('nimbi: ', affected, id, await repo.findOne(id));
+    console.log('nimbi: ', affected, id, await repo.findOne({ where: { client_id: id }}));
 
-    const entity = await repo.findOneOrFail(id);
+    const entity = await repo.findOneOrFail({
+      where: { client_id: id }
+    });
     return this.clientMapper.toDTO(entity);
   }
 

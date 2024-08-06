@@ -33,7 +33,9 @@ export class TypeOrmActionRepository
     id: string,
   ): Promise<ActionDto | undefined> {
     const actionRepo = await this.repo(ctx, ActionEntity);
-    const entity = await actionRepo.findOne(id);
+    const entity = await actionRepo.findOne({
+      where: { id },
+    });
 
     return this.actionMapper.toDTO(entity);
   }
@@ -45,8 +47,10 @@ export class TypeOrmActionRepository
     const actionRepo = await this.repo(ctx, ActionEntity);
 
     await actionRepo.findOneOrFail({
-      tenant: ctx.tenant,
-      id: action.id,
+      where: {
+        tenant: ctx.tenant,
+        id: action.id,
+      }
     });
 
     const entity = this.actionMapper.toEntity(ctx, action);
@@ -58,8 +62,10 @@ export class TypeOrmActionRepository
   async delete(ctx: IRequestContext, id: string): Promise<void> {
     const actionRepo = await this.repo(ctx, ActionEntity);
     const entity = await actionRepo.findOneOrFail({
-      tenant: ctx.tenant,
-      id: id,
+      where: {
+        tenant: ctx.tenant,
+        id: id,
+      }
     });
 
     await entity.remove();

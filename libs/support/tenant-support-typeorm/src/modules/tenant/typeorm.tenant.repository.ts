@@ -27,7 +27,7 @@ export class TypeOrmTenantRepository implements ITenantRepository {
   ) {}
 
   async retrieve(ctx: IContext, id: string): Promise<TenantDto | undefined> {
-    const entity = await this.repository.findOne(id);
+    const entity = await this.repository.findOne({ where: { id } });
     return this.tenantMapper.toDTO(entity);
   }
 
@@ -50,7 +50,9 @@ export class TypeOrmTenantRepository implements ITenantRepository {
     data: UpdateTenantDto,
   ): Promise<TenantDto> {
     await this.repository.update(id, data);
-    const entity = await this.repository.findOneOrFail(id);
+    const entity = await this.repository.findOneOrFail({
+      where: { id },
+    });
     return this.tenantMapper.toDTO(entity);
   }
 

@@ -25,7 +25,12 @@ import { Scopes } from 'libs/oidc/client/src/lib/guards/scopes.decorator';
 
 @ApiTags('邮件模版')
 @Controller('/api/v1/email-templates')
-@Throttle(3, 1)
+@Throttle({
+  default: {
+    limit: 3,
+    ttl: 1000,
+  }
+})
 @UseGuards(ThrottlerGuard, AuthGuard('jwt'), ScopesGuard)
 @ApiBearerAuth()
 @ApiTags('授权')

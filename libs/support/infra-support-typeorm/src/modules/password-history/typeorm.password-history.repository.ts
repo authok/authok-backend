@@ -24,11 +24,11 @@ export class TypeOrmPasswordHistoryRepository
     });
 
     const saved = await repo.save(passwordHistory);
-
+    
     return {
       id: saved.id,
-      user_id: _passwordHistory.user_id,
-      used_password: _passwordHistory.used_password,
+      user_id: _passwordHistory.user_id!,
+      used_password: _passwordHistory.used_password!,
     };
   }
 

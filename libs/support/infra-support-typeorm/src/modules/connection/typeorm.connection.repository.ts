@@ -16,7 +16,7 @@ import {
 import { TenantAwareRepository } from 'libs/support/tenant-support-typeorm/src/modules/tenant/tenant-aware.repository';
 import { ClientEntity } from '../client/client.entity';
 import { paginate } from 'libs/common/src/pagination/typeorm-paginate';
-import * as merge from 'deepmerge';
+import deepmerge from 'deepmerge';
 import { ConnectionMapper } from './connection.mapper';
 import { APIException } from 'libs/common/src/exception/api.exception';
 
@@ -82,8 +82,10 @@ export class TypeOrmConnectionRepository
     const connectionRepository = await this.repo(ctx, ConnectionEntity);
 
     const existConnection = await connectionRepository.findOne({
-      tenant: ctx.tenant,
-      name: input.name,
+      where: {
+        tenant: ctx.tenant,
+        name: input.name,
+      }
     });
 
     if (existConnection) {
@@ -136,7 +138,7 @@ export class TypeOrmConnectionRepository
     });
 
     if (data.options) {
-      data.options = merge(existingConn.options, data.options);
+      data.options = deepmerge(existingConn.options, data.options);
       console.log('merged: ', data.options);
     }
 

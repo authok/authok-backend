@@ -29,9 +29,9 @@ let PostLoginActionRunner = class PostLoginActionRunner {
             .invoke('post-login', funcName || 'onPostLogin', event, api);
     }
 };
-PostLoginActionRunner = __decorate([
+exports.PostLoginActionRunner = PostLoginActionRunner;
+exports.PostLoginActionRunner = PostLoginActionRunner = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [script_manager_1.ScriptManager])
 ], PostLoginActionRunner);
-exports.PostLoginActionRunner = PostLoginActionRunner;
 //# sourceMappingURL=post-login.action.runner.js.map

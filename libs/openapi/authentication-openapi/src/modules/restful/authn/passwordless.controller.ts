@@ -2,7 +2,6 @@ import {
   Controller,
   Post,
   Body,
-  UnauthorizedException,
   Logger,
   NotFoundException,
   HttpException,
@@ -29,7 +28,7 @@ import { IClientService } from 'libs/api/infra-api/src/client/client.service';
 import { TemplateSms } from 'libs/core/notifications-core/src/sms/sms';
 import { IUserService } from 'libs/api/infra-api/src/user/user.service';
 import { IConnectionService } from 'libs/api/infra-api/src/connection/connection.service';
-import * as moment from 'moment';
+import dayjs from 'dayjs';
 import { RequestContext } from 'libs/core/infra-core/src/request-context/request-context.dto';
 import { IMailer } from 'libs/api/infra-api/src/email-template/mailer.service';
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
@@ -71,7 +70,12 @@ export class PasswordlessController {
   @Post('start')
   @ApiOperation({ summary: '开始免密登录' })
   @UseGuards(ThrottlerGuard)
-  @Throttle(1, 3)
+  @Throttle({
+    default: {
+      limit: 3,
+      ttl: 1000,
+    }
+  })
   async start(
     @ReqCtx() ctx: RequestContext,
     @Res() res: Response,
@@ -98,7 +102,7 @@ export class PasswordlessController {
         Logger.warn(
           `already has token for ${req.email}, token: ${token.value}`,
         );
-        if (moment().subtract(1, 'minute').toDate() < token.created_at) {
+        if (dayjs().subtract(1, 'minute').toDate() < token.created_at) {
           Logger.warn(`一分钟内不能重复发送`);
 
           throw new BadRequestException('token already exists');
@@ -130,7 +134,7 @@ export class PasswordlessController {
         req.email,
       );
 
-      token.expired_at = moment().add(5, 'minute').toDate();
+      token.expired_at = dayjs().add(5, 'minute').toDate();
       await this.passwordlessTokenRepository.deleteToken(ctx, scene, req.email);
       await this.passwordlessTokenRepository.saveToken(ctx, token);
 
@@ -147,7 +151,7 @@ export class PasswordlessController {
         Logger.warn(
           `already has token for ${req.phone_number}, token: ${token.value}'`,
         );
-        if (moment().subtract(1, 'minute').toDate() < token.created_at) {
+        if (dayjs().subtract(1, 'minute').toDate() < token.created_at) {
           Logger.warn('一分钟内不能重复发送短信验证码');
           throw new HttpException(
             'token already exists',
@@ -185,7 +189,7 @@ export class PasswordlessController {
       await this.smsSender.send({}, sms);
       // 发送成功了再保存
 
-      token.expired_at = moment().add(5, 'minute').toDate();
+      token.expired_at = dayjs().add(5, 'minute').toDate();
       await this.passwordlessTokenRepository.deleteToken(
         ctx,
         scene,

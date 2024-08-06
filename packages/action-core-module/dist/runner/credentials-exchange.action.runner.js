@@ -29,9 +29,9 @@ let CredentailsExchangeActionRunner = class CredentailsExchangeActionRunner {
             .invoke('m2m', funcName || 'onExecuteCredentialsExchange', event, api);
     }
 };
-CredentailsExchangeActionRunner = __decorate([
+exports.CredentailsExchangeActionRunner = CredentailsExchangeActionRunner;
+exports.CredentailsExchangeActionRunner = CredentailsExchangeActionRunner = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [script_manager_1.ScriptManager])
 ], CredentailsExchangeActionRunner);
-exports.CredentailsExchangeActionRunner = CredentailsExchangeActionRunner;
 //# sourceMappingURL=credentials-exchange.action.runner.js.map

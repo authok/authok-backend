@@ -49,7 +49,8 @@ let ActionModule = ActionModule_1 = class ActionModule {
         };
     }
 };
-ActionModule = ActionModule_1 = __decorate([
+exports.ActionModule = ActionModule;
+exports.ActionModule = ActionModule = ActionModule_1 = __decorate([
     (0, common_1.Module)({
         imports: [],
         providers: [
@@ -80,5 +81,4 @@ ActionModule = ActionModule_1 = __decorate([
         exports: [action_service_1.ActionService, script_manager_1.ScriptManager],
     })
 ], ActionModule);
-exports.ActionModule = ActionModule;
 //# sourceMappingURL=action.module.js.map

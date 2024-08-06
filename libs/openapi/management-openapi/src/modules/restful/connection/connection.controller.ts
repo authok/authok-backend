@@ -44,7 +44,12 @@ import { IUserService } from 'libs/api/infra-api/src/user/user.service';
 import { ScopesGuard } from 'libs/oidc/client/src/lib/guards/scopes.guard';
 
 @Controller('/api/v1/connections')
-@Throttle(3, 1)
+@Throttle({
+  default: {
+    limit: 3,
+    ttl: 1000,
+  }
+})
 @UseGuards(ThrottlerGuard, AuthGuard('jwt'), ScopesGuard)
 @ApiTags('身份源')
 @ApiBearerAuth()

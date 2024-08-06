@@ -66,7 +66,7 @@ export class PageMeta {
   readonly page_size: number;
 
   @ApiProperty({ description: '总记录数' })
-  readonly total: number;
+  readonly total?: number | undefined;
 
   [key: string]: any;
 }
@@ -84,10 +84,10 @@ export const pageDtoFactory = <T extends Function>(
 ): new () => PageDto<T> => {
   class paginatedDto<T> extends PageDto<T> {
     @ApiProperty({ type: PageMeta })
-    meta: PageMeta;
+    declare meta: PageMeta;
 
     @ApiProperty({ type: [type] })
-    items: T[];
+    declare items: T[];
   }
 
   return paginatedDto;

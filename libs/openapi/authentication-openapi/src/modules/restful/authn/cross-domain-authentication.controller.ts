@@ -49,7 +49,12 @@ export class CrossDomainAuthenticationController {
   ) {}
 
   // @UseGuards(ThrottlerGuard)
-  // @Throttle(10, 60)
+  @Throttle({
+    default: {
+      limit: 10,
+      ttl: 60000,
+    }
+  })
   @ApiOperation({ summary: '跨域登录' })
   @Post('authenticate')
   // @UseInterceptors(OIDCSessionInterceptor)

@@ -38,9 +38,9 @@ let VM2Sandbox = class VM2Sandbox {
         return this;
     }
 };
-VM2Sandbox = __decorate([
+exports.VM2Sandbox = VM2Sandbox;
+exports.VM2Sandbox = VM2Sandbox = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [Object])
 ], VM2Sandbox);
-exports.VM2Sandbox = VM2Sandbox;
 //# sourceMappingURL=vm2.sandbox.js.map

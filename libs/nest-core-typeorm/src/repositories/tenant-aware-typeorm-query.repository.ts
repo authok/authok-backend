@@ -25,6 +25,7 @@ import {
   ObjectLiteral,
   RelationQueryBuilder as TypeOrmRelationQueryBuilder,
   DeepPartial as TypeOrmDeepPartial,
+  FindOptionsWhere,
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { MethodNotAllowedException, NotFoundException } from '@nestjs/common';
@@ -467,7 +468,9 @@ export class TenantAwareTypeOrmQueryRepository<Entity>
     e: Entity,
   ): Promise<Entity> {
     if (repo.hasId(e)) {
-      const found = await repo.findOne(repo.getId(e) as string | number);
+      const found = await repo.findOneBy({
+        id: repo.getId(e) as string | number
+      } as unknown as FindOptionsWhere<Entity>);
       if (found) {
         throw new Error('Entity already exists');
       }

@@ -24,7 +24,12 @@ import { ScopesGuard } from 'libs/oidc/client/src/lib/guards/scopes.guard';
 
 @ApiTags('资源服务器 - API')
 @Controller('/api/v1/resource-servers')
-@Throttle(3, 1)
+@Throttle({
+  default: {
+    limit: 3,
+    ttl: 1000,
+  }
+})
 @UseGuards(ThrottlerGuard, AuthGuard('jwt'), ScopesGuard)
 @ApiTags('应用')
 @ApiBearerAuth()

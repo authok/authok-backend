@@ -20,7 +20,11 @@ export class TypeOrmSecretQuestionRepository
     id: string,
   ): Promise<SecretQuestionDto | undefined> {
     const repo = await this.repo(ctx, SecretQuestionEntity);
-    return await repo.findOne(id);
+    return await repo.findOne({
+      where: {
+        id,
+      }
+    });
   }
 
   async create(

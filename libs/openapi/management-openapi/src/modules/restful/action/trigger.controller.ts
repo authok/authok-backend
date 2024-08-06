@@ -10,7 +10,12 @@ import { Throttle, ThrottlerGuard } from "@nestjs/throttler";
 import { ScopesGuard } from "libs/oidc/client/src/lib/guards/scopes.guard";
 
 @Controller('/api/v1/triggers')
-@Throttle(3, 1)
+@Throttle({
+  default: {
+    limit: 3,
+    ttl: 1000,
+  }
+})
 @UseGuards(ThrottlerGuard, AuthGuard('jwt'), ScopesGuard)
 @ApiTags('触发器')
 @ApiBearerAuth()

@@ -10,7 +10,12 @@ import { IRequestContext, ReqCtx } from '@libs/nest-core';
 import { ScopesGuard } from 'libs/oidc/client/src/lib/guards/scopes.guard';
 
 @Controller('/api/v1/grants')
-@Throttle(3, 1)
+@Throttle({
+  default: {
+    limit: 3,
+    ttl: 1000,
+  }
+})
 @UseGuards(ThrottlerGuard, AuthGuard('jwt'), ScopesGuard)
 @ApiBearerAuth()
 @ApiTags('授权')

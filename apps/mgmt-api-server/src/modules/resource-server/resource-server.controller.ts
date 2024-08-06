@@ -16,7 +16,7 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 import { IResourceServerService } from 'libs/api/infra-api/src/resource-server/resource-server.service';
 import { ResourceServerPageQueryDto, ResourceServerDto, UpdateResourceServerDto } from 'libs/api/infra-api/src/resource-server/resource-server.dto';
-import { Throttle } from '@nestjs/throttler';
+import { Throttle, seconds } from '@nestjs/throttler';
 import { PageDto } from 'libs/common/src/pagination/pagination.dto';
 import { OIDCRequest } from '../../types/oidc';
 import { JoiSchemaOptions, JoiSchema } from 'nestjs-joi';
@@ -44,7 +44,12 @@ class TokenRequestDto {
 
 @ApiTags('资源服务器 - API')
 @Controller('/api/v1/resource-servers')
-@Throttle(3, 1)
+@Throttle({
+  default: {
+    limit: 3,
+    ttl: seconds(1),
+  }
+})
 @UseGuards(TenantGuard)
 @UseGuards(ScopesGuard)
 export class ResourceServerController {

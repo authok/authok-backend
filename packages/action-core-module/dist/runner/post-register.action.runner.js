@@ -25,9 +25,9 @@ let PostRegisterActionRunner = class PostRegisterActionRunner {
             .invoke('post-register', funcName || 'onPostUserRegister', event);
     }
 };
-PostRegisterActionRunner = __decorate([
+exports.PostRegisterActionRunner = PostRegisterActionRunner;
+exports.PostRegisterActionRunner = PostRegisterActionRunner = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [script_manager_1.ScriptManager])
 ], PostRegisterActionRunner);
-exports.PostRegisterActionRunner = PostRegisterActionRunner;
 //# sourceMappingURL=post-register.action.runner.js.map

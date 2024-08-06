@@ -1,7 +1,7 @@
 import { Injectable, Inject, Logger, NotFoundException } from '@nestjs/common';
 import { Provider as OidcProvider } from '@authok/oidc-provider';
 import * as jose from 'jose';
-import * as LRU from 'lru-cache';
+import { LRUCache } from 'lru-cache';
 import { ConfigService } from '@nestjs/config';
 import { ITenantService } from 'libs/api/infra-api/src/tenant/tenant.service';
 import { IKeyService } from 'libs/api/infra-api/src/key/key.service';
@@ -13,7 +13,7 @@ import { IExtension } from '../provider/extention';
 
 @Injectable()
 export class OidcService {
-  private cache: LRU<string, OidcProvider>;
+  private cache: LRUCache<string, OidcProvider>;
 
   constructor(
     private readonly configService: ConfigService,
@@ -26,11 +26,11 @@ export class OidcService {
     @Inject('OIDCConfigurationExtensions')
     private readonly configurationExtensions: IExtension<IConfiguration>[],
   ) {
-    const cacheOptions: LRU.Options<any, any> = {
+    const cacheOptions: LRUCache.Options<any, any, any> = {
       max: this.configService.get('provider.cache.max') || 500,
-      maxAge: this.configService.get('provider.cache.maxAge') || 1000 * 86400,
+      ttl: this.configService.get('provider.cache.maxAge') || 1000 * 86400,
     };
-    this.cache = new LRU(cacheOptions);
+    this.cache = new LRUCache(cacheOptions);
   }
 
   async findProvider(issuer: string) {

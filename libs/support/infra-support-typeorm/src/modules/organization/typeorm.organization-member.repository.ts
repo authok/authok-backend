@@ -161,45 +161,45 @@ export class TypeOrmOrganizationMemberRepository
       }),
     };
 
-    const searchOptions: FindManyOptions<PermissionEntity> = {
-      where: (qb: SelectQueryBuilder<PermissionEntity>) => {
-        qb.innerJoin(
-          `${qb.alias}.resource_server`,
-          'resource_server',
-        ).addSelect(['resource_server.identifier', 'resource_server.name']);
+    const qb = permissionRepo.createQueryBuilder('permissions');
 
-        if (query.audience) {
-          qb.where(`resource_server.identifier = :audience`, {
-            audience: query.audience,
-          });
-        }
+    {
+      qb.innerJoin(
+        `${qb.alias}.resource_server`,
+        'resource_server',
+      ).addSelect(['resource_server.identifier', 'resource_server.name']);
 
-        qb.innerJoin(
-          'role_permissions',
-          'role_permissions',
-          `role_permissions.permission_id = ${qb.alias}.id`,
-        );
+      if (query.audience) {
+        qb.where(`resource_server.identifier = :audience`, {
+          audience: query.audience,
+        });
+      }
 
-        qb.innerJoin(
-          'organization_members',
-          'organization_members',
-          'organization_members.org_id = :org_id AND organization_members.fk_user_id = :user_id AND organization_members.tenant= :tenant',
-          {
-            org_id,
-            user_id,
-            tenant: ctx.tenant,
-          },
-        );
+      qb.innerJoin(
+        'role_permissions',
+        'role_permissions',
+        `role_permissions.permission_id = ${qb.alias}.id`,
+      );
 
-        qb.innerJoin(
-          'organization_member_roles',
-          'organization_member_roles',
-          'organization_member_roles.role_id = role_permissions.role_id AND organization_member_roles.member_id = organization_members.id',
-        );
-      },
-    };
+      qb.innerJoin(
+        'organization_members',
+        'organization_members',
+        'organization_members.org_id = :org_id AND organization_members.fk_user_id = :user_id AND organization_members.tenant= :tenant',
+        {
+          org_id,
+          user_id,
+          tenant: ctx.tenant,
+        },
+      );
 
-    const page = await _paginate(permissionRepo, options, searchOptions);
+      qb.innerJoin(
+        'organization_member_roles',
+        'organization_member_roles',
+        'organization_member_roles.role_id = role_permissions.role_id AND organization_member_roles.member_id = organization_members.id',
+      );
+    }
+
+    const page = await _paginate(qb, options);
 
     return {
       items: page.items?.map((it) => {

@@ -3,8 +3,6 @@ import {
   Column,
   OneToMany,
   Unique,
-  CreateDateColumn,
-  UpdateDateColumn,
   ManyToMany,
   JoinTable,
 } from 'typeorm';
@@ -153,13 +151,6 @@ export class UserEntity extends GuidIdentity {
     nullable: true,
   })
   app_metadata: Record<string, any>;
-
-  @CreateDateColumn({ comment: '记录创建时间' })
-  created_at: Date;
-
-  @Column()
-  @UpdateDateColumn()
-  public updated_at: Date;
 
   @OneToMany(() => IdentityEntity, (identity) => identity.user, {
     eager: true,

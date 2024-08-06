@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { FindConditions, Repository, EntityTarget } from 'typeorm';
+import { Repository, EntityTarget, FindOptionsWhere } from 'typeorm';
 
 import {
   IRequiredEntityAttrs,
@@ -98,7 +98,11 @@ export class TypeOrmAdapter implements IModelAdapter {
       this.entityType,
     );
 
-    const found: IRequiredEntityAttrs = await repo.findOne(id);
+    const found: IRequiredEntityAttrs = await repo.findOne({
+      where: {
+        id,
+      }
+    });
 
     console.log('client found: ', found);
 
@@ -130,7 +134,7 @@ export class TypeOrmAdapter implements IModelAdapter {
 
     const found = await repo.findOne({
       where: {
-        userCode,
+        userCode: userCode as string,
       },
     });
 
@@ -154,7 +158,7 @@ export class TypeOrmAdapter implements IModelAdapter {
 
     const found: IRequiredEntityAttrs = await repo.findOne({
       where: {
-        uid,
+        uid: uid as string,
       },
     });
 
@@ -182,7 +186,7 @@ export class TypeOrmAdapter implements IModelAdapter {
       this.entityType,
     );
 
-    const findCond: FindConditions<IRequiredEntityAttrs> = {
+    const findCond: FindOptionsWhere<IRequiredEntityAttrs> = {
       id: `${id}`,
     };
 

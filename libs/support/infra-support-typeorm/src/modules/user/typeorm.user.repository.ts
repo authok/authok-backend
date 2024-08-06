@@ -315,8 +315,10 @@ export class TypeOrmUserRepository
   ): Promise<UserDto | undefined> {
     const userRepo = await this.repo(ctx, UserEntity);
     const _user = await userRepo.findOne({
-      tenant: ctx.tenant,
-      user_id,
+      where: {
+        tenant: ctx.tenant,
+        user_id,
+      }
     });
 
     if (!_user) throw new NotFoundException();
@@ -346,7 +348,11 @@ export class TypeOrmUserRepository
       relations: ['identities'],
     };
 
-    searchOptions.where = (qb: SelectQueryBuilder<UserEntity>) => {
+    const qb = userRepo.createQueryBuilder('user')
+      .leftJoinAndSelect("user.identities", "identities")
+      .where("identities.fk_user_id = user.id");
+
+    {
       qb.where(`${qb.alias}.tenant = :tenant`, {
         tenant: ctx.tenant,
       });
@@ -441,12 +447,11 @@ export class TypeOrmUserRepository
       } else {
         qb.orderBy(`${qb.alias}.created_at`, 'DESC');
       }
-    };
+    }
 
     const page = await paginate<UserEntity, PageMeta>(
-      userRepo,
+      qb,
       options,
-      searchOptions,
     );
 
     return {
@@ -668,55 +673,55 @@ export class TypeOrmUserRepository
       }),
     };
 
-    const searchOptions: FindManyOptions<PermissionEntity> = {
-      where: (qb: SelectQueryBuilder<PermissionEntity>) => {
-        qb.leftJoin(`${qb.alias}.resource_server`, 'resource_server').addSelect(
-          ['resource_server.identifier', 'resource_server.name'],
-        );
+    const qb = permissionRepo.createQueryBuilder('permissions')
+
+    {
+      qb.leftJoin(`${qb.alias}.resource_server`, 'resource_server').addSelect(
+        ['resource_server.identifier', 'resource_server.name'],
+      );
+
+      if (query.audience) {
+        qb.where(`resource_server.identifier = :audience`, {
+          audience: query.audience,
+        });
+      }
+
+      qb.leftJoin(
+        'user_permissions',
+        'user_permissions',
+        `user_permissions.permission_id = ${qb.alias}.id`,
+      ).andWhere(
+        'user_permissions.tenant = :tenant AND user_permissions.user_id = :user_id',
+        {
+          tenant: ctx.tenant,
+          user_id,
+        },
+      );
+
+      if (role_ids.length > 0) {
+        qb.addSelect([
+          'roles.id',
+          'roles.name',
+          'roles.description',
+        ]).leftJoin(`${qb.alias}.roles`, 'roles');
 
         if (query.audience) {
-          qb.where(`resource_server.identifier = :audience`, {
-            audience: query.audience,
+          qb.orWhere(
+            '(roles.id IN (:...role_ids) AND resource_server.identifier = :audience)',
+            {
+              role_ids,
+              audience: query.audience,
+            },
+          );
+        } else {
+          qb.orWhere('roles.id IN (:...role_ids)', {
+            role_ids,
           });
         }
+      }
+    }
 
-        qb.leftJoin(
-          'user_permissions',
-          'user_permissions',
-          `user_permissions.permission_id = ${qb.alias}.id`,
-        ).andWhere(
-          'user_permissions.tenant = :tenant AND user_permissions.user_id = :user_id',
-          {
-            tenant: ctx.tenant,
-            user_id,
-          },
-        );
-
-        if (role_ids.length > 0) {
-          qb.addSelect([
-            'roles.id',
-            'roles.name',
-            'roles.description',
-          ]).leftJoin(`${qb.alias}.roles`, 'roles');
-
-          if (query.audience) {
-            qb.orWhere(
-              '(roles.id IN (:...role_ids) AND resource_server.identifier = :audience)',
-              {
-                role_ids,
-                audience: query.audience,
-              },
-            );
-          } else {
-            qb.orWhere('roles.id IN (:...role_ids)', {
-              role_ids,
-            });
-          }
-        }
-      },
-    };
-
-    const page = await paginate(permissionRepo, options, searchOptions);
+    const page = await paginate(qb, options);
 
     const permission_ids = page.items.map((it) => it.id);
     const directPermissions = await permissionRepo
@@ -935,8 +940,10 @@ export class TypeOrmUserRepository
     const savedUser = await manager.transaction(
       async (entityManager: EntityManager) => {
         let primaryUser = await entityManager.findOneOrFail(UserEntity, {
-          tenant: ctx.tenant,
-          user_id: primaryUserId,
+          where: {
+            tenant: ctx.tenant,
+            user_id: primaryUserId,
+          }
         });
 
         const identity = primaryUser.identities.find(
@@ -987,8 +994,10 @@ export class TypeOrmUserRepository
         await entityManager.save(newUser);
 
         primaryUser = await entityManager.findOneOrFail(UserEntity, {
-          tenant: ctx.tenant,
-          user_id: primaryUserId,
+          where: {
+            tenant: ctx.tenant,
+            user_id: primaryUserId,
+          }
         });
 
         return this.userMapper.toDTO(primaryUser);
@@ -1020,17 +1029,12 @@ export class TypeOrmUserRepository
 
     const searchOptions: FindManyOptions<OrganizationMemberEntity> = {
       relations: ['organization'],
-    };
-
-    searchOptions.where = (
-      qb: SelectQueryBuilder<OrganizationMemberEntity>,
-    ) => {
-      qb.where({
+      where: {
         user: {
           tenant: ctx.tenant,
           user_id,
-        },
-      });
+        }
+      }
     };
 
     const page = await paginate(orgMemberRepo, options, searchOptions);

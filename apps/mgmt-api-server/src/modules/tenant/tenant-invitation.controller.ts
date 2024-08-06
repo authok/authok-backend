@@ -3,7 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { IInvitationService } from "libs/api/infra-api/src/invitation/invitation.service";
 import { InvitationDto, InvitationPageQueryDto } from "libs/api/infra-api/src/invitation/invitation.dto";
 import { OIDCRequest } from "../../types/oidc";
-import * as moment from 'moment';
+import dayjs from 'moment';
 import { PageDto } from "libs/common/src/pagination/pagination.dto";
 import { ReqCtx, IRequestContext } from "@libs/nest-core";
 import { IOrganizationService } from "libs/api/infra-api/src/organization/organization.service";
@@ -27,7 +27,7 @@ export class TenantInvitationController {
       user_id: req.user.sub,
     }
 
-    const expires_at = moment(new Date()).add(7, 'd').toDate();
+    const expires_at = dayjs(new Date()).add(7, 'd').toDate();
 
     const invitation = {..._invitation, inviter, org_id: req.user.org_id, expires_at };
 

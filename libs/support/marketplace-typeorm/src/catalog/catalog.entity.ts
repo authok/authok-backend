@@ -1,7 +1,7 @@
 import { Entity, Column, ManyToMany, JoinTable, ManyToOne, JoinColumn } from "typeorm";
-import { GuidIdentity } from "libs/support/infra-support-typeorm/src/common/guid.entity";
 import { CategoryEntity } from "../category/category.entity";
 import { FeatureEntity } from "../feature/feature.entity";
+import { GuidIdentity } from "@libs/support/infra-support-typeorm/common/guid.entity";
 
 class Doc {
   skipSections: number[];

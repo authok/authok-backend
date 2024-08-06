@@ -1,5 +1,5 @@
 import { Entity, Column } from "typeorm";
-import { GuidIdentity } from "libs/support/infra-support-typeorm/src/common/guid.entity";
+import { GuidIdentity } from "@libs/support/infra-support-typeorm/common/guid.entity";
 
 @Entity({
   name: 'categories',

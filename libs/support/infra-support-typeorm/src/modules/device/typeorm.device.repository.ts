@@ -15,7 +15,9 @@ export class TypeOrmDeviceRepository
     id: string,
   ): Promise<DeviceDto | undefined> {
     const repo = await this.repo(ctx, DeviceEntity);
-    return await repo.findOne(id);
+    return await repo.findOne({
+      where: { id }
+    });
   }
 
   async delete(

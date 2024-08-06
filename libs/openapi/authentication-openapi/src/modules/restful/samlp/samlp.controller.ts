@@ -18,7 +18,7 @@ import { ReqCtx, IRequestContext } from '@libs/nest-core';
 import { IClientService } from 'libs/api/infra-api/src/client/client.service';
 import * as https from 'https';
 import * as uuid from 'uuid';
-import { SessionNotFound } from '@authok/oidc-provider/lib/helpers/errors';
+
 import { UserDto } from 'libs/api/infra-api/src/user/user.dto';
 import { URL } from 'url';
 import * as validator from '@authenio/samlify-xsd-schema-validator';
@@ -100,6 +100,9 @@ export class SAMLPController {
     @Req() req: Request,
     @Res() res: Response,
   ) {
+    const { SessionNotFound } = await import('@authok/oidc-provider/lib/helpers/errors');
+
+
     const provider = await ctx.currentProvider();
     if (!provider) {
       throw new NotFoundException('provider not found');

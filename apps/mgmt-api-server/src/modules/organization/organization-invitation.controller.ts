@@ -6,7 +6,7 @@ import { TenantGuard } from "../../middleware/tenant.guard";
 import { IRequestContext, ReqCtx } from "@libs/nest-core";
 import { Scopes } from "libs/oidc/client/src/lib/guards/scopes.decorator";
 import { IOrganizationService } from "libs/api/infra-api/src/organization/organization.service";
-import * as moment from 'moment';
+import dayjs from 'moment';
 import { ScopesGuard } from "libs/oidc/client/src/lib/guards/scopes.guard";
 import { OIDCRequest } from "../../types/oidc";
 
@@ -46,7 +46,7 @@ export class OrganizationInvitationController {
     const org = await this.organizationService.retrieve(ctx, org_id);
     if (!org) throw new NotFoundException(`organization ${org_id} not found`);
 
-    const expires_at = moment(new Date()).add(7, 'd').toDate();
+    const expires_at = dayjs(new Date()).add(7, 'd').toDate();
 
     const invitation = {..._invitation, inviter, org_id, expires_at };
 

@@ -11,10 +11,10 @@ import * as fs from 'fs';
 import * as http from 'http';
 
 import * as https from 'https';
-import * as express from 'express';
+import express from 'express';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import * as helmet from 'helmet';
-import * as cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 import { ApiServerModule } from './api-server.module';
 import { ManagementOpenApiModule } from 'libs/openapi/management-openapi/src/management.openapi.module';
 

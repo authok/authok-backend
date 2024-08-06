@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { GraphQLModule, GqlModuleOptions } from '@nestjs/graphql';
 // import GraphQLJSON from 'graphql-type-json';
 import { GlobalIdScalar } from 'nestjs-relay';
-import { DateScalar } from 'libs/shared/src/graphql/scalars/date.scalar';
+// import { DateScalar } from 'libs/shared/src/graphql/scalars/date.scalar';
 import { NodeResolver } from './dto/node.resolver';
 import { ApplicationResolver } from './resolvers/application.resolver';
 import { RoleResolver } from './resolvers/role.resolver';
@@ -37,7 +37,7 @@ import { join } from 'path';
     RoleResolver,
     ApplicationResolver,
     NodeResolver,
-    DateScalar,
+    // DateScalar,
     GlobalIdScalar,
   ],
 })
