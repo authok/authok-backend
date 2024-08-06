@@ -1,4 +1,4 @@
-# Authok IDaaS服务
+# Authok IDaaS
 
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
 [circleci-url]: https://circleci.com/gh/nestjs/nest
@@ -27,27 +27,27 @@ Authok is an open-source alternative to Auth0. Authok is compatible with global 
 
 
 
-## 安装
+## Install
 
 ```bash
 $ npm install
 ```
-或者
+or
 ```bash
 $ yarn install
 ```
 
-## 运行依赖环境
+## Docker-compose
 https://github.com/docker/compose/releases
 
 ```bash
 docker-compose up -d
 ```
 
-## 运行
+## Run
 
 ```bash
-# 开发版
+
 $ npm run start:api-server
 
 # watch mode
@@ -103,10 +103,9 @@ docker tag authok/webtask-action ccr.ccs.tencentyun.com/authok/webtask-action:la
 docker push ccr.ccs.tencentyun.com/authok/webtask-action:latest
 ```
 
-## k8s 部署
+## k8s deployment
 
 # api-server
-nginx 配置
 
 # mgmt-server
 
@@ -121,7 +120,6 @@ DRIVER=mysql \
   DB_PORT=${DB_PORT} \
   DB_USER=${DB_USER} \
   DB_DATABASE=${DB_DATABASE} \
-  DB_SYNCHRONIZE=${DB_SYNCHRONIZE} \
   DB_PASSWORD=${DB_PASSWORD} \
   DB_DATABASE_LOGSTREAM=${DB_DATABASE_LOGSTREAM} \
   yarn cli create:mgmt_tenant --region cn --name mgmt
