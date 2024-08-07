@@ -45,4 +45,4 @@ import { LogEventHandler } from './log.event.handler';
   ],
   exports: ['ILogService', 'ILogStreamService'],
 })
-export class TypeOrmLogModule {}
+export class LoggingTypeOrmModule {}

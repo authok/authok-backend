@@ -60,7 +60,7 @@ export class TenantConnectionManager {
   }
 
   addEntities(...items: EntityClassOrSchema[]) {
-    items.forEach((it) => Logger.log(`加载 Entity: ${it}`));
+    items.forEach((it) => Logger.log(`加载 Entity: ${it.constructor.name}`));
     this.entities.push(...items);
   }
 

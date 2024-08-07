@@ -32,6 +32,7 @@ import { ResourceServerEventHandler } from './resource-server/resource-server.ev
 import { BcryptPasswordCryptor } from './user/password-cryptor/bcrypt.password-cryptor';
 import { CustomDomainService } from './custom-domain/custom-domain.service';
 import { MetricService } from './metric/metric.service';
+import { TenantManager } from './tenant/tenant.manager';
 
 @Global()
 @Module({
@@ -156,6 +157,10 @@ import { MetricService } from './metric/metric.service';
       provide: 'IMetricService',
       useClass: MetricService,
     },
+    {
+      provide: 'ITenantManager',
+      useClass: TenantManager,
+    },
     ResourceServerEventHandler,
     SigningKeyGenerator,
     UserEventHandler,
@@ -183,13 +188,13 @@ import { MetricService } from './metric/metric.service';
     'IConfigService',
     'IFactorService',
     'IEnrollmentService',
-
     'ITriggerService',
     'IActionService',
     'ITriggerBindingService',
     'IGrantService',
     'ICustomDomainService',
     'IMetricService',
+    'ITenantManager',
   ],
 })
 export class InfraCoreModule {}

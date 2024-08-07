@@ -12,7 +12,6 @@ import { PassportModule } from 'libs/passport/src/passport.module';
 import { SharedModule } from 'libs/shared/src/shared.module';
 import { InfraSupportTypeOrmModule } from 'libs/support/infra-support-typeorm/src/infra.support.typeorm.module';
 import { IPModule } from 'libs/support/ipservice-support/src/ip.module';
-import { TypeOrmLogModule } from 'libs/support/logstream-typeorm/src/log.module';
 import { NodeMailerMailModule } from 'libs/support/mail-nodemailer/src/mail.module';
 import { PasswordlessSupportModule } from 'libs/support/passwordless/src/passwordless.module';
 import { VM2SandboxModule } from 'libs/support/sandbox-vm2/src/vm2.sandbox.module';
@@ -24,7 +23,11 @@ import { BizCommandModule } from './biz-command.module';
 import { TriggerModule } from 'libs/support/trigger-client/src/trigger.module';
 import { MarketplaceTypeOrmModule } from 'libs/support/marketplace-typeorm/src/marketplace.typeorm.module';
 import { MarketplaceCoreModule } from 'libs/core/marketplace-core/src/marketplace.core.module';
-import { TenantGrpcClientModule } from 'libs/client/tenant/src/tenant-client.module';
+import { TenantGrpcClientModule } from 'libs/client/tenant/src/tenant-grpc-client.module';
+import { TenantConnectionManagerModule } from 'libs/tenant-connection-manager/src/connection-manager.module';
+import { LoggingGrpcClientModule } from 'libs/client/logging/src/logging-grpc-client.module';
+import { LoggingTypeOrmModule } from 'libs/support/logstream-typeorm/src/logging.module';
+import { MarketplaceGrpcClientModule } from 'libs/client/marketplace/src/marketplace-grpc-client.module';
 
 @Module({
   imports: [
@@ -42,7 +45,6 @@ import { TenantGrpcClientModule } from 'libs/client/tenant/src/tenant-client.mod
     SharedModule,
     NotificationModule,
     TicketModule,
-    TypeOrmLogModule,
     RedisTicketModule,
     PasswordlessSupportModule,
     CloudNativeSmsModule,
@@ -54,14 +56,15 @@ import { TenantGrpcClientModule } from 'libs/client/tenant/src/tenant-client.mod
     OIDCProviderModule,
     AuthorizationModule,
     AuthenticationModule,
-    TenantGrpcClientModule,
     InfraCoreModule,
     InfraSupportTypeOrmModule,
     CommandModule,
     BizCommandModule,
     TriggerModule,
-    MarketplaceCoreModule,
-    MarketplaceTypeOrmModule,
+    TenantConnectionManagerModule,
+    TenantGrpcClientModule,
+    ...(process.env.LOGGING_SERVICE_MICROSERVICE_DISABLED ? [MarketplaceTypeOrmModule, MarketplaceCoreModule] : [MarketplaceGrpcClientModule]),
+    ...(process.env.LOGGING_SERVICE_MICROSERVICE_DISABLED ? [LoggingTypeOrmModule] : [LoggingGrpcClientModule]),
   ],
 })
 export class AppModule {}

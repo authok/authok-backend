@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Command, Positional } from 'nestjs-command';
 import { IConnectionService } from 'libs/api/infra-api/src/connection/connection.service';
-import { ConnectionPageQueryDto } from 'libs/api/infra-api/src/connection/connection.dto';
+import { ConnectionPageQuery } from 'libs/api/infra-api/src/connection/connection.model';
 
 @Injectable()
 export class ConnectionCommand {
@@ -25,6 +25,6 @@ export class ConnectionCommand {
   ) {
     return await this.connectionService.paginate({ tenant }, {
       strategy: ['sms', 'email'],
-    } as ConnectionPageQueryDto);
+    });
   }
 }

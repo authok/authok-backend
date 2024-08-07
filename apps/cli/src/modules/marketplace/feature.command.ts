@@ -34,7 +34,7 @@ export class FeatureCommand {
     const saved = await this.featureService.createOne({}, {
       slug,
       name,
-    });
+    } as any);
 
     console.log(`feature 创建成功:`, saved);
   }

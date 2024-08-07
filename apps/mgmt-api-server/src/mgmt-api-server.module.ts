@@ -17,7 +17,7 @@ import { MarketplaceTypeOrmModule } from 'libs/support/marketplace-typeorm/src/m
 import { MarketplaceCoreModule } from 'libs/core/marketplace-core/src/marketplace.core.module';
 import { APIExceptionFilter } from 'libs/common/src/filters/api-exception.filter';
 import { HttpExceptionFilter } from 'libs/common/src/filters/http-exception.filter';
-import { TypeOrmLogModule } from 'libs/support/logstream-typeorm/src/log.module';
+import { LoggingTypeOrmModule } from 'libs/support/logstream-typeorm/src/logging.module';
 
 import { TenantController } from './modules/tenant/tenant.controller';
 import { TenantInvitationController } from './modules/tenant/tenant-invitation.controller';
@@ -52,8 +52,7 @@ import { FeatureController } from './modules/marketplace/feature.controller';
 import { CategoryController } from './modules/marketplace/category.controller';
 import { CatalogController } from './modules/marketplace/catalog.controller';
 import { HttpModule } from '@nestjs/axios';
-import { TenantGrpcClientModule } from 'libs/client/tenant/src/tenant-client.module';
-import { TenantManager } from './modules/tenant/tenant.manager';
+import { TenantGrpcClientModule } from 'libs/client/tenant/src/tenant-grpc-client.module';
 
 @Global()
 @Module({
@@ -86,7 +85,7 @@ import { TenantManager } from './modules/tenant/tenant.manager';
     TenantGrpcClientModule,
     InfraCoreModule,
     InfraSupportTypeOrmModule,
-    TypeOrmLogModule,
+    LoggingTypeOrmModule,
     MarketplaceCoreModule,
     MarketplaceTypeOrmModule,
     ElasticSearchModule,
@@ -104,10 +103,6 @@ import { TenantManager } from './modules/tenant/tenant.manager';
     {
       provide: APP_INTERCEPTOR,
       useClass: ExpressJwtRequestContextInterceptor,
-    },
-    {
-      provide: 'ITenantManager',
-      useClass: TenantManager,
     },
   ],
   controllers: [

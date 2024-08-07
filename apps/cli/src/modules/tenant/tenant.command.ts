@@ -2,13 +2,13 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Command, Option } from 'nestjs-command';
 import { ITenantService } from 'libs/api/infra-api/src/tenant/tenant.service';
 import {
-  CreateResourceServerDto,
-  ResourceServerDto,
-  UpdateResourceServerDto,
-} from 'libs/api/infra-api/src/resource-server/resource-server.dto';
+  CreateResourceServerModel,
+  ResourceServerModel,
+  UpdateResourceServerModel,
+} from 'libs/api/infra-api/src/resource-server/resource-server.model';
 import { IResourceServerService } from 'libs/api/infra-api/src/resource-server/resource-server.service';
 import { managementApiScopes } from 'libs/core/infra-core/src/resource-server/management.api.scopes';
-import { TenantDto } from 'libs/api/infra-api/src/tenant/tenant.dto';
+import { TenantModel } from 'libs/api/infra-api/src/tenant/tenant.model';
 import { IRoleService } from 'libs/api/infra-api/src/role/role.service';
 import { ITenantManager } from 'libs/api/infra-api/src/tenant/tenant.manager';
 import { IOrganizationService } from 'libs/api/infra-api/src/organization/organization.service';
@@ -118,7 +118,7 @@ export class TenantCommand {
     console.log('xxx 等待完毕');
   }
 
-  async createManagementApi(tenant: TenantDto) {
+  async createManagementApi(tenant: TenantModel) {
     const api = {
       name: 'Dashboard Management API',
       identifier: `https://mgmt.authok.cn/api/v1/`,
@@ -129,7 +129,7 @@ export class TenantCommand {
       enforce_policies: true,
       token_lifetime_for_web: 7200,
       scopes: managementApiScopes,
-    } as CreateResourceServerDto;
+    } as CreateResourceServerModel;
     const mgmtResourceServer = await this.resourceServerService.create(
       { tenant: tenant.id },
       api,
@@ -141,7 +141,7 @@ export class TenantCommand {
     return mgmtResourceServer;
   }
 
-  async addRoles(tenant: TenantDto, resourceServer: ResourceServerDto) {
+  async addRoles(tenant: TenantModel, resourceServer: ResourceServerModel) {
     Logger.debug('给管理租户创建默认角色');
     const role = await this.roleService.create(
       { tenant: tenant.id },
@@ -172,7 +172,7 @@ export class TenantCommand {
       'x-rGkX-xNQfQN3rWLLGfr',
       {
         scopes: managementApiScopes,
-      } as UpdateResourceServerDto,
+      } as UpdateResourceServerModel,
     );
   }
 }

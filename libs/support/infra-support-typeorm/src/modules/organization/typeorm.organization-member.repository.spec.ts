@@ -8,7 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { IPModule } from 'libs/support/ipservice-support/src/ip.module';
 import { NodeMailerMailModule } from 'libs/support/mail-nodemailer/src/mail.module';
 import { TriggerModule } from 'libs/support/trigger-client/src/trigger.module';
-import { TypeOrmLogModule } from 'libs/support/logstream-typeorm/src/log.module';
+import { LoggingTypeOrmModule } from 'libs/support/logstream-typeorm/src/logging.module';
 import { SharedModule } from 'libs/shared/src/shared.module';
 import { TenantConnectionManager } from 'libs/tenant-connection-manager/src/tenant.connection.manager';
 import { OrganizationMemberEntity, OrganizationEntity, OrganizationMemberRoleEntity } from './organization.entity';
@@ -56,7 +56,7 @@ describe('OrganizationMember', () => {
         SharedModule,
         IPModule,
         TriggerModule,
-        TypeOrmLogModule,
+        LoggingTypeOrmModule,
         NodeMailerMailModule,
         EventEmitterModule.forRoot({
           global: true,

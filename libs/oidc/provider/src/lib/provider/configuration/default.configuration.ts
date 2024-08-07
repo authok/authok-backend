@@ -1,4 +1,3 @@
-import { Configuration } from '@authok/oidc-provider';
 const {
   interactionPolicy: { Prompt, Check, base },
 } = require('@authok/oidc-provider');
@@ -8,6 +7,7 @@ import * as wildcard from 'wildcard';
 import * as psl from 'psl';
 import { Provider } from '@authok/oidc-provider';
 import { Logger } from '@nestjs/common';
+import Configuration from '@authok/oidc-provider/lib/helpers/configuration';
 
 const { InvalidClientMetadata } = Provider.errors;
 

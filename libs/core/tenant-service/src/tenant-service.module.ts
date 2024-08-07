@@ -1,7 +1,6 @@
 import { Module, Global } from '@nestjs/common';
 import { TenantService } from './tenant.service';
 import { DBConnectionService } from './db-connection.service';
-import { TenantEventHandler } from './tenant.event.handler';
 
 @Global()
 @Module({

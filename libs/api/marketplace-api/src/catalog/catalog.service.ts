@@ -1,9 +1,11 @@
 import { CatalogDto } from "./catalog.dto";
 import { PageQueryDto, PageDto } from "libs/common/src/pagination/pagination.dto";
-import { IContext, QueryService } from "@libs/nest-core";
+import { IContext } from "@libs/nest-core";
 
-export interface ICatalogService extends QueryService<CatalogDto> {
+export interface ICatalogService {
   paginate(ctx: IContext, query: PageQueryDto): Promise<PageDto<CatalogDto>>;
+
+  createOne(ctx: IContext, data: CatalogDto): Promise<CatalogDto>;
 
   findBySlug(ctx: IContext, slug: string): Promise<CatalogDto | undefined>;
 

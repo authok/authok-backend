@@ -1,4 +1,4 @@
-import { Configuration } from '@authok/oidc-provider';
+import Configuration from '@authok/oidc-provider/lib/helpers/configuration';
 import { DEFAULT_OIDC_CONFIGURATION } from './default.configuration';
 import { Logger } from '@nestjs/common';
 import * as _ from 'lodash';
@@ -28,7 +28,7 @@ export class OIDCConfigurationBuilder {
   private configurationHolder: ConfigurationHolder;
   
   constructor() {
-    this.configurationHolder = new ConfigurationHolder({...DEFAULT_OIDC_CONFIGURATION });
+    this.configurationHolder = new ConfigurationHolder({...(DEFAULT_OIDC_CONFIGURATION as any) });
   }
 
   extend(...extentions: IExtension<IConfiguration>[]): OIDCConfigurationBuilder {

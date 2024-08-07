@@ -28,5 +28,5 @@ export const LOGGING_GRPC_CLIENT = 'logging_grpc_client'
     'ILogStreamService',
   ]
 })
-export class LoggingClientModule {
+export class LoggingGrpcClientModule {
 }
