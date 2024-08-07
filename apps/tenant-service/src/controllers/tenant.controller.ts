@@ -1,6 +1,8 @@
 import { Controller, Inject } from "@nestjs/common";
+import { RpcException } from "@nestjs/microservices";
 import { ITenantService } from "libs/api/infra-api/src/tenant/tenant.service";
 import { CreateTenantRequest, DeleteTenantRequest, DeleteTenantReply, FindTenantByNameRequest, RetrieveTenantRequest, TENANT_SERVICE_NAME, Tenant, TenantServiceController, TenantServiceControllerMethods, UpdateTenantRequest, ListTenantReply, ListTenantRequest } from "proto/stub/tenant/tenant.pb";
+import { status } from '@grpc/grpc-js';
 
 
 @Controller()
@@ -33,7 +35,12 @@ export class TenantController implements TenantServiceController {
 
   async retrieve(req: RetrieveTenantRequest): Promise<Tenant> {
     const tenant = await this.tenantService.retrieve({}, req.id)
-    if (!tenant) return undefined
+    if (!tenant) {
+      throw new RpcException({
+        code: status.NOT_FOUND,
+        message: 'tenant_not_found',
+      });
+    }
 
     return {
       id: tenant.id,
@@ -48,9 +55,14 @@ export class TenantController implements TenantServiceController {
 
   async findByName(req: FindTenantByNameRequest): Promise<Tenant> {
     const tenant = await this.tenantService.findByName({}, req.name)
-    if (!tenant) return undefined
- 
-    return {
+    if (!tenant) {
+      throw new RpcException({
+        code: status.NOT_FOUND,
+        message: 'tenant_not_found',
+      });
+    }
+
+    const pbTenant = {
       id: tenant.id,
       name: tenant.name,
       displayName: tenant.display_name,
@@ -59,6 +71,8 @@ export class TenantController implements TenantServiceController {
       environment: tenant.environment,
       jwtConfiguration: JSON.stringify(tenant.jwt_configuration ?? {}),
     }
+
+    return { tenant: pbTenant }
   }
 
   async delete(request: DeleteTenantRequest): Promise<DeleteTenantReply> {

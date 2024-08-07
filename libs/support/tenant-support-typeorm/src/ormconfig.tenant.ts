@@ -2,37 +2,23 @@
 
 import { getEnvVars } from 'scripts/database-config-utils';
 import { DataSource } from 'typeorm';
+import path from 'path';
+import { config } from 'dotenv';
 
-function dbSslConfig(envVars) {
-  let config = {};
+config({ path: path.resolve(process.cwd(), '.env.local') });
+config({ path: path.resolve(process.cwd(), '.env') });
 
-  if (envVars?.DATABASE_URL)
-    config = {
-      url: envVars.DATABASE_URL,
-      ssl: { rejectUnauthorized: false },
-    };
-
-  if (envVars?.CA_CERT)
-    config = {
-      ...config,
-      ...{ ssl: { rejectUnauthorized: false, ca: envVars.CA_CERT } },
-    };
-
-  return config;
-}
-
-function buildDataSource(data): DataSource {
+function buildDataSource(): DataSource {
   const connectionParams = {
-    database: data.DB_NAME,
-    port: +data.DB_PORT || 5432,
-    username: data.DB_USER,
-    password: data.DB_PASSWORD,
-    host: data.DB_HOST,
+    database: process.env.TENANCY_DB_NAME,
+    port: +process.env.TENANCY_DB_PORT || 5432,
+    username: process.env.TENANCY_DB_USER,
+    password: process.env.TENANCY_DB_PASSWORD,
+    host: process.env.TENANCY_DB_HOST,
     connectTimeoutMS: 5000,
     extra: {
       max: 25,
     },
-    ...dbSslConfig(data),
   };
 
   const entitiesDir = [__dirname + '/**/*.entity.ts'];
@@ -45,12 +31,11 @@ function buildDataSource(data): DataSource {
     uuidExtension: 'pgcrypto',
     migrationsRun: false,
     migrationsTransactionMode: 'all',
-    logging: data.DB_LOGGING || false,
+    logging: ['error'],
     migrations: [__dirname + `/../migrations/**/*{.ts,.js}`],
   });
 }
 
-const data = getEnvVars("tenant");
-const datasource = buildDataSource(data);
+const datasource = buildDataSource();
 
 export default datasource;

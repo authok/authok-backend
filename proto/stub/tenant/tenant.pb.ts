@@ -7,6 +7,7 @@
 /* eslint-disable */
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
+import { NullValue } from "../google/protobuf/struct.pb";
 
 export const protobufPackage = "tenant";
 
@@ -94,6 +95,11 @@ export interface Tenant {
   region: string;
   environment: string;
   jwtConfiguration: string;
+}
+
+export interface NullableTenant {
+  null?: NullValue | undefined;
+  tenant?: Tenant | undefined;
 }
 
 export interface ListTenantRequest {

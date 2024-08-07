@@ -1,6 +1,9 @@
 syntax = "proto3";
 
 package tenant;
+import "google/protobuf/struct.proto";
+
+
 
 service TenantService {
   rpc Create (CreateTenantRequest) returns (Tenant) {}
@@ -73,6 +76,13 @@ message Tenant {
   string region = 5;
   string environment = 6;
   string jwt_configuration = 7;
+}
+
+message NullableTenant {
+  oneof kind {
+    google.protobuf.NullValue null = 1;
+    Tenant tenant = 2;
+  }
 }
 
 message ListTenantRequest {

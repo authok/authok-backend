@@ -1,12 +1,6 @@
-import { IContext, IRequestContext } from '@libs/nest-core';
-import {
-  PageDto,
-  PageMeta,
-  PageQueryDto,
-} from 'libs/common/src/pagination/pagination.dto';
+import { IContext } from '@libs/nest-core';
 import { IDBConnectionRepository } from 'libs/api/infra-api/src/tenant/db-connection.repository';
-import { InjectRepository } from '@nestjs/typeorm';
-import { DBConnection } from './db-connection.entity';
+import { DBConnectionEntity } from './db-connection.entity';
 import { Repository } from 'typeorm';
 import { DBConnectionModel } from 'libs/api/infra-api/src/tenant/db-connection.model';
 import {
@@ -15,11 +9,14 @@ import {
   paginate,
 } from 'nestjs-typeorm-paginate';
 import { Page, PageQuery } from 'libs/common/src/pagination/pagination.model';
+import { Inject } from '@nestjs/common';
+import { PageMeta } from 'libs/common/src/pagination/pagination.model';
+import { InjectRepository } from '@nestjs/typeorm';
 
 export class TypeOrmDBConnectionRepository implements IDBConnectionRepository {
   constructor(
-    @InjectRepository(DBConnection)
-    private readonly repo: Repository<DBConnection>,
+    @InjectRepository(DBConnectionEntity)
+    private readonly repo: Repository<DBConnectionEntity>,
   ) {}
 
   async retrieve(
@@ -67,7 +64,7 @@ export class TypeOrmDBConnectionRepository implements IDBConnectionRepository {
       }),
     };
 
-    const result = await paginate<DBConnection, PageMeta>(this.repo, options);
+    const result = await paginate<DBConnectionEntity, PageMeta>(this.repo, options);
 
     return {
       items: result.items,

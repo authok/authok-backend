@@ -8,7 +8,7 @@ import { Column, Entity } from 'typeorm';
   name: 'dbconnections',
 })
 @GUID()
-export class DBConnection extends GuidIdentity {
+export class DBConnectionEntity extends GuidIdentity {
   @Column()
   name: string;
 

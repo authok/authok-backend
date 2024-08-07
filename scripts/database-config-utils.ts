@@ -6,18 +6,18 @@ import { isEmpty } from 'lodash';
 const url = require('url');
 const querystring = require('querystring');
 
-export function filePathForEnvVars(dbname: string,env: string | undefined): string {
+export function filePathForEnvVars(env: string | undefined): string {
   if (env === 'test') {
-    return path.resolve(process.cwd(), `.env.test.${dbname}`);
+    return path.resolve(process.cwd(), `.env.test`);
   } else {
-    return path.resolve(process.cwd(), `.env.${dbname}`);
+    return path.resolve(process.cwd(), `.env`);
   }
 }
 
-export function getEnvVars(dbname: string) {
+export function getEnvVars() {
   let data: any = process.env;
 
-  const envVarsFilePath = filePathForEnvVars(dbname, process.env.NODE_ENV)
+  const envVarsFilePath = filePathForEnvVars(process.env.NODE_ENV)
   if (fs.existsSync(envVarsFilePath)) {
     data = { ...data, ...dotenv.parse(fs.readFileSync(envVarsFilePath)) };
   }
@@ -93,8 +93,8 @@ function validateDatabaseConfig(dbConfig: any): Joi.ValidationResult {
   return envVarsSchema.validate(dbConfig);
 }
 
-export function buildAndValidateDatabaseConfig(dbname: string): Joi.ValidationResult {
-  const config: any = getEnvVars(dbname);
+export function buildAndValidateDatabaseConfig(): Joi.ValidationResult {
+  const config: any = getEnvVars();
   const dbConfig = {
     type: config.DRIVER,
     name: config.DB_NAME,

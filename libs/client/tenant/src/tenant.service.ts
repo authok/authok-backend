@@ -52,9 +52,7 @@ export class TenantService implements ITenantService, OnModuleInit {
       name,
     })
   
-    const reply = await firstValueFrom(s);
-
-    return reply as unknown as TenantModel;
+    return await s.toPromise() as any;
   }
 
   async delete(ctx: IContext, id: string) {
