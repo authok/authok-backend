@@ -8258,6 +8258,11 @@ nestjs-command@^3.1.4:
     lodash.compact "^3.0.1"
     lodash.flattendeep "^4.4.0"
 
+nestjs-grpc-exceptions@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/nestjs-grpc-exceptions/-/nestjs-grpc-exceptions-0.2.2.tgz#8adc59216c6e22d9ddc68cf309615f852a8bf805"
+  integrity sha512-z0uwcUkeh34nzQ2NA1q8KdeFpRE51OUFjgGuJvNJWx/uRMXQnTp+82OKaPqHDhQnIvi3BRPDSOsNoGc0CcvTBA==
+
 nestjs-joi@^1.10.0:
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/nestjs-joi/-/nestjs-joi-1.10.0.tgz#dd81cbea502a6af07194dae67edb939f4c59eb9b"

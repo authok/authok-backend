@@ -237,3 +237,6 @@ Tenant 改为 prisma db 访问方式
 
 ###
 logstream 服务独立成微服务.
+
+
+### 在数据库 migration 脚本创建初始 管理系统账号

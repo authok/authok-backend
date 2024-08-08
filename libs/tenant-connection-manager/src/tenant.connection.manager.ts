@@ -7,7 +7,7 @@ import {
 import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type';
 import { IDBConnectionService } from 'libs/api/infra-api/src/tenant/db-connection.service';
 import { ITenantService } from 'libs/api/infra-api/src/tenant/tenant.service';
-import { IRequestContext } from '@libs/nest-core';
+import { IContext, IRequestContext } from '@libs/nest-core';
 import {
   Connection,
   ConnectionManager,
@@ -64,7 +64,7 @@ export class TenantConnectionManager {
     this.entities.push(...items);
   }
 
-  async get(ctx: IRequestContext): Promise<Connection> {
+  async get(ctx: IContext): Promise<Connection> {
     if (!ctx.tenant) {
       return getConnection();
     }

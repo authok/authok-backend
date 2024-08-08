@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import configuration from 'apps/mgmt-api-server/src/config/configuration';
 import { AuthenticationModule } from 'libs/core/authentication-core/src/authentication.module';
 import { AuthorizationModule } from 'libs/core/authorization-core/src/authorization.module';
 import { InfraCoreModule } from 'libs/core/infra-core/src/infra.core.module';
@@ -28,6 +27,7 @@ import { TenantConnectionManagerModule } from 'libs/tenant-connection-manager/sr
 import { LoggingGrpcClientModule } from 'libs/client/logging/src/logging-grpc-client.module';
 import { LoggingTypeOrmModule } from 'libs/support/logstream-typeorm/src/logging.module';
 import { MarketplaceGrpcClientModule } from 'libs/client/marketplace/src/marketplace-grpc-client.module';
+import configuration from './config/configuration';
 
 @Module({
   imports: [

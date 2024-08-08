@@ -2,7 +2,6 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Command, Option } from 'nestjs-command';
 import { ITenantService } from 'libs/api/infra-api/src/tenant/tenant.service';
 import {
-  CreateResourceServerModel,
   ResourceServerModel,
   UpdateResourceServerModel,
 } from 'libs/api/infra-api/src/resource-server/resource-server.model';
@@ -87,21 +86,19 @@ export class TenantCommand {
     })
     region: string,
   ) {
-    const mgmtTenantId = 'org_1';
-    // const tenant = { id: mgmtTenantId } as TenantDto;
     const tenant = await this.tenantService.create(
-      { tenant: mgmtTenantId },
+      {},
       {
-        id: mgmtTenantId,
         name,
         region,
       },
     );
 
+    Logger.log('租户创建成功: ', tenant)
     const org = await this.organizationService.create(
-      { tenant: mgmtTenantId },
+      { tenant: tenant.id },
       {
-        id: mgmtTenantId,
+        id: tenant.id,
         name,
       },
     );
@@ -119,24 +116,21 @@ export class TenantCommand {
   }
 
   async createManagementApi(tenant: TenantModel) {
-    const api = {
-      name: 'Dashboard Management API',
-      identifier: `https://mgmt.authok.cn/api/v1/`,
-      is_system: false,
-      allow_offline_access: true,
-      skip_consent_for_verifiable_first_party_clients: true,
-      token_lifetime: 86400,
-      enforce_policies: true,
-      token_lifetime_for_web: 7200,
-      scopes: managementApiScopes,
-    } as CreateResourceServerModel;
     const mgmtResourceServer = await this.resourceServerService.create(
       { tenant: tenant.id },
-      api,
+      {
+        name: 'Dashboard Management API',
+        identifier: `https://mgmt.authok.cn/api/v1/`,
+        is_system: false,
+        allow_offline_access: true,
+        skip_consent_for_verifiable_first_party_clients: true,
+        token_lifetime: 86400,
+        enforce_policies: true,
+        token_lifetime_for_web: 7200,
+        scopes: managementApiScopes,
+      },
     );
-    Logger.log(
-      `为租户: ${tenant.name} 创建了管理API: ${mgmtResourceServer.id}`,
-    );
+    Logger.log(`为租户: ${tenant.name} 创建了管理API: ${mgmtResourceServer.id}`);
 
     return mgmtResourceServer;
   }
@@ -146,8 +140,8 @@ export class TenantCommand {
     const role = await this.roleService.create(
       { tenant: tenant.id },
       {
-        name: '管理员',
-        description: '管理员',
+        name: 'Admin',
+        description: 'Admin',
       },
     );
 

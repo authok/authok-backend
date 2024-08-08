@@ -59,20 +59,22 @@ export class TenantManager implements ITenantManager {
     const mgmtTenant = this.configService.get('management.tenant');
     const audience = this.configService.get('management.audience');
 
+    console.log('mgmtTenant: ', mgmtTenant)
+
     // 查找看是否存在
     const existingTenant = await this.tenantService.findByName(ctx, _tenant.name);
     if (existingTenant) {
       throw new ConflictException(`同名租户已经存在`);
     }
 
-    Logger.debug('创建租户关联的组织');
+    const tenant = await this.tenantService.create(ctx, { ..._tenant });
+
+    Logger.log('创建租户关联的组织');
     const org = await this.organizationService.create({ tenant: mgmtTenant }, {
-      id: _tenant.name,
+      id: _tenant.id,
       name: _tenant.name,
       display_name: _tenant.display_name,
     } as OrganizationModel);
-
-    const tenant = await this.tenantService.create(ctx, { id: org.id, ..._tenant });
 
     try {
       const mgmtResourceServer = await this.resourceServerService.findByIdentifier({ tenant: mgmtTenant }, audience);

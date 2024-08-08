@@ -13,7 +13,7 @@ import {
 import { IContext } from '@libs/nest-core';
 import { ClientGrpc } from '@nestjs/microservices';
 import { TENANT_SERVICE_NAME, TenantServiceClient } from 'proto/stub/tenant/tenant.pb';
-import { firstValueFrom } from 'rxjs';
+import { handleRpcException } from './utils';
 
 const defaultJwtConfiguration = {
   alg: 'HS256',
@@ -35,50 +35,42 @@ export class TenantService implements ITenantService, OnModuleInit {
   }
 
   async retrieve(ctx: IContext, id: string): Promise<TenantModel | null> {
-    const s = this.tenantServiceClient.retrieve({
-      id,
-    })
-  
-    const reply = firstValueFrom(s);
-
-    return reply as unknown as TenantModel;
+    return await handleRpcException(
+      this.tenantServiceClient.retrieve({
+        id,
+      }).toPromise(),
+    ) as any
   }
 
   async findByName(
     ctx: IContext,
     name: string,
   ): Promise<TenantModel | null> {
-    const s = await this.tenantServiceClient.findByName({
-      name,
-    })
-  
-    return await s.toPromise() as any;
+    return await handleRpcException(
+      this.tenantServiceClient.findByName({
+        name,
+      }).toPromise(),
+    ) as any
   }
 
   async delete(ctx: IContext, id: string) {
-    const s = this.tenantServiceClient.delete({
+    return await this.tenantServiceClient.delete({
       id,
-    })
-
-    const reply = await firstValueFrom(s);
-
-    return null
+    }).toPromise() as any;
   }
 
   async create(
     ctx: IContext,
     data: CreateTenantModel,
   ): Promise<TenantModel> {
-    const s = this.tenantServiceClient.create({
+    const pbTenant = await this.tenantServiceClient.create({
       name: data.name,
       displayName: data.display_name,
       description: data.description,
       region: data.region,
       environment: data.environment,
       jwtConfiguration: JSON.stringify(data.jwt_configuration ?? defaultJwtConfiguration),
-    })
-
-    const pbTenant = await firstValueFrom(s);
+    }).toPromise() as any;
 
     return {
       id: pbTenant.id,
@@ -96,7 +88,7 @@ export class TenantService implements ITenantService, OnModuleInit {
     id: string,
     data: Partial<UpdateTenantModel>,
   ): Promise<TenantModel> {
-    const s = this.tenantServiceClient.update({
+    const pbTenant = this.tenantServiceClient.update({
       id,
       name: data.name,
       displayName: data.display_name,
@@ -104,9 +96,7 @@ export class TenantService implements ITenantService, OnModuleInit {
       region: data.region,
       environment: data.environment,
       jwtConfiguration: JSON.stringify(data.jwt_configuration ?? {}),
-    } as any)
-
-    const pbTenant = await firstValueFrom(s);
+    } as any).toPromise() as any;
 
     return {
       id: pbTenant.id,
@@ -123,16 +113,14 @@ export class TenantService implements ITenantService, OnModuleInit {
     ctx: IContext,
     query: PageQueryDto,
   ): Promise<PageDto<TenantModel>> {
-    const s = this.tenantServiceClient.list({
+    const { meta, items: _items = [] } = await this.tenantServiceClient.list({
       q: query.q,
       page: query.page,
       pageSize: query.page_size,
       sort: query.sort,
       includeTotals: query.include_totals,
       includeFields: query.include_fields,
-    } as any)
-
-    const { meta, items: _items = [] } = await firstValueFrom(s);
+    } as any).toPromise();
 
     const items = _items.map(pbTenant => ({
       id: pbTenant.id,

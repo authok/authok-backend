@@ -62,7 +62,7 @@ export class TenantController implements TenantServiceController {
       });
     }
 
-    const pbTenant = {
+    return {
       id: tenant.id,
       name: tenant.name,
       displayName: tenant.display_name,
@@ -71,8 +71,6 @@ export class TenantController implements TenantServiceController {
       environment: tenant.environment,
       jwtConfiguration: JSON.stringify(tenant.jwt_configuration ?? {}),
     }
-
-    return { tenant: pbTenant }
   }
 
   async delete(request: DeleteTenantRequest): Promise<DeleteTenantReply> {

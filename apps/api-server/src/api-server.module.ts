@@ -31,6 +31,7 @@ import { TenantGrpcClientModule } from 'libs/client/tenant/src/tenant-grpc-clien
 import { TenantConnectionManagerModule } from 'libs/tenant-connection-manager/src/connection-manager.module';
 import { AllExceptionFilter } from 'libs/common/src/filters/all-exception.filter';
 import { TypeORMExceptionFilter } from 'libs/common/src/filters/typeorm-exception.filter';
+import { GrpcServerExceptionFilter } from "nestjs-grpc-exceptions";
 
 @Global()
 @Module({
@@ -118,6 +119,10 @@ import { TypeORMExceptionFilter } from 'libs/common/src/filters/typeorm-exceptio
     {
       provide: APP_INTERCEPTOR,
       useClass: RequestContextInterceptor,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: GrpcServerExceptionFilter,
     },
   ],
 })

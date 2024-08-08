@@ -284,11 +284,9 @@ class ModuleInitializer implements OnModuleInit {
     ClientGrantMapper,
     ConnectionMapper,
     OrganizationMemberRoleMapper,
-
     // action
     ActionMapper,
     TriggerMapper,
-
     GrantMapper,
 
     ModuleInitializer,
