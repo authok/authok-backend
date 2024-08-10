@@ -1,0 +1,334 @@
+{
+  "collection": "@nestjs/schematics",
+  "defaultProject": "api-server",
+  "monorepo": true,
+  "sourceRoot": "apps/api-server/src",
+  "projects": {
+    "api-server": {
+      "type": "application",
+      "root": "apps/api-server",
+      "entryFile": "main",
+      "sourceRoot": "apps/api-server/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/api-server/tsconfig.app.json"
+      },
+      "targets": {
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "build:api-server",
+            "inspect": true,
+            "port": 57741
+          }
+        }
+      }
+    },
+    "mgmt-api-server": {
+      "type": "application",
+      "root": "apps/mgmt-api-server",
+      "entryFile": "main",
+      "sourceRoot": "apps/mgmt-api-server/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/mgmt-api-server/tsconfig.app.json"
+      },
+      "targets": {
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "build:mgmt-api-server",
+            "inspect": true,
+            "port": 57742
+          }
+        }
+      }
+    },
+    "tenant-service": {
+      "type": "application",
+      "root": "apps/tenant-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/tenant-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/tenant-service/tsconfig.app.json",
+        "assets": ["./proto/tenant/*.proto"],
+        "watchAssets": true
+      },
+      "targets": {
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "build:tenant-service",
+            "inspect": true,
+            "port": 57743
+          }
+        }
+      }
+    },
+    "task-center": {
+      "type": "application",
+      "root": "apps/task-center",
+      "entryFile": "main",
+      "sourceRoot": "apps/task-center/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/task-center/tsconfig.app.json"
+      },
+      "targets": {
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "build:task-center",
+            "inspect": true,
+            "port": 5006
+          }
+        }
+      }
+    },
+    "cli": {
+      "type": "application",
+      "root": "apps/cli",
+      "entryFile": "main",
+      "sourceRoot": "apps/cli/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/cli/tsconfig.app.json"
+      },
+      "targets": {
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "build:cli",
+            "inspect": true,
+            "port": 57741
+          }
+        }
+      }
+    },
+    "shared": {
+      "type": "library",
+      "root": "libs/shared",
+      "entryFile": "index",
+      "sourceRoot": "libs/shared/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/shared/tsconfig.lib.json"
+      }
+    },
+    "dto": {
+      "type": "library",
+      "root": "libs/dto",
+      "entryFile": "index",
+      "sourceRoot": "libs/dto/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/dto/tsconfig.lib.json"
+      }
+    },
+    "service-auth": {
+      "type": "application",
+      "root": "apps/service-auth",
+      "entryFile": "main",
+      "sourceRoot": "apps/service-auth/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/service-auth/tsconfig.app.json"
+      }
+    },
+    "service-acl": {
+      "type": "application",
+      "root": "apps/service-acl",
+      "entryFile": "main",
+      "sourceRoot": "apps/service-acl/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/service-acl/tsconfig.app.json"
+      }
+    },
+    "common": {
+      "type": "library",
+      "root": "libs/common",
+      "entryFile": "index",
+      "sourceRoot": "libs/common/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/common/tsconfig.lib.json"
+      }
+    },
+    "tenant-client": {
+      "type": "library",
+      "root": "libs/client/tenant",
+      "entryFile": "index",
+      "sourceRoot": "libs/client/tenant/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/client/tenant/tsconfig.lib.json"
+      }
+    },
+    "tenant-connection-manager": {
+      "type": "library",
+      "root": "libs/tenant-connection-manager",
+      "entryFile": "index",
+      "sourceRoot": "libs/tenant-connection-manager/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/tenant-connection-manager/tsconfig.lib.json"
+      }
+    },
+    "samlp": {
+      "type": "library",
+      "root": "libs/samlp",
+      "entryFile": "main",
+      "sourceRoot": "libs/samlp/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/samlp/tsconfig.lib.json"
+      }
+    },
+    "nest-core": {
+      "type": "library",
+      "root": "libs/nest-core",
+      "entryFile": "index",
+      "sourceRoot": "libs/nest-core/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/nest-core/tsconfig.lib.json"
+      }
+    },
+    "nest-core-typeorm": {
+      "type": "library",
+      "root": "libs/nest-core-typeorm",
+      "entryFile": "index",
+      "sourceRoot": "libs/nest-core-typeorm/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/nest-core-typeorm/tsconfig.lib.json"
+      }
+    },
+    "oidc-client": {
+      "type": "library",
+      "root": "libs/oidc/client",
+      "entryFile": "index",
+      "sourceRoot": "libs/oidc/client/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/oidc/client/tsconfig.lib.json"
+      }
+    },
+    "oidc-common": {
+      "type": "library",
+      "root": "libs/oidc/common",
+      "entryFile": "index",
+      "sourceRoot": "libs/oidc/common/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/oidc/common/tsconfig.lib.json"
+      }
+    },
+    "infra-api": {
+      "type": "library",
+      "root": "libs/api/infra-api",
+      "entryFile": "index",
+      "sourceRoot": "libs/api/infra-api/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/api/infra-api/tsconfig.lib.json"
+      }
+    },
+    "infra-core": {
+      "type": "library",
+      "root": "libs/api/infra-core",
+      "entryFile": "index",
+      "sourceRoot": "libs/api/infra-core/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/api/infra-core/tsconfig.lib.json"
+      }
+    },
+    "ticket-api": {
+      "type": "library",
+      "root": "libs/ticket-api",
+      "entryFile": "index",
+      "sourceRoot": "libs/ticket-api/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/ticket-api/tsconfig.lib.json"
+      }
+    },
+    "authentication-api": {
+      "type": "library",
+      "root": "libs/api/authentication-api",
+      "entryFile": "index",
+      "sourceRoot": "libs/api/authentication-api/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/api/authentication-api/tsconfig.lib.json"
+      }
+    },
+    "authentication-core": {
+      "type": "library",
+      "root": "libs/core/authentication-core",
+      "entryFile": "index",
+      "sourceRoot": "libs/core/authentication-core/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/core/authentication-core/tsconfig.lib.json"
+      }
+    },
+    "tenant-support-typeorm": {
+      "type": "library",
+      "root": "libs/support/tenant-support-typeorm",
+      "entryFile": "index",
+      "sourceRoot": "libs/support/tenant-support-typeorm/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/support/tenant-support-typeorm/tsconfig.lib.json"
+      }
+    },
+    "notifications-core": {
+      "type": "library",
+      "root": "libs/core/notifications-core",
+      "entryFile": "index",
+      "sourceRoot": "libs/core/notifications-core/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/core/notifications-core/tsconfig.lib.json"
+      }
+    },
+    "ticket-core": {
+      "type": "library",
+      "root": "libs/ticket-core",
+      "entryFile": "index",
+      "sourceRoot": "libs/ticket-core/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/ticket-core/tsconfig.lib.json"
+      }
+    },
+    "authentication-openapi": {
+      "type": "library",
+      "root": "libs/openapi/authentication-openapi",
+      "entryFile": "index",
+      "sourceRoot": "libs/openapi/authentication-openapi/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/openapi/authentication-openapi/tsconfig.lib.json"
+      }
+    },
+    "management-openapi": {
+      "type": "library",
+      "root": "libs/openapi/management-openapi",
+      "entryFile": "index",
+      "sourceRoot": "libs/openapi/management-openapi/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/openapi/management-openapi/tsconfig.lib.json"
+      }
+    },
+    "support-ticket-redis": {
+      "type": "library",
+      "root": "libs/support/ticket-redis",
+      "entryFile": "index",
+      "sourceRoot": "libs/support/ticket-redis/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/support/ticket-redis/tsconfig.lib.json"
+      }
+    },
+    "support-sms-cloudnative": {
+      "type": "library",
+      "root": "libs/support/sms-cloudnative",
+      "entryFile": "index",
+      "sourceRoot": "libs/support/sms-cloudnative/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/support/sms-cloudnative/tsconfig.lib.json"
+      }
+    },
+    "support-mail-cloudnative": {
+      "type": "library",
+      "root": "libs/support/mail-cloudnative",
+      "entryFile": "index",
+      "sourceRoot": "libs/support/mail-cloudnative/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/support/mail-cloudnative/tsconfig.lib.json"
+      }
+    }
+  },
+  "compilerOptions": {
+    "webpack": true,
+    "builder": "swc"
+  }
+}

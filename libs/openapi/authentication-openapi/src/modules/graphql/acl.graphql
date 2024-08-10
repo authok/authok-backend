@@ -1,0 +1,98 @@
+extend type Query {
+  role(code: String!, namespace: String): Role
+}
+
+type PaginatedAuthorizedResources {
+  totalCount: Int!
+  list: [AuthorizedResource!]!
+}
+
+enum ResourceType {
+  DATA
+  API
+  MENU
+  UI
+  BUTTON
+}
+
+type AuthorizedResource {
+  code: String!
+  type: ResourceType
+  actions: [String!]
+}
+
+type PaginatedRoles {
+  totalCount: Int!
+  list: [Role!]!
+}
+
+type Role {
+  namespace: String!
+  code: String!
+  arn: String!
+  description: String
+  isSystem: Boolean
+  createdAt: String
+  updatedAt: String
+  users: PaginatedUsers!
+  authorizedResources(resourceType: String): PaginatedAuthorizedResources
+  parent: Role
+}
+
+type PaginatedDepartments {
+  list: [UserDepartment!]!
+  totalCount: Int!
+}
+
+type UserDepartment {
+  department: Node!
+  isMainDepartment: Boolean!
+  joinedAt: String
+}
+
+type Node {
+  id: String!
+  orgId: String
+  name: String!
+  nameI18n: String
+  description: String
+  descriptionI18n: String
+  order: Int
+  code: String
+  root: Boolean
+  depth: Int
+  path: [String!]!
+  codePath: [String]!
+  namePath: [String!]!
+  createdAt: String
+  updatedAt: String
+  children: [String!]
+  users(
+    page: Int = 1
+    limit: Int = 10
+    sortBy: SortByEnum = CREATEDAT_DESC
+    includeChildrenNodes: Boolean = true
+  ): PaginatedUsers!
+  authorizedResources(
+    namespace: String
+    resourceType: String
+  ): PaginatedAuthorizedResources
+}
+
+type PaginatedGroups {
+  totalCount: Int!
+  list: [Group!]!
+}
+
+type Group {
+  code: String!
+  name: String!
+  description: String
+  createdAt: String
+  updatedAt: String
+  users(page: Int, limit: Int): PaginatedUsers!
+  authorizedResources(
+    namespace: String
+    resourceType: String
+  ): PaginatedAuthorizedResources
+}

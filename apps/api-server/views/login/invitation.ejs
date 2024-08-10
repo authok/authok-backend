@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Authok Login</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="//cdn.authok.io/api-server/css/index.css"></link>
+  <!--link rel="shortcut icon" href="https://cdn.authok.io/styleguide/components/2.0.2/media/logos/img/favicon.png"-->
+</head>
+<body>
+  <div class="main">
+    Acccept invitations from <%= invitation.inviter.username || invitation.inviter.nickname || invitation.inviter.email || invitation.inviter.phone_number %>
+    <form autocomplete="off" action="/login/<%= uid %>/invitation" method="post">
+      <button class="ant-btn ant-btn-primary ant-btn-lg" autofocus type="submit" class="login login-submit">Accept invitation</button>
+    </form>
+  </div>
+</body>
+</html>

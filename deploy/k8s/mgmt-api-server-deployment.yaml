@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: default
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "*"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+  name: mgmt-api-server
+  namespace: authok
+spec:
+  tls:
+    - secretName: authok-api-tls
+      hosts:
+        - mgmt.authok.io
+  rules:
+    - host: mgmt.authok.io
+      http:
+        paths:
+          - backend:
+              service:
+                name: mgmt-api-server
+                port:
+                  name: server
+            path: /
+            pathType: Prefix

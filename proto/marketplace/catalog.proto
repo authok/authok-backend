@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package marketplace;
+
+service CatalogService {
+  rpc Create (CreateCatalogRequest) returns (Catalog) {}
+  rpc Retrieve (RetrieveCatalogRequest) returns (Catalog) {}
+  rpc Update(UpdateCatalogRequest) returns (Catalog) {}
+  rpc Delete (DeleteCatalogRequest) returns (DeleteCatalogReply) {}
+  rpc List(ListCatalogRequest) returns (ListCatalogReply) {}
+}
+
+message DeleteCatalogRequest {
+  string id = 1;
+}
+
+message DeleteCatalogReply {
+  bool success = 1;
+}
+
+message RetrieveCatalogRequest {
+  string id = 1;
+}
+
+message CreateCatalogRequest {
+}
+
+message UpdateCatalogRequest {
+  string id = 1;
+}
+
+message Catalog {
+  string id = 1;
+}
+
+message ListCatalogRequest {
+  string q = 1;
+  int64 page = 2;
+  int64 per_page = 3;
+  string sort = 4;
+  bool include_totals = 5;
+  bool include_fields = 6;
+}
+
+message PageMeta {
+  int64 page = 1;
+  int64 per_page = 3;
+  int64 total = 2;
+}
+
+message ListCatalogReply {
+  repeated Catalog items = 1;
+  PageMeta meta = 2;
+}

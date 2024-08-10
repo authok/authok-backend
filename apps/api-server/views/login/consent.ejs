@@ -1,0 +1,133 @@
+<html>
+  <head>
+    <title>用户授权</title>
+    <style type="text/css">
+      ul, li {
+        list-style: none;
+      }
+      
+      .ant-btn {
+        line-height: 1.5715;
+        position: relative;
+        display: inline-block;
+        font-weight: 400;
+        white-space: nowrap;
+        text-align: center;
+        background-image: none;
+        border: 1px solid transparent;
+        box-shadow: 0 2px 0 rgb(0 0 0 / 2%);
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        touch-action: manipulation;
+        height: 32px;
+        padding: 4px 15px;
+        font-size: 14px;
+        border-radius: 2px;
+        color: rgba(0, 0, 0, 0.85);
+        border-color: #d9d9d9;
+        background: #fff;
+      }
+
+      .ant-btn-primary {
+        color: #fff;
+        border-color: #1890ff;
+        background: #1890ff;
+        text-shadow: 0 -1px 0 rgb(0 0 0 / 12%);
+        box-shadow: 0 2px 0 rgb(0 0 0 / 5%);
+      }
+
+      .ant-btn-lg {
+        height: 40px;
+        padding: 6.4px 15px;
+        font-size: 16px;
+        border-radius: 2px;
+      }
+
+      .ant-btn, .ant-btn:active, .ant-btn:focus {
+        outline: 0;
+      }
+
+      .main {
+        text-align: center;
+      }
+      
+      .main .app-image-wrapper {
+        margin: 0 auto;
+
+        display: block;
+        width: 64px;
+        height: 64px;
+      }
+
+      .app-image {
+        width: 100%;
+        height: 100%;
+      }
+
+      .scopes ul {
+        padding-inline-start: 0
+      }
+    </style>
+  </head>  
+  <body>
+    <div class="main">
+      <div class="app-image-wrapper">
+        <% if (client.logo_uri) { %><img class="app-image" src="<%= client.logo_uri %>" /><% } %>
+      </div>
+      <h3><%= client.name %></h3>
+      <p>需要得到以下授权:</p>
+      <ul class="scopes">
+        <% if ([details.missingOIDCScope, details.missingOIDCClaims,
+        details.missingResourceScopes].filter(Boolean).length === 0) { %>
+        <li>the client is asking you to confirm previously given authorization</li>
+        <% } %> <% missingOIDCScope = new Set(details.missingOIDCScope);
+        missingOIDCScope.delete('openid'); missingOIDCScope.delete('offline_access')
+        %> <% if (missingOIDCScope.size) { %>
+        <li>scopes:</li>
+        <ul>
+          <% missingOIDCScope.forEach((scope) => { %>
+          <li><%= scope %></li>
+          <% }) %>
+        </ul>
+        <% } %> <% missingOIDCClaims = new Set(details.missingOIDCClaims); ['sub',
+        'sid', 'auth_time', 'acr', 'amr',
+        'iss'].forEach(Set.prototype.delete.bind(missingOIDCClaims)) %> <% if
+        (missingOIDCClaims.size) { %>
+        <li>claims:</li>
+        <ul>
+          <% missingOIDCClaims.forEach((claim) => { %>
+          <li><%= claim %></li>
+          <% }) %>
+        </ul>
+        <% } %> <% missingResourceScopes = details.missingResourceScopes %> <% if
+        (missingResourceScopes) { %> <% for (const [indicator, scopes] of
+        Object.entries(details.missingResourceScopes)) { %>
+        <li>
+          <b><%= indicator %></b>
+        </li>
+        <ul>
+          <% scopes.forEach((scope) => { %>
+          <li><%= scope %></li>
+          <% }) %>
+        </ul>
+        <% } %> <% } %> <% if (params.scope &&
+        params.scope.includes('offline_access')) { %>
+        <li>
+          the client is asking to have offline access to this authorization <% if
+          ((!details.missingOIDCScope) ||
+          !details.missingOIDCScope.includes('offline_access')) { %> (which you've
+          previously granted) <% } %>
+        </li>
+        <% } %>
+      </ul>
+      
+      <form autocomplete="off" action="/login/<%= uid %>/confirm" method="post">
+        <button class="ant-btn ant-btn-primary ant-btn-lg" autofocus type="submit" class="login login-submit">同意授权</button>
+      </form>  
+    </div> 
+  </body>
+</html>

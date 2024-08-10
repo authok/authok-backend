@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    biz: authok
+    app: api-server
+  name: api-server
+  namespace: authok
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      biz: authok
+      app: api-server
+  template:
+    metadata:
+      labels:
+        biz: authok
+        app: api-server
+    spec:
+      containers:
+        - image: ccr.ccs.tencentyun.com/authok/api-server:latest
+          imagePullPolicy: Always
+          name: api-server
+          resources:
+            limits:
+              memory: 512Mi
+            requests:
+              memory: 512Mi
+          ports:
+            - name: server
+              containerPort: 3003
+              protocol: TCP
+      imagePullSecrets:
+        - name: qcloudregistrykey
+      restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-server
+  namespace: authok
+spec:
+  ports:
+    - name: server
+      port: 3003
+      protocol: TCP
+      targetPort: 3003
+  selector:
+    biz: authok
+    app: api-server
+  sessionAffinity: None
+  type: ClusterIP
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: default
+    kubernetes.io/ingress.rule-mix: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "Access-Control-Allow-Origin: $http_origin";
+      more_set_headers "Access-Control-Allow-Credentials: true";
+      more_set_headers "Access-Control-Allow-Headers: content-type,content-length,authorization,origin,accept,x-request-language,x-requested-with,authok-client";
+      more_set_headers "Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,PATCH,DELETE";
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+  name: api-server
+  namespace: authok
+spec:
+  rules:
+  - host: '*.us.authok.io'
+    http:
+      paths:
+      - backend:
+          serviceName: api-server
+          servicePort: 3003
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - '*.us.authok.io'
+    secretName: us-authok-io

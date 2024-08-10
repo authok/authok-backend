@@ -1,0 +1,297 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""An object with an ID"""
+interface Node {
+  """The ID of the object"""
+  id: ID!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String!
+  endCursor: String!
+}
+
+"""连接代表 Authok 与用户源的关系，包括外部的Identity Provider、数据库、免密认证等"""
+type Connection implements Node {
+  """The ID of the object"""
+  id: ID!
+
+  """名称"""
+  name: String!
+
+  """在登录界面展示的名称"""
+  display_name: String
+
+  """类型，决定了Identity Provider"""
+  strategy: ConnectionStrategy!
+
+  """启用了此连接的client id列表"""
+  enabled_clients: [String]!
+}
+
+enum ConnectionStrategy {
+  ad
+  adfs
+  alipay
+  amazon
+  apple
+  dropbox
+  bitbucket
+  aol
+  authok_oidc
+  authok
+  baidu
+  bitly
+  box
+  custom
+  daccount
+  dwolla
+  email
+  evernote_sandbox
+  evernote
+  exact
+  facebook
+  fitbit
+  flickr
+  github
+  google_apps
+  google_oauth2
+  instagram
+  ip
+  linkedin
+  miicard
+  oauth1
+  oauth2
+  office365
+  oidc
+  paypal
+  paypal_sandbox
+  pingfederate
+  planningcenter
+  renren
+  salesforce_community
+  salesforce_sandbox
+  salesforce
+  samlp
+  sharepoint
+  shopify
+  sms
+  soundcloud
+  thecity_sandbox
+  thecity
+  thirtysevensignals
+  twitter
+  untappd
+  vkontakte
+  waad
+  wechat
+  weibo
+  windowslive
+  wordpress
+  yahoo
+  yammer
+  yandex
+  line
+}
+
+type ConnectionEdge {
+  cursor: String!
+  node: Connection!
+}
+
+type ConnectionConnection {
+  pageInfo: PageInfo!
+  edges: [ConnectionEdge!]!
+  total: Int!
+}
+
+type Application implements Node {
+  id: ID!
+  createdAt: Date!
+  connections: ConnectionConnection!
+}
+
+"""ISO8601 DateTime String (but unix timestamp will also be accepted"""
+scalar Date
+
+type Role implements Node {
+  """The ID of the object"""
+  id: ID!
+  namespace: String!
+  code: String!
+  arn: String!
+  description: String!
+  isSystem: Boolean!
+  createdAt: Date!
+  updatedAt: Date!
+  parent: Role!
+}
+
+type Address {
+  """国家"""
+  country: String
+
+  """省"""
+  province: String
+
+  """市"""
+  city: String
+
+  """区"""
+  district: String
+
+  """详细地址"""
+  address: String
+
+  """邮编"""
+  postal_code: String
+}
+
+"""用户资料"""
+type User implements Node {
+  id: ID!
+
+  """姓名，例：Jane Josephine Doe"""
+  name: String
+
+  """名，例：Jane"""
+  given_name: String
+
+  """姓，例：Doe"""
+  family_name: String
+
+  """中间名，例：Josephine"""
+  middle_name: String
+
+  """昵称，例：JJ"""
+  nickname: String
+
+  """个人资料，例：http://exampleco.com/janedoe"""
+  profile: String
+
+  """头像，例：http://exampleco.com/janedoe/me.jpg"""
+  picture: String
+
+  """个人主页，例：http://exampleco.com"""
+  website: String
+
+  """工作单位，例：google"""
+  company: String
+
+  """邮箱，例：janedoe@exampleco.com"""
+  email: String
+
+  """邮箱是否验证成功"""
+  email_verified: Boolean
+
+  """性别"""
+  gender: Gender
+
+  """生日，例：1972-03-31"""
+  birthdate: Date
+
+  """时区，例：America/Los_Angeles"""
+  zoneinfo: String
+
+  """语言，例：en-US"""
+  locale: String
+
+  """手机号，例：+1 (111) 222-3434"""
+  phone_number: String
+
+  """手机号是否验证成功"""
+  phone_number_verified: Boolean
+
+  """地址"""
+  address: Address
+
+  """是否封禁"""
+  blocked: Boolean
+
+  """登录总次数"""
+  logins_count: Float!
+
+  """最近登录时间"""
+  last_login_at: Date
+
+  """最近登录IP"""
+  last_login_ip: String
+
+  """注册来源，例：weibo"""
+  signup_source: String
+
+  """用户注册时间"""
+  signup_at: Date
+
+  """用户记录保存时间"""
+  created_at: Date!
+
+  """用记录最后更新时间"""
+  updated_at: Date
+  roles(
+    namespace: String!
+
+    """Paginate before opaque cursor"""
+    before: String
+
+    """Paginate after opaque cursor"""
+    after: String
+
+    """Paginate first"""
+    first: Int
+
+    """Paginate last"""
+    last: Int
+  ): RoleConnection
+  identities: [Identity!]!
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+type Identity {
+  openid: String!
+  userIdInIdp: String!
+  userId: String!
+  connection: String!
+  isSocial: Boolean!
+  provider: String!
+  refreshToken: String!
+  accessToken: String!
+}
+
+type RoleEdge {
+  node: Role
+  cursor: String!
+}
+
+type RoleConnection {
+  edges: [RoleEdge]
+  pageInfo: PageInfo!
+}
+
+type Query {
+  user(id: String!): User!
+  role(id: String!): Role!
+
+  """获取应用"""
+  application(id: String!): Application
+
+  """Fetches an object given its ID"""
+  node(
+    """The ID of an object"""
+    id: ID!
+  ): Node
+
+  """Fetches objects given their IDs"""
+  nodes(
+    """The IDs of objects"""
+    ids: [ID!]!
+  ): [Node]!
+}

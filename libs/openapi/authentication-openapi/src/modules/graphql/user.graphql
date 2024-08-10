@@ -1,0 +1,88 @@
+type Query {
+  user(id: String): User
+}
+
+enum UserStatus {
+  Suspended
+  Resigned
+  Activated
+  Archived
+}
+
+type User {
+  id: String!
+  arn: String!
+  status: UserStatus
+  userPoolId: String!
+  username: String
+  email: String
+  emailVerified: Boolean
+  phone: String
+  phoneVerified: Boolean
+  unionid: String
+  openid: String
+  identities: [Identity]
+  nickname: String
+  registerSource: [String!]
+  picture: String
+  password: String
+  oauth: String
+  token: String
+  tokenExpiredAt: String
+  loginsCount: Int
+  lastLogin: String
+  lastIP: String
+  signedUp: String
+  blocked: Boolean
+  isDeleted: Boolean
+  device: String
+  browser: String
+  name: String
+  givenName: String
+  familyName: String
+  middleName: String
+  profile: String
+  preferredUsername: String
+  website: String
+  gender: String
+  birthdate: String
+  zoneinfo: String
+  locale: String
+  address: String
+  formatted: String
+  streetAddress: String
+  locality: String
+  region: String
+  postalCode: String
+  city: String
+  province: String
+  country: String
+  createdAt: Date
+  updatedAt: String
+  roles(namespace: String): PaginatedRoles
+  groups: PaginatedGroups
+  departments(orgId: String): PaginatedDepartments
+  authorizedResources(
+    namespace: String
+    resourceType: String
+  ): PaginatedAuthorizedResources
+  externalId: String
+}
+
+type Identity {
+  openid: String
+  userIdInIdp: String
+  userId: String
+  connectionId: String
+  isSocial: Boolean
+  provider: String
+  userPoolId: String
+  refreshToken: String
+  accessToken: String
+  profileData: JSON
+}
+
+type PaginatedUsers {
+  totalCount: Int!
+  list: [User!]!
+}
