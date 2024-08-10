@@ -1,5 +1,4 @@
 import { ObjectType, Field, Int, ID, registerEnumType } from '@nestjs/graphql';
-import { NodeInterface, PageInfo, NodeType } from 'nestjs-relay';
 
 export enum ConnectionStrategy {
   ad,
@@ -67,10 +66,13 @@ export enum ConnectionStrategy {
 }
 registerEnumType(ConnectionStrategy, { name: 'ConnectionStrategy' });
 
-@NodeType({
+@ObjectType({
   description: '身份源代表 Authok 与用户源的关系，包括外部的Identity Provider、数据库、免密认证等',
 })
-export class Connection extends NodeInterface {
+export class Connection {
+  @Field()
+  id: string;
+
   @Field({ description: '名称' })
   name: string;
 

@@ -1,9 +1,7 @@
-import { Field } from '@nestjs/graphql';
-import { NodeType, NodeInterface } from 'nestjs-relay';
-import { ConnectionConnection } from './connection.dto';
+import { ObjectType, Field } from '@nestjs/graphql';
 
-@NodeType()
-export class Tenant extends NodeInterface {
+@ObjectType()
+export class Tenant {
   @Field()
   logo?: string;
 
@@ -14,5 +12,5 @@ export class Tenant extends NodeInterface {
   createdAt?: Date;
 
   @Field()
-  connections?: ConnectionConnection;
+  // connections?: ConnectionConnection;
 }

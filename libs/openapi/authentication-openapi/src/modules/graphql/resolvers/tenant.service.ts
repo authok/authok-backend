@@ -4,12 +4,6 @@
 // import { Tenant } from '../dto/tenant.dto';
 // import { CreateTenantDto } from 'libs/dto/src';
 // import { Connection, ConnectionConnection } from '../dto/connection.dto';
-// import {
-//   ResolveConnectionField,
-//   ResolvedGlobalId,
-//   GlobalIdFieldResolver,
-//   ConnectionArgs,
-// } from 'nestjs-relay';
 // import { TenantService } from '../services/tenant.service'
 
 // @Resolver(() => Tenant)

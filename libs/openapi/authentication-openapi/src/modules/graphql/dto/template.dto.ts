@@ -1,8 +1,7 @@
-import { Field } from '@nestjs/graphql';
-import { NodeType, NodeInterface } from 'nestjs-relay';
+import { Field, ObjectType } from '@nestjs/graphql';
 
-@NodeType({ description: '模板' })
-export class Template extends NodeInterface {
+@ObjectType({ description: '模板' })
+export class Template {
   @Field({ nullable: true, description: '名称' })
   name?: string;
 

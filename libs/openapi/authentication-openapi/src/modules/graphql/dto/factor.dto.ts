@@ -1,8 +1,10 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { NodeInterface } from 'nestjs-relay';
 
 @ObjectType()
-export class Factor extends NodeInterface {
+export class Factor {
+  @Field()
+  id: string;
+
   @Field({ nullable: true, description: '' })
   factorType?: string;
 

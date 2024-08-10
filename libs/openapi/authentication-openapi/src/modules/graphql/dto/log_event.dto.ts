@@ -1,8 +1,10 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { NodeType, NodeInterface, PageInfo } from 'nestjs-relay';
 
-@NodeType({ description: '事件' })
-export class LogEvent extends NodeInterface {
+@ObjectType({ description: '事件' })
+export class LogEvent {
+  @Field()
+  id: string;
+  
   @Field({ nullable: false, description: 'uuid' })
   uuid?: string;
 
@@ -53,8 +55,8 @@ export class LogEvent extends NodeInterface {
   request?: EventRequest;
 }
 
-@NodeType({ description: '事件执行者' })
-export class EventActor extends NodeInterface {
+@ObjectType({ description: '事件执行者' })
+export class EventActor {
   @Field({ nullable: false, description: 'type' })
   type?: string;
 
@@ -68,8 +70,8 @@ export class EventActor extends NodeInterface {
   detailEntry?: Record<string, string>;
 }
 
-@NodeType({ description: 'EventClient' })
-export class EventClient extends NodeInterface {
+@ObjectType({ description: 'EventClient' })
+export class EventClient {
   @Field({ nullable: true, description: 'userAgent' })
   userAgent?: UserAgent;
 
@@ -86,8 +88,8 @@ export class EventClient extends NodeInterface {
   device?: string;
 }
 
-@NodeType({ description: 'UserAgent' })
-export class UserAgent extends NodeInterface {
+@ObjectType({ description: 'UserAgent' })
+export class UserAgent {
   @Field({ nullable: true, description: 'rawUserAgent' })
   rawUserAgent?: string;
 
@@ -98,8 +100,8 @@ export class UserAgent extends NodeInterface {
   browser?: string;
 }
 
-@NodeType({ description: 'GeographicalContext' })
-export class GeographicalContext extends NodeInterface {
+@ObjectType({ description: 'GeographicalContext' })
+export class GeographicalContext {
   @Field({ nullable: true, description: 'geolocation' })
   geolocation?: Geolocation;
 
@@ -116,7 +118,7 @@ export class GeographicalContext extends NodeInterface {
   postalCode?: string;
 }
 
-@NodeType({ description: 'Geolocation' })
+@ObjectType({ description: 'Geolocation' })
 export class Geolocation {
   @Field({ nullable: true, description: 'lat' })
   lat?: number;
@@ -125,7 +127,7 @@ export class Geolocation {
   lon?: number;
 }
 
-@NodeType({ description: 'Geolocation' })
+@ObjectType({ description: 'Geolocation' })
 export class EventOutcome {
   @Field({ nullable: true, description: 'result' })
   result?: string;
@@ -134,8 +136,8 @@ export class EventOutcome {
   reason?: string;
 }
 
-@NodeType({ description: '' })
-export class EventTarget extends NodeInterface {
+@ObjectType({ description: '' })
+export class EventTarget {
   @Field({ nullable: false, description: 'result' })
   type?: string;
 
@@ -149,8 +151,8 @@ export class EventTarget extends NodeInterface {
   detailEntry?: Record<string, any>;
 }
 
-@NodeType({ description: 'EventTransaction' })
-export class EventTransaction extends NodeInterface {
+@ObjectType({ description: 'EventTransaction' })
+export class EventTransaction {
   @Field({ nullable: true, description: 'type' })
   type?: string;
 
@@ -158,13 +160,13 @@ export class EventTransaction extends NodeInterface {
   detail?: Record<string, any>;
 }
 
-@NodeType({ description: 'DebugContext' })
+@ObjectType({ description: 'DebugContext' })
 export class DebugContext {
   @Field({ nullable: true, description: 'debugData' })
   debugData?: Record<string, any>;
 }
 
-@NodeType({ description: 'AuthenticationContext' })
+@ObjectType({ description: 'AuthenticationContext' })
 export class AuthenticationContext {
   @Field({ nullable: true, description: 'authenticationProvider' })
   authenticationProvider?: string;
@@ -188,13 +190,13 @@ export class AuthenticationContext {
   interface?: string;
 }
 
-@NodeType({ description: 'Issuer' })
-export class Issuer extends NodeInterface {
+@ObjectType({ description: 'Issuer' })
+export class Issuer {
   @Field({ nullable: true, description: 'type' })
   type?: string;
 }
 
-@NodeType({ description: 'Issuer' })
+@ObjectType({ description: 'Issuer' })
 export class SecurityContext {
   @Field({ nullable: true, description: 'asNumber' })
   asNumber?: number;
@@ -212,13 +214,13 @@ export class SecurityContext {
   isProxy?: boolean;
 }
 
-@NodeType({ description: 'EventRequest' })
+@ObjectType({ description: 'EventRequest' })
 export class EventRequest {
   @Field({ nullable: true, description: 'ipChain' })
   ipChain?: IpAddress[];
 }
 
-@NodeType({ description: 'IpAddress' })
+@ObjectType({ description: 'IpAddress' })
 export class IpAddress {
   @Field({ nullable: true, description: 'ip' })
   ip?: string;
@@ -231,24 +233,4 @@ export class IpAddress {
 
   @Field({ nullable: true, description: 'source' })
   source?: string;
-}
-
-export class LogEventEdge {
-  @Field(() => String)
-  readonly cursor!: string;
-
-  @Field(() => LogEvent)
-  readonly node!: LogEvent;
-}
-
-@ObjectType()
-export class LogEventConnection {
-  @Field(() => PageInfo)
-  readonly pageInfo!: PageInfo;
-
-  @Field(() => [LogEventEdge])
-  readonly edges!: LogEventEdge[];
-
-  @Field(() => Int)
-  readonly total!: number;
 }

@@ -1,9 +1,11 @@
-import { Field } from '@nestjs/graphql';
-import { NodeType, NodeInterface } from 'nestjs-relay';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { ConnectionConnection } from './connection.dto';
 
-@NodeType()
-export class Application extends NodeInterface {
+@ObjectType()
+export class Application {
+  @Field()
+  id: string;
+
   @Field()
   createdAt?: Date;
 

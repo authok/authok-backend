@@ -1,8 +1,7 @@
-import { Field } from '@nestjs/graphql';
-import { NodeType, NodeInterface } from 'nestjs-relay';
+import { Field, ObjectType } from '@nestjs/graphql';
 
-@NodeType({ description: '模板' })
-export class UserType extends NodeInterface {
+@ObjectType({ description: 'UserType' })
+export class UserType {
   @Field({ nullable: true, description: '可读名称' })
   displayName?: string;
 

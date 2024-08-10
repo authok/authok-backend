@@ -1,10 +1,9 @@
-import { Field } from '@nestjs/graphql';
-import { NodeType, NodeInterface } from 'nestjs-relay';
+import { ObjectType, Field } from '@nestjs/graphql';
 import { Address } from './address.dto';
 import { Gender } from './gender.dto';
 
-@NodeType({ description: '用户资料' })
-export class User extends NodeInterface {
+@ObjectType({ description: '用户资料' })
+export class User {
   @Field({ nullable: true, description: '姓名，例：Jane Josephine Doe' })
   name?: string;
 

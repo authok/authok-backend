@@ -9,18 +9,11 @@ import {
 } from '@nestjs/graphql';
 import { User } from '../dto/user.dto';
 import { Identity } from '../dto/identity.dto';
-import {
-  ConnectionArgs,
-  ResolveConnectionField,
-  Connection,
-  GlobalIdFieldResolver,
-} from 'nestjs-relay';
-import { connectionFromArray } from 'graphql-relay';
-import { Role, RoleConnection } from '../dto/role.dto';
+import { Role } from '../dto/role.dto';
 import { IUserService } from 'libs/api/infra-api/src';
 import { Inject } from '@nestjs/common';
 @Resolver(() => User)
-export class UserResolver extends GlobalIdFieldResolver(User) {
+export class UserResolver {
   constructor(
     @Inject('IUserService')
     private readonly userService: IUserService,
@@ -35,12 +28,9 @@ export class UserResolver extends GlobalIdFieldResolver(User) {
     return null;
   }
 
-  @ResolveConnectionField(() => Role)
   roles(
-    @Args() args: ConnectionArgs,
     @Args('namespace') namespace: string,
-  ): RoleConnection {
-    const conn: Connection<Role> = connectionFromArray<Role>([], args);
+  ) {
     return {
       total: 3,
       edges: [],

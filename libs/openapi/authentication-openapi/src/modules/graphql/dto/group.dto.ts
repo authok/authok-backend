@@ -1,8 +1,10 @@
-import { Field } from '@nestjs/graphql';
-import { NodeType, NodeInterface } from 'nestjs-relay';
+import { Field, ObjectType } from '@nestjs/graphql';
 
-@NodeType({ description: '组' })
-export class Group extends NodeInterface {
+@ObjectType({ description: 'Group' })
+export class Group {
+  @Field()
+  id: string;
+  
   @Field({ nullable: true, description: '分组名称' })
   name?: string;
 
