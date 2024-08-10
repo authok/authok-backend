@@ -17,9 +17,7 @@ export class UserResolver {
   constructor(
     @Inject('IUserService')
     private readonly userService: IUserService,
-  ) {
-    super();
-  }
+  ) {}
 
   @Query(() => User)
   async user(@Args('id') id: string): Promise<User | null> {

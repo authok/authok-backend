@@ -1,7 +1,7 @@
 import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
 
-@NodeType()
-export class Role extends NodeInterface {
+@ObjectType()
+export class Role {
   @Field()
   namespace: string;
   @Field()
