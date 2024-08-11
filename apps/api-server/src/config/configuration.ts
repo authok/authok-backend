@@ -34,9 +34,9 @@ export default () => ({
     },
   },
   redis: {
-    host: process.env.REDIS_HOST || '127.0.0.1',
-    port: process.env.REDIS_PORT || 6379,
-    password: process.env.REDIS_PASS || '',
+    host: process.env.REDIS_HOST ?? '127.0.0.1',
+    port: process.env.REDIS_PORT ?? 6379,
+    password: process.env.REDIS_PASS ?? '',
   },
   tenant_service: {
     addr: process.env.TENANT_SERVICE_ADDR ?? 'localhost:3002'
