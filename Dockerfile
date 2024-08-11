@@ -59,6 +59,7 @@ COPY --from=build /usr/local/authok.backend/proto ./proto
 
 COPY --from=build /usr/local/authok.backend/libs/support/tenant-support-typeorm/src/ormconfig.tenant.ts ./libs/support/tenant-support-typeorm/src/ormconfig.tenant.ts
 COPY --from=build /usr/local/authok.backend/libs/support/tenant-support-typeorm/migrations ./libs/support/tenant-support-typeorm/migrations
+COPY --from=build /usr/local/authok.backend/libs/support/infra-support-typeorm/src/ormconfig.authok.ts ./libs/support/infra-support-typeorm/src/ormconfig.authok.ts
 COPY --from=build /usr/local/authok.backend/libs/support/infra-support-typeorm/migrations ./libs/support/infra-support-typeorm/migrations
 COPY --from=build /usr/local/authok.backend/tsconfig.json .
 
