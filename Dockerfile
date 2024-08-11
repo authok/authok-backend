@@ -62,4 +62,4 @@ EXPOSE 3003
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN echo 'Asia/Shanghai' >/etc/timezone
 
-ENTRYPOINT ["node", "dist/apps/api-server/main.js"]
+CMD ["node", "dist/apps/api-server/main.js"]
