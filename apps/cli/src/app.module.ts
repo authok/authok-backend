@@ -33,7 +33,7 @@ import configuration from './config/configuration';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env.local',
+      envFilePath: ['.env', '.env.local'],
       load: [configuration],
     }),
     RedisModule.forRootAsync({

@@ -38,6 +38,7 @@ import { GrpcServerExceptionFilter } from "nestjs-grpc-exceptions";
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: ['.env', '.env.local'],
       load: [configuration],
     }),
     RedisModule.forRootAsync({
