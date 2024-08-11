@@ -33,6 +33,7 @@ import { AllExceptionFilter } from 'libs/common/src/filters/all-exception.filter
 import { TypeORMExceptionFilter } from 'libs/common/src/filters/typeorm-exception.filter';
 import { GrpcServerExceptionFilter } from "nestjs-grpc-exceptions";
 
+
 @Global()
 @Module({
   imports: [
