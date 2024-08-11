@@ -26,7 +26,7 @@ import { FeatureMapper } from './feature/feature.mapper';
           autoLoadEntities: true,
           synchronize: !!process.env.DB_SYNCHRONIZE,
           timezone: process.env.TIMEZONE || 'Z',
-          logging: process.env.DB_LOGGING !== 'false',
+          logging: Object.is(process.env.DB_LOGGING, 'true'),
           // cli: {
           //  migrationsDir: 'src/migrations',
           // },

@@ -148,7 +148,7 @@ export class TenantConnectionManager {
             database: process.env.DB_NAME || `authok_default`,
             synchronize: false,
             timezone: process.env.TIMEZONE || 'Z',
-            logging: process.env.DB_LOGGING !== 'false',
+            logging: Object.is(process.env.DB_LOGGING, 'true'),
           };
         }
       }
