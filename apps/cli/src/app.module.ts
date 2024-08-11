@@ -18,6 +18,7 @@ import { CloudNativeSmsModule } from 'libs/support/sms-cloudnative/src/sms.modul
 import { RedisTicketModule } from 'libs/support/ticket-redis/src/redis-ticket.module';
 import { CommandModule } from 'nestjs-command';
 import { RedisModule } from '@authok/nestjs-redis';
+
 import { BizCommandModule } from './biz-command.module';
 import { TriggerModule } from 'libs/support/trigger-client/src/trigger.module';
 import { MarketplaceTypeOrmModule } from 'libs/support/marketplace-typeorm/src/marketplace.typeorm.module';
