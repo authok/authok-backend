@@ -145,7 +145,7 @@ export class TenantConnectionManager {
             port: +process.env.DB_PORT || 5432,
             username: process.env.DB_USER || 'postgres',
             password: process.env.DB_PASSWORD || 'postgres',
-            database: process.env.AUTHOK_DB_DATABASE || `authok_asia_1`,
+            database: process.env.DB_NAME || `authok_default`,
             synchronize: false,
             timezone: process.env.TIMEZONE || 'Z',
             logging: process.env.DB_LOGGING !== 'false',

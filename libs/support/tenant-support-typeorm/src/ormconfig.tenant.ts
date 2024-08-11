@@ -1,6 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
-import { getEnvVars } from 'scripts/database-config-utils';
 import { DataSource } from 'typeorm';
 import path from 'path';
 import { config } from 'dotenv';

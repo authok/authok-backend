@@ -115,7 +115,7 @@ export class TenantCommand {
       { tenant: tenant.id },
       {
         name: 'Dashboard Management API',
-        identifier: `https://mgmt.${domain}/api/v2/`,
+        identifier: `https://mgmt.${tenant.region}.${domain}/api/v2/`,
         is_system: false,
         allow_offline_access: true,
         skip_consent_for_verifiable_first_party_clients: true,

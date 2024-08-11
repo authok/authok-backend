@@ -18,7 +18,7 @@ import { ConfigService } from '@nestjs/config';
         const port = configService.get('TENANCY_DB_PORT', 5432)
         const username = configService.get('TENANCY_DB_USER', 'postgres')
         const password = configService.get('TENANCY_DB_PASSWORD', 'postgres')
-        const database = configService.get('TENANCY_DB_DATABASE', 'authok_tenant')
+        const database = configService.get('TENANCY_DB_DATABASE', 'authok_tenancy')
         const timezone = configService.get('TIMEZONE', 'Z')
         const logging = configService.get('TENANCY_DB_LOGGING', true)
 
