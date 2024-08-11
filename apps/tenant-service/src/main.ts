@@ -6,7 +6,7 @@ import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
   const host = process.env.HORT ?? '0.0.0.0';
-  const port = process.env.PORT || 3005;
+  const port = process.env.PORT ?? 3002;
 
   const microservice = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
     transport: Transport.GRPC,

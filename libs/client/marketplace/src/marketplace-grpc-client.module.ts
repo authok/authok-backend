@@ -17,7 +17,7 @@ const MARKETPLACE_GRPC_CLIENT = 'marketplace_grpc_client'
       name: MARKETPLACE_GRPC_CLIENT,    
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const url = configService.get('MARKETPLACE_SERVICE_ENDPOINT', 'localhost:3005')
+        const url = configService.get('marketplace_service.addr', 'localhost:3006')
         return {
           transport: Transport.GRPC,
           options: {

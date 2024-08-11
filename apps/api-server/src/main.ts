@@ -125,7 +125,7 @@ async function createApp(server): Promise<INestApplication> {
 async function bootstrap() {
   const server = express();
 
-  const port = process.env.PORT || 3003;
+  const port = process.env.PORT ?? 3003;
 
   const apiServer = await createApp(server);
   await apiServer.init();

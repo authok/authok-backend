@@ -23,7 +23,7 @@ class ErrorHandlingProxy extends ClientGrpcProxy {
       name: TENANT_GRPC_CLIENT,    
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const url = configService.get('TENANT_SERVICE_ENDPOINT', 'localhost:3005')
+        const url = configService.get('tenant_service.addr', 'localhost:3002')
 
         return {
           transport: Transport.GRPC,

@@ -38,4 +38,10 @@ export default () => ({
     port: process.env.REDIS_PORT || 6379,
     password: process.env.REDIS_PASS || '',
   },
+  tenant_service: {
+    addr: process.env.TENANT_SERVICE_ADDR ?? 'localhost:3002'
+  },
+  marketplace_service: {
+    addr: process.env.MARKETPLACE_SERVICE_ADDR ?? 'localhost:3006'
+  }
 });
