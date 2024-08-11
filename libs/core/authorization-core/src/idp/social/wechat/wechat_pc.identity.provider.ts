@@ -98,8 +98,7 @@ export class WechatPCIdentityProvider extends OAuth2IdentityProvider {
     const options = ctx.connection.options;
     const app_id = options.app_id;
 
-    const refreshTokenURL =
-      'https://api.weixin.qq.com/sns/oauth2/refresh_token';
+    const refreshTokenURL = 'https://api.weixin.qq.com/sns/oauth2/refresh_token';
     const url = new URL(refreshTokenURL);
     url.searchParams.set('appid', app_id);
     url.searchParams.set('refresh_token', refresh_token);
@@ -144,7 +143,7 @@ export class WechatPCIdentityProvider extends OAuth2IdentityProvider {
 
     return plainToClass(ProfileDataModel, {
       ...rest,
-      user_id: unionid || openid,
+      user_id: openid,
       openid,
       nickname,
       gender,
@@ -159,9 +158,7 @@ export class WechatPCIdentityProvider extends OAuth2IdentityProvider {
     access_token: string,
     openid: string,
   ) {
-    const r = await axios.get<WechatCheckAccessTokenResult>(
-      `https://api.weixin.qq.com/sns/auth?access_token=${access_token}&openid=${openid}`,
-    );
+    const r = await axios.get<WechatCheckAccessTokenResult>(`https://api.weixin.qq.com/sns/auth?access_token=${access_token}&openid=${openid}`);
     const data = r.data;
     if (data.errcode) {
       throw new APIException(
