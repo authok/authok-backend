@@ -37,6 +37,7 @@ export default () => ({
     host: process.env.REDIS_HOST ?? '127.0.0.1',
     port: process.env.REDIS_PORT ?? 6379,
     password: process.env.REDIS_PASS ?? '',
+    tls: Object.is(process.env.REDIS_SSL_ENABLED, 'true'),
   },
   tenant_service: {
     addr: process.env.TENANT_SERVICE_ADDR ?? 'localhost:3002'
