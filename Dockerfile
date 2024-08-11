@@ -38,6 +38,7 @@ RUN yarn global add @nestjs/cli rimraf
 COPY --from=dependencies /usr/local/authok.backend/node_modules ./node_modules
 COPY . .
 
+RUN yarn build:tenant-service
 RUN yarn build:api-server
 RUN yarn build:mgmt-api-server
 RUN yarn build:cli
@@ -45,7 +46,6 @@ RUN yarn build:cli
 
 
 FROM node:22.3.0-alpine3.19 AS production
-
 
 WORKDIR /usr/local/authok.backend
 
