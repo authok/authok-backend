@@ -37,6 +37,7 @@ export class TenantService implements ITenantService, OnModuleInit {
         id,
       }).toPromise(),
     );
+    if (!pbTenant) return undefined;
 
     return {
       id: pbTenant.id,
@@ -58,6 +59,7 @@ export class TenantService implements ITenantService, OnModuleInit {
         name,
       }).toPromise(),
     )
+    if (!pbTenant) return undefined;
 
     return {
       id: pbTenant.id,
