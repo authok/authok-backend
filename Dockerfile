@@ -57,6 +57,9 @@ COPY --from=build /usr/local/authok.backend/dist ./dist
 COPY --from=build /usr/local/authok.backend/apps/api-server/views ./apps/api-server/views
 COPY --from=build /usr/local/authok.backend/proto ./proto
 
+COPY --from=build /usr/local/authok.backend/libs/support/tenant-support-typeorm/src/ormconfig.tenant.ts ./libs/support/tenant-support-typeorm/src/ormconfig.tenant.ts
+
+
 EXPOSE 3003
 
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
