@@ -22,7 +22,7 @@ jobs:
       # would read as:
       #     github.event.release.tag_name if github.event_name == 'release' else 'latest'
       #     https://docs.github.com/en/actions/learn-github-actions/expressions
-      IMAGE_TAG: "${{ github.event_name == 'release' && github.event.release.tag_name || 'latest' }}"
+      IMAGE_TAG: "${{ github.event_name == 'release' && github.event.release.tag_name || github.ref_name || 'latest' }}"
 
     steps:
     - uses: actions/checkout@v4
