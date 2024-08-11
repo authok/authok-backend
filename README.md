@@ -103,14 +103,14 @@ docker build -t authok/webtask-action . -f Dockerfile.webtask
 
 ## Create Management Tenant
 ```bash
-DRIVER=mysql \
+DRIVER=postgres \
   DB_HOST=${DB_HOST} \
   DB_PORT=${DB_PORT} \
   DB_USER=${DB_USER} \
   DB_DATABASE=${DB_DATABASE} \
   DB_PASSWORD=${DB_PASSWORD} \
   DB_DATABASE_LOGSTREAM=${DB_DATABASE_LOGSTREAM} \
-  yarn cli create:mgmt_tenant --region cn --name mgmt
+  yarn cli create:mgmt_tenant --region us --name mgmt
 ```
 
 

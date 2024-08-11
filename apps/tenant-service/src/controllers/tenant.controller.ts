@@ -123,7 +123,7 @@ export class TenantController implements TenantServiceController {
 
     return {
       meta: {
-        pageSize: meta.per_page,
+        perPage: meta.per_page,
         page: meta.page,
         total: meta.total,
       },
