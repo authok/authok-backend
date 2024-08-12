@@ -35,5 +35,5 @@ jobs:
         file: ./Dockerfile
         push: true
         tags: |
-          ${{ IMAGE_NAME }}:${{ IMAGE_TAG }}
-          ${{ IMAGE_NAME }}:latest
+          ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          ${{ env.IMAGE_NAME }}:latest
