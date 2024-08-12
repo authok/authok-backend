@@ -23,21 +23,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build --file Dockerfile -t "${IMAGE_NAME}:${IMAGE_TAG}" .
     - name: "DockerHub login"
       uses: "docker/login-action@v2"
       with:
         username: "${{secrets.DOCKER_USER}}"
         password: "${{secrets.DOCKER_PASS}}"
-    - name: "Push to DockerHub and GHCR"
-      run: |
-        docker push "${IMAGE_NAME}:${IMAGE_TAG}"
-
-    - name: Build and push latest Docker image
+    - name: Build and push to Docker hub
       uses: docker/build-push-action@v5.1.0
       with:
         context: .
         file: ./Dockerfile
         push: true
-        tags: ${IMAGE_NAME}:latest
+        tags: |
+          ${{ IMAGE_NAME }}:${{ IMAGE_TAG }}
+          ${{ IMAGE_NAME }}:latest
