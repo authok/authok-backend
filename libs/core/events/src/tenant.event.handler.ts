@@ -87,7 +87,7 @@ export class TenantEventHandler {
   }
 
   async initTenant(tenant: TenantModel) {
-    const region = tenant.region || 'cn';
+    const region = tenant.region || 'us';
 
     const domain = this.configService.get('domain', 'authok.io')
 
