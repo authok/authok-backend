@@ -38,7 +38,7 @@ export class ClientGrantEntity extends GuidIdentity {
   @Column({ length: 36 })
   tenant: string;
 
-  @Column({ nullable: false, length: 36 })
+  @Column({ nullable: false, length: 256 })
   audience: string;
 
   @ManyToOne(() => ResourceServerEntity, {
