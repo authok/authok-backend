@@ -33,7 +33,7 @@ export class ResourceServerEntity extends GuidIdentity {
   @Column({ length: 36 })
   tenant: string;
 
-  @Column({ length: 36 })
+  @Column({ length: 256 })
   identifier: string;
 
   @Column({ nullable: true })
