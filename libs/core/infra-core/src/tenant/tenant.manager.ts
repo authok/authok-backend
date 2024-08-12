@@ -106,7 +106,7 @@ export class TenantManager implements ITenantManager {
       await this.createDefaultApp(tenant, api);
 
       Logger.warn(`>> tenant ${tenant.id} creating steps.创建 默认身份源 (需要改成异步事件驱动)`);
-      this.createConnections(tenant);
+      await this.createConnections(tenant);
 
       return tenant;
     } catch(e) {
