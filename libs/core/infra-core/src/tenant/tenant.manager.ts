@@ -159,7 +159,7 @@ export class TenantManager implements ITenantManager {
   }
 
   async createManagementAPI(tenant: TenantModel): Promise<ResourceServerModel> {
-    const region = tenant.region || 'us';
+    const region = tenant.region ?? 'us';
 
     const domain = this.configService.get('domain', 'authok.io')
 
