@@ -33,3 +33,11 @@ jobs:
     - name: "Push to DockerHub and GHCR"
       run: |
         docker push "${IMAGE_NAME}:${IMAGE_TAG}"
+
+    - name: Build and push latest Docker image
+      uses: docker/build-push-action@v5.1.0
+      with:
+        context: .
+        file: ./Dockerfile
+        push: true
+        tags: ${IMAGE_NAME}:latest
