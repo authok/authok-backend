@@ -38,6 +38,9 @@ export default () => ({
     port: process.env.REDIS_PORT ?? 6379,
     password: process.env.REDIS_PASS ?? '',
     tls: Object.is(process.env.REDIS_SSL_ENABLED, 'true'),
+    connectTimeout: process.env.REDIS_CONNECT_TIMEOUT ?? 10000,
+    commandTimeout: process.env.REDIS_COMMAND_TIMEOUT ?? 10000,
+    socketTimetout: process.env.REDIS_SOCKET_TIMEOUT ?? 10000,
   },
   tenant_service: {
     addr: process.env.TENANT_SERVICE_ADDR ?? 'localhost:3002'

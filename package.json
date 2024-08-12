@@ -23,7 +23,7 @@
     "start:mgmt-api-server:debug": "nest start --debug --watch mgmt-api-server",
     "start:mgmt-api-server:prod": "node dist/apps/mgmt-api-server/main",
     "build:tenant-service": "nest build tenant-service",
-    "start:tenant-service": "nest start api-server",
+    "start:tenant-service": "nest start tenant-service",
     "start:tenant-service:dev": "nest start --watch tenant-service",
     "start:tenant-service:debug": "nest start --debug --watch tenant-service",
     "start:tenant-service:prod": "node dist/apps/tenant-service/main",
