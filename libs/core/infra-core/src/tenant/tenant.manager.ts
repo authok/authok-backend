@@ -209,7 +209,7 @@ export class TenantManager implements ITenantManager {
       { tenant: tenant.id },
       {
         name: 'sms',
-        display_name: '短信',
+        display_name: 'Sms',
         strategy: 'sms',
       },
     );
@@ -218,8 +218,17 @@ export class TenantManager implements ITenantManager {
       { tenant: tenant.id },
       {
         name: 'email',
-        display_name: '邮件',
+        display_name: 'Email',
         strategy: 'email',
+      },
+    );
+
+    await this.connectionService.create(
+      { tenant: tenant.id },
+      {
+        name: 'database',
+        display_name: 'Database',
+        strategy: 'authok',
       },
     );
   }
