@@ -102,10 +102,10 @@ export class TenantManager implements ITenantManager {
       Logger.log(`>> tenant ${tenant.id} creating steps: 创建 Management API`);
       const api = await this.createManagementAPI(tenant)
 
-      Logger.warn(`>> tenant ${tenant.id} creating steps: 创建 默认应用 (需要改成异步事件驱动)`);
+      Logger.log(`>> tenant ${tenant.id} creating steps: 创建 默认应用 (需要改成异步事件驱动)`);
       await this.createDefaultApp(tenant, api);
 
-      Logger.warn(`>> tenant ${tenant.id} creating steps.创建 默认身份源 (需要改成异步事件驱动)`);
+      Logger.log(`>> tenant ${tenant.id} creating steps.创建 默认身份源 (需要改成异步事件驱动)`);
       await this.createConnections(tenant);
 
       return tenant;
