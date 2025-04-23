@@ -61,12 +61,12 @@ import { OrganizationMemberRoleController } from './organization/organization-me
         }
       }
     }),
-    CacheModule.registerAsync({
+    CacheModule.registerAsync({      
       useFactory: async (redisService: RedisService) => {
         return {
           ttl: 30, // seconds
           max: 10000, // maximum number of items in cache
-          store: redisInsStore(redisService.getClient()),
+          store: redisInsStore(redisService.getClient()) as any,
         };
       },
       inject: [RedisService],
