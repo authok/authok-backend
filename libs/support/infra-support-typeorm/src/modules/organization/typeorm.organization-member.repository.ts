@@ -125,6 +125,10 @@ export class TypeOrmOrganizationMemberRepository
     const qb = orgMemberRepo.createQueryBuilder('org_members');
 
     {
+      qb.where(`${qb.alias}.org_id = :org_id`, {
+        org_id: query.org_id,
+      });
+
       qb.leftJoinAndSelect(
         `${qb.alias}.roles`,
         'organization_member_roles',
