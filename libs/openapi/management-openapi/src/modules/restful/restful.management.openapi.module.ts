@@ -66,7 +66,7 @@ import { OrganizationMemberRoleController } from './organization/organization-me
         return {
           ttl: 30, // seconds
           max: 10000, // maximum number of items in cache
-          store: () => redisInsStore(redisService.getClient()),
+          store: redisInsStore(redisService.getClient()),
         };
       },
       inject: [RedisService],
