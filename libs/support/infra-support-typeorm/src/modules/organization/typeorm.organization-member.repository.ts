@@ -107,6 +107,7 @@ export class TypeOrmOrganizationMemberRepository
 
   async paginate(
     ctx: IContext,
+    org_id: string,
     query: PageQuery,
   ): Promise<Page<OrganizationMemberModel>> {
     const connection: Connection = await this.repo.connectionManager.get(ctx);
@@ -125,6 +126,10 @@ export class TypeOrmOrganizationMemberRepository
     const qb = orgMemberRepo.createQueryBuilder('org_members');
 
     {
+      qb.where(`${qb.alias}.org_id = :org_id`, {
+        org_id,
+      })
+
       qb.leftJoinAndSelect(
         `${qb.alias}.roles`,
         'organization_member_roles',

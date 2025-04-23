@@ -97,7 +97,8 @@ export class TenantController {
 
     return await this.organizationMemberService.paginate(
       { tenant },
-      {...query, org_id: req.user.org_id },
+      req.user.org_id,
+      { ...query },
     ) as any;
   }
 

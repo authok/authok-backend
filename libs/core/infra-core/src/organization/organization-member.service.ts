@@ -36,8 +36,8 @@ export class OrganizationMemberService implements IOrganizationMemberService {
     await this.organizationMemberRepository.deleteOne(ctx, id);
   }
 
-  async paginate(ctx: IContext, query: PageQueryDto): Promise<PageDto<OrganizationMemberModel>> {
-    return await this.organizationMemberRepository.paginate(ctx, query);
+  async paginate(ctx: IContext, org_id: string, query: PageQueryDto): Promise<PageDto<OrganizationMemberModel>> {
+    return await this.organizationMemberRepository.paginate(ctx, org_id, query);
   }
 
   async addRoles(ctx: IContext, member_id: string, role_ids: string[]) {

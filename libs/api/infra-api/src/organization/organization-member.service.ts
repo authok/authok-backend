@@ -15,7 +15,7 @@ export interface IOrganizationMemberService {
 
   delete(ctx: IContext, member_id: string): Promise<void>;
 
-  paginate(ctx: IContext, query: PageQueryDto): Promise<PageDto<OrganizationMemberModel>>;
+  paginate(ctx: IContext, org_id: string, query: PageQueryDto): Promise<PageDto<OrganizationMemberModel>>;
 
   addRoles(ctx: IContext, member_id: string, role_ids: string[]);
   

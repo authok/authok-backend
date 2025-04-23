@@ -38,9 +38,9 @@ export class OrganizationMemberController {
     @Param('org_id') org_id: string,
     @Query() _query: OrganizationMemberPageQueryDto,
   ): Promise<PageDto<OrganizationMemberDto>> {
-    const query = {..._query, org_id };
+    const query = {..._query };
   
-    return await this.organizationMemberService.paginate(ctx, query) as any;
+    return await this.organizationMemberService.paginate(ctx, org_id, query) as any;
   }
 
   @Post('')

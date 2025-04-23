@@ -93,9 +93,9 @@ export class OrganizationMemberController {
     @Param('org_id') org_id: string,
     @Query() _query: OrganizationMemberPageQueryDto,
   ): Promise<PageDto<OrganizationMemberDto>> {
-    const query = { ..._query, org_id };
+    const query = { ..._query };
 
-    const { meta, items: _items } = await this.organizationMemberService.paginate(ctx, query);
+    const { meta, items: _items } = await this.organizationMemberService.paginate(ctx, org_id, query);
     const items = _items.map(it => plainToClass(OrganizationMemberDto, it));
 
     return plainToClass(PageDto<OrganizationMemberDto>, {
